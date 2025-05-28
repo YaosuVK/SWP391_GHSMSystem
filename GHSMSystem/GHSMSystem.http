@@ -1,0 +1,6 @@
+@GHSMSystem_HostAddress = http://localhost:5287
+
+GET {{GHSMSystem_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
