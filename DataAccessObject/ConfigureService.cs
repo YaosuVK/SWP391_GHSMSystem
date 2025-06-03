@@ -1,4 +1,6 @@
 ﻿using BusinessObject.Model;
+using DataAccessObject.BaseDAO;
+using DataAccessObject.IBaseDAO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -33,6 +35,7 @@ namespace DataAccessObject
             services.AddScoped<AppointmentDetail>();
             services.AddScoped<Appointment>();
             services.AddScoped<LabTest>();
+            services.AddScoped(typeof(IBaseDAO<>), typeof(BaseDAO<>));
             return services;
         }
     }

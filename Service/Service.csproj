@@ -21,10 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Hubs\" />
-    <Folder Include="IService\" />
-    <Folder Include="Service\" />
-    <Folder Include="RequestAndResponse\Response\" />
-    <Folder Include="RequestAndResponse\Request\" />
   </ItemGroup>
 
 </Project>

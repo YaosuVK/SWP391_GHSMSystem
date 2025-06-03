@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250528135839_FixDB")]
-    partial class FixDB
+    [Migration("20250602173023_FixDb")]
+    partial class FixDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -325,7 +325,6 @@ namespace DataAccessObject.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -333,11 +332,9 @@ namespace DataAccessObject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Experience")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
@@ -345,7 +342,6 @@ namespace DataAccessObject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specialty")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
@@ -377,7 +373,6 @@ namespace DataAccessObject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
@@ -517,7 +512,6 @@ namespace DataAccessObject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
@@ -740,7 +734,6 @@ namespace DataAccessObject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
@@ -945,31 +938,31 @@ namespace DataAccessObject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a017a2d9-6a59-4c7d-a662-20d7b5b2bab7",
+                            Id = "64604348-2ec7-4036-9e70-4609a4283f38",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "fb19da09-4023-4810-bcad-927d9b61def1",
+                            Id = "5e1cf87d-a50e-4469-8639-30251fe2abc3",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "101c456f-06a5-4c13-86c2-16ed8e6ab9c7",
+                            Id = "9945f4e9-388e-4027-b408-95bf48d5b5bb",
                             Name = "Consultant",
                             NormalizedName = "CONSULTANT"
                         },
                         new
                         {
-                            Id = "e73123d8-a5ae-4f49-8ba9-9735387ebda7",
+                            Id = "0874a4e7-5655-49a6-af25-5b86f94477b7",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "244dcff8-05eb-488d-87af-172e6123be47",
+                            Id = "1f4d57cc-9420-4e0c-ad26-13d20b9e0a3f",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         });

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccessObject.Migrations
 {
     /// <inheritdoc />
-    public partial class FixDB : Migration
+    public partial class FixDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -197,14 +197,14 @@ namespace DataAccessObject.Migrations
                     ConsultantID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ConsultantName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Specialty = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Experience = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Specialty = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Experience = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -224,7 +224,7 @@ namespace DataAccessObject.Migrations
                     CustomerID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CustomerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
@@ -248,7 +248,7 @@ namespace DataAccessObject.Migrations
                     ManagerID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
@@ -296,7 +296,7 @@ namespace DataAccessObject.Migrations
                     StaffID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     StaffName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
@@ -731,11 +731,11 @@ namespace DataAccessObject.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "101c456f-06a5-4c13-86c2-16ed8e6ab9c7", null, "Consultant", "CONSULTANT" },
-                    { "244dcff8-05eb-488d-87af-172e6123be47", null, "Staff", "STAFF" },
-                    { "a017a2d9-6a59-4c7d-a662-20d7b5b2bab7", null, "Admin", "ADMIN" },
-                    { "e73123d8-a5ae-4f49-8ba9-9735387ebda7", null, "Manager", "MANAGER" },
-                    { "fb19da09-4023-4810-bcad-927d9b61def1", null, "Customer", "CUSTOMER" }
+                    { "0874a4e7-5655-49a6-af25-5b86f94477b7", null, "Manager", "MANAGER" },
+                    { "1f4d57cc-9420-4e0c-ad26-13d20b9e0a3f", null, "Staff", "STAFF" },
+                    { "5e1cf87d-a50e-4469-8639-30251fe2abc3", null, "Customer", "CUSTOMER" },
+                    { "64604348-2ec7-4036-9e70-4609a4283f38", null, "Admin", "ADMIN" },
+                    { "9945f4e9-388e-4027-b408-95bf48d5b5bb", null, "Consultant", "CONSULTANT" }
                 });
 
             migrationBuilder.CreateIndex(

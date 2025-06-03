@@ -16,9 +16,4 @@
     <ProjectReference Include="..\DataAccessObject\DataAccessObject.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="IRepositories\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

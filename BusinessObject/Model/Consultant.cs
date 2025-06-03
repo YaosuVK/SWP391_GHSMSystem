@@ -17,7 +17,7 @@ namespace BusinessObject.Model
 
         public string Email { get; set; }
 
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         public string Address { get; set; }
 
@@ -29,11 +29,11 @@ namespace BusinessObject.Model
 
         public Account Account { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string Specialty { get; set; }
+        public string? Specialty { get; set; }
 
-        public string Experience { get; set; }
+        public string? Experience { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; }
 
