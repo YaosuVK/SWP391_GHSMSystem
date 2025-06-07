@@ -28,10 +28,7 @@ namespace Service.Service
     {
         private readonly IMapper _mapper;
         private readonly IAccountRepository _accountRepository;
-        private readonly ICustomerRepository _customerRepository;
         private readonly IConsultantRepository _consultantRepository;
-        private readonly IStaffRepository _staffRepository;
-        private readonly IManagerRepository _managerRepository;
         private readonly UserManager<Account> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenRepository _tokenRepository;
@@ -39,10 +36,9 @@ namespace Service.Service
 
         public AccountService(IMapper mapper,
             IAccountRepository accountRepository,
-            ICustomerRepository customerRepository,
+            
             IConsultantRepository consultantRepository,
-            IStaffRepository staffRepository,
-            IManagerRepository managerRepository,
+           
             UserManager<Account> userManager,
             RoleManager<IdentityRole> roleManager,
             ITokenRepository tokenRepository,
@@ -50,10 +46,9 @@ namespace Service.Service
         {
             _mapper = mapper;
             _accountRepository = accountRepository;
-            _customerRepository = customerRepository;
+            
             _consultantRepository = consultantRepository;
-            _staffRepository = staffRepository;
-            _managerRepository = managerRepository;
+            
             _userManager = userManager;
             _roleManager = roleManager;
             _tokenRepository = tokenRepository;
@@ -156,25 +151,6 @@ namespace Service.Service
                             }
 
                             var userRoles = await _userManager.GetRolesAsync(accountApp);
-                            var customer = new Customer
-                            {
-                                CustomerID = accountApp.Id,       // tài khoản staff vừa tạo
-                                CustomerName = request.Username,
-                                Email = accountApp.Email,
-                                Password = null,
-                                Address = accountApp.Address,
-                                Phone = accountApp.Phone,
-                                Status = true,
-                                DateOfBirth = accountApp.DateOfBirth
-                            };
-
-                            var result = await _customerRepository.AddAsync(customer);
-                            if (result == null)
-                            {
-                                await _userManager.DeleteAsync(accountApp);
-                                return new BaseResponse<RegisterCustomerResponse>("Cannot create Customer record!", StatusCodeEnum.Conflict_409, null);
-                            }
-
                             var customerResponse = new RegisterCustomerResponse
                             {
                                 UserName = accountApp.UserName,
@@ -202,7 +178,20 @@ namespace Service.Service
             }
             catch (Exception e)
             {
-                return new BaseResponse<RegisterCustomerResponse>($"{e.Message}", StatusCodeEnum.InternalServerError_500, null);
+                var errorMessage = e.Message;
+
+                // Nếu có lỗi bên trong, gộp lại
+                if (e.InnerException != null)
+                {
+                    errorMessage += " | InnerException: " + e.InnerException.Message;
+
+                    // Nếu còn lồng nữa (2 cấp), bạn có thể lấy tiếp:
+                    if (e.InnerException.InnerException != null)
+                    {
+                        errorMessage += " | InnerInnerException: " + e.InnerException.InnerException.Message;
+                    }
+                }
+                return new BaseResponse<RegisterCustomerResponse>($"{errorMessage}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -320,80 +309,6 @@ namespace Service.Service
 
                         if (roleResult.Succeeded)
                         {
-                            object domainResult = null;
-
-                            switch (role)
-                            {
-                                case "CUSTOMER":
-                                    var customer = new Customer
-                                    {
-                                        CustomerID = accountApp.Id,
-                                        CustomerName = accountApp.UserName,
-                                        Email = accountApp.Email,
-                                        Password = null,
-                                        Address = accountApp.Address,
-                                        Phone = accountApp.Phone,
-                                        DateOfBirth = accountApp.DateOfBirth,
-                                        Status = true
-                                    };
-                                    domainResult = await _customerRepository.AddAsync(customer);
-                                    break;
-
-                                case "STAFF":
-                                    var staff = new Staff
-                                    {
-                                        StaffID = accountApp.Id,
-                                        StaffName = accountApp.UserName,
-                                        Email = accountApp.Email,
-                                        Password = null,
-                                        Address = accountApp.Address,
-                                        Phone = accountApp.Phone,
-                                        DateOfBirth = accountApp.DateOfBirth,
-                                        Status = true
-                                    };
-                                    domainResult = await _staffRepository.AddAsync(staff);
-                                    break;
-
-                                case "MANAGER":
-                                    var manager = new Manager
-                                    {
-                                        ManagerID = accountApp.Id,
-                                        Name = accountApp.UserName,
-                                        Email = accountApp.Email,
-                                        Password = null,
-                                        Address = accountApp.Address,
-                                        Phone = accountApp.Phone,
-                                        DateOfBirth = accountApp.DateOfBirth,
-                                        Status = true
-                                    };
-                                    domainResult = await _managerRepository.AddAsync(manager);
-                                    break;
-
-                                case "CONSULTANT":
-                                    var consultant = new Consultant
-                                    {
-                                        ConsultantID = accountApp.Id,
-                                        ConsultantName = accountApp.UserName,
-                                        Email = accountApp.Email,
-                                        Password = null,
-                                        Address = accountApp.Address,
-                                        Phone = accountApp.Phone,
-                                        DateOfBirth = accountApp.DateOfBirth,
-                                        Status = true,
-                                        Description = null,
-                                        Specialty = null,
-                                        Experience = null
-                                    };
-                                    domainResult = await _consultantRepository.AddAsync(consultant);
-                                    break;
-                            }
-
-                            if (domainResult == null)
-                            {
-                                await _userManager.DeleteAsync(accountApp);
-                                return new BaseResponse<AccountResponse>($"Cannot create {role} record!", StatusCodeEnum.Conflict_409, null);
-                            }
-
                             var userRoles = await _userManager.GetRolesAsync(accountApp);
                             var token = await _tokenRepository.createToken(accountApp);
                             var accountResponse = new AccountResponse
@@ -446,7 +361,7 @@ namespace Service.Service
             }
         }
 
-        /*public async Task<BaseResponse<AccountResponse>> UpdateAccount(string userId, UpdateAccountDto updateAccountDto)
+        public async Task<BaseResponse<AccountResponse>> UpdateAccount(string userId, UpdateAccountDto updateAccountDto)
         {
             try
             {
@@ -487,17 +402,15 @@ namespace Service.Service
                     }
                 }
 
-                // Update other account properties
                 user.Name = updateAccountDto.Name ?? user.Name;
                 user.Address = updateAccountDto.Address ?? user.Address;
                 user.Phone = updateAccountDto.Phone ?? user.Phone;
 
-                // Save changes
                 var updateResult = await _userManager.UpdateAsync(user);
 
                 if (updateResult.Succeeded)
                 {
-                    // Optionally, return updated user information
+                   
                     var updatedUserRoles = await _userManager.GetRolesAsync(user);
                     var accountResponse = new AccountResponse
                     {
@@ -519,8 +432,7 @@ namespace Service.Service
             {
                 return new BaseResponse<AccountResponse>($"{e.Message}", StatusCodeEnum.InternalServerError_500, null);
             }
-
-        }*/
+        }
 
         public async Task<BaseResponse<string>> UpdateAccountStatus(string userEmail, [FromBody] UpdateAccountStatusDto updateAccountStatusDto)
         {
@@ -550,7 +462,20 @@ namespace Service.Service
             }
             catch (Exception e)
             {
-                return new BaseResponse<string>($"{e.Message}", StatusCodeEnum.InternalServerError_500, null);
+                var errorMessage = e.Message;
+
+                // Nếu có lỗi bên trong, gộp lại
+                if (e.InnerException != null)
+                {
+                    errorMessage += " | InnerException: " + e.InnerException.Message;
+
+                    // Nếu còn lồng nữa (2 cấp), bạn có thể lấy tiếp:
+                    if (e.InnerException.InnerException != null)
+                    {
+                        errorMessage += " | InnerInnerException: " + e.InnerException.InnerException.Message;
+                    }
+                }
+                return new BaseResponse<string>($"{errorMessage}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
 

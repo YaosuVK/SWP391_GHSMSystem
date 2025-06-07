@@ -21,10 +21,6 @@ namespace BusinessObject.Model
         public int WorkingHourID { get; set; }
         public WorkingHour WorkingHour { get; set; }
 
-        [ForeignKey("ConsultantID")]
-        public string? ConsultantID { get; set; }
-        public Consultant Consultant { get; set; }
-
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }
@@ -37,5 +33,7 @@ namespace BusinessObject.Model
         public int MaxCure { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; }
+
+        public ICollection<ConsultantSlot> ConsultantSlots { get; set; }
     }
 }

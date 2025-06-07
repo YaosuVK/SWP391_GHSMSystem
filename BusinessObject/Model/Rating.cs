@@ -15,7 +15,7 @@ namespace BusinessObject.Model
 
         [ForeignKey("CustomerID")]
         public string CustomerID { get; set; }
-        public Customer Customer { get; set; }
+        public Account Customer { get; set; }
 
         public double SumRate { get; set; }
 

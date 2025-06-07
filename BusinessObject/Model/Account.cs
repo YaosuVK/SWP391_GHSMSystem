@@ -19,14 +19,23 @@ namespace BusinessObject.Model
 
         public DateOnly DateOfBirth { get; set; }
 
-        public Staff Staff { get; set; }
+        public ConsultantProfile? ConsultantProfile { get; set; }
 
-        public Customer Customer { get; set; }
+        public ICollection<LabTest> LabTests { get; set; }
 
-        public Consultant Consultant { get; set; }
+        public ICollection<Appointment> CustomerAppointments { get; set; }
+        public ICollection<Appointment> ConsultantAppointments { get; set; }
 
-        public Manager Manager { get; set; }
+        public ICollection<TreatmentOutcome> TreatmentOutcomes { get; set; }
 
-        public Clinic Clinic { get; set; }
+        public ICollection<ConsultantSlot> ConsultantSlots { get; set; }
+
+        public ICollection<Transaction> Transactions { get; set; }
+        
+        public ICollection<Rating> Ratings { get; set; }
+
+        public ICollection<Service> Services { get; set; }
+
+        public ICollection<MenstrualCycle> MenstrualCycles { get; set; }
     }
 }

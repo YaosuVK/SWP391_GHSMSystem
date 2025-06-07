@@ -21,8 +21,12 @@ namespace BusinessObject.Model
         public int CategoryID { get; set; }
         public Category Category { get; set; }
 
+        [ForeignKey("ManagerID")]
+        public string ManagerID { get; set; }
+        public Account Manager { get; set; }
+
         [Required]
-        public string servicesName { get; set; }
+        public string ServicesName { get; set; }
 
         [Required]
         public string Description { get; set; }
@@ -32,7 +36,7 @@ namespace BusinessObject.Model
         public DateTime UpdateAt { get; set; }
 
         [Required]
-        public double servicesPrice { get; set; }
+        public double ServicesPrice { get; set; }
 
         public bool Status { get; set; }
 

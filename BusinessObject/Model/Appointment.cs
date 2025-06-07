@@ -12,14 +12,12 @@ namespace BusinessObject.Model
     {
         [Key]
         public int AppointmentID { get; set; }
-
-        [ForeignKey("CustomerID")]
+        
         public string CustomerID { get; set; }
-        public Customer Customer { get; set; }
+        public Account Customer { get; set; }
 
-        [ForeignKey("ConsultantID")]
         public string ConsultantID { get; set; }
-        public Consultant Consultant { get; set; }
+        public Account Consultant { get; set; }
 
         [ForeignKey("ClinicID")]
         public int ClinicID { get; set; }
@@ -41,8 +39,8 @@ namespace BusinessObject.Model
         [EnumDataType(typeof(AppointmentStatus))]
         public AppointmentStatus Status { get; set; }
 
-        [EnumDataType(typeof(AppointmentType))]
-        public AppointmentType AppointmentType { get; set; }
+        /*[EnumDataType(typeof(AppointmentType))]
+        public AppointmentType AppointmentType { get; set; }*/
 
         public ICollection<Transaction> Transactions { get; set; }
 
@@ -56,9 +54,9 @@ namespace BusinessObject.Model
         InActive = 2
     }
 
-    public enum AppointmentType
+    /*public enum AppointmentType
     {
         Consulting = 0,
         Curing = 1
-    }
+    }*/
 }

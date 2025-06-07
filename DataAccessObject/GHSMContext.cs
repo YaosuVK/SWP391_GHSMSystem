@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Message = BusinessObject.Model.Message;
 namespace DataAccessObject
 {
     public class GHSMContext : IdentityDbContext<Account>
@@ -30,29 +30,9 @@ namespace DataAccessObject
                 .HasForeignKey<TreatmentOutcome>(e => e.AppointmentID);
 
             modelBuilder.Entity<Account>()
-                .HasOne(a => a.Staff)
+                .HasOne(a => a.ConsultantProfile)
                 .WithOne(s => s.Account)
-                .HasForeignKey<Staff>(s => s.StaffID);
-
-            modelBuilder.Entity<Account>()
-               .HasOne(a => a.Manager)
-               .WithOne(s => s.Account)
-               .HasForeignKey<Manager>(s => s.ManagerID);
-
-            modelBuilder.Entity<Account>()
-               .HasOne(a => a.Consultant)
-               .WithOne(s => s.Account)
-               .HasForeignKey<Consultant>(s => s.ConsultantID);
-
-            modelBuilder.Entity<Account>()
-               .HasOne(a => a.Customer)
-               .WithOne(s => s.Account)
-               .HasForeignKey<Customer>(s => s.CustomerID);
-
-            modelBuilder.Entity<Clinic>()
-                .HasOne(c => c.Account)
-                .WithOne(a => a.Clinic)
-                .HasForeignKey<Clinic>(c => c.AccountID);
+                .HasForeignKey<ConsultantProfile>(s => s.AccountID);
 
             modelBuilder.Entity<Service>()
                 .HasOne(s => s.Clinic)
@@ -68,13 +48,13 @@ namespace DataAccessObject
 
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Customer)
-                .WithMany(c => c.Appointments)
+                .WithMany(c => c.CustomerAppointments)
                 .HasForeignKey(a => a.CustomerID)
                 .OnDelete(DeleteBehavior.Restrict); // Hoặc NoAction
 
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Consultant)
-                .WithMany(c => c.Appointments)
+                .WithMany(c => c.ConsultantAppointments)
                 .HasForeignKey(a => a.ConsultantID)
                 .OnDelete(DeleteBehavior.Restrict); // Tránh Cascade nhiều nhánh
 
@@ -107,6 +87,20 @@ namespace DataAccessObject
                 .WithMany(s => s.LabTests)    // navigation property ở Staff
                 .HasForeignKey(l => l.StaffID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ConsultantSlot>()
+            .HasKey(x => new { x.ConsultantID, x.SlotID }); // 👈 KHÓA CHÍNH tổ hợp
+
+            modelBuilder.Entity<ConsultantSlot>()
+                .HasOne(cs => cs.Consultant)
+                .WithMany(a => a.ConsultantSlots)
+                .HasForeignKey(cs => cs.ConsultantID)
+                .OnDelete(DeleteBehavior.Restrict); // Tránh xóa dây chuyền nếu cần
+
+            modelBuilder.Entity<ConsultantSlot>()
+                .HasOne(cs => cs.Slot)
+                .WithMany(s => s.ConsultantSlots)
+                .HasForeignKey(cs => cs.SlotID);
 
             List<IdentityRole> roles = new List<IdentityRole>
                {
@@ -142,10 +136,7 @@ namespace DataAccessObject
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<ImageBlog> ImageBlogs { get; set; }
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Manager> Managers { get; set; }
-        public DbSet<Consultant> Consultants { get; set; }
-        public DbSet<Staff> Staffs { get; set; }
+        public DbSet<ConsultantProfile> ConsultantProfiles { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentDetail> AppointmentDetails { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -154,6 +145,8 @@ namespace DataAccessObject
         public DbSet<MenstrualCycle> MenstrualCycles { get; set; }
         public DbSet<CyclePrediction> CyclePredictions { get; set; }
         public DbSet<Slot> Slots { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<WorkingHour> WorkingHours { get; set; }
         public DbSet<Clinic> Clinics { get; set; }

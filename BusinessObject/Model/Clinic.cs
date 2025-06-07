@@ -13,11 +13,6 @@ namespace BusinessObject.Model
         [Key]
         public int ClinicID { get; set; }
 
-        
-        public string AccountID { get; set; }
-        [ForeignKey("AccountID")]
-        public Account Account { get; set; }
-
         public string Name { get; set; }
 
         public string Description { get; set; }

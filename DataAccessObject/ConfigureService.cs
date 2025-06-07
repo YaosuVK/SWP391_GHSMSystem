@@ -16,10 +16,7 @@ namespace DataAccessObject
         public static IServiceCollection ConfigureDataAccessObjectService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<Account>();
-            services.AddScoped<Staff>();
-            services.AddScoped<Manager>();
-            services.AddScoped<Consultant>();
-            services.AddScoped<Customer>();
+            services.AddScoped<ConsultantProfile>();
             services.AddScoped<Clinic>();
             services.AddScoped<Category>();
             services.AddScoped<Service>();

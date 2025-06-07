@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250602173023_FixDb")]
+    [Migration("20250607143309_FixDb")]
     partial class FixDb
     {
         /// <inheritdoc />
@@ -115,9 +115,6 @@ namespace DataAccessObject.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentID"));
-
-                    b.Property<int>("AppointmentType")
-                        .HasColumnType("int");
 
                     b.Property<int>("ClinicID")
                         .HasColumnType("int");
@@ -267,10 +264,6 @@ namespace DataAccessObject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClinicID"));
 
-                    b.Property<string>("AccountID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -302,89 +295,54 @@ namespace DataAccessObject.Migrations
 
                     b.HasKey("ClinicID");
 
-                    b.HasIndex("AccountID")
-                        .IsUnique();
-
                     b.ToTable("Clinics");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Consultant", b =>
+            modelBuilder.Entity("BusinessObject.Model.ConsultantProfile", b =>
                 {
-                    b.Property<string>("ConsultantID")
+                    b.Property<int>("ConsultantProfileID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConsultantProfileID"));
+
+                    b.Property<string>("AccountID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ConsultantName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Experience")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Specialty")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.HasKey("ConsultantProfileID");
 
-                    b.HasKey("ConsultantID");
+                    b.HasIndex("AccountID")
+                        .IsUnique();
 
-                    b.ToTable("Consultants");
+                    b.ToTable("ConsultantProfiles");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Customer", b =>
+            modelBuilder.Entity("BusinessObject.Model.ConsultantSlot", b =>
                 {
-                    b.Property<string>("CustomerID")
+                    b.Property<string>("ConsultantID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("SlotID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("CustomerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("AssignedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
+                    b.HasKey("ConsultantID", "SlotID");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("SlotID");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("CustomerID");
-
-                    b.ToTable("Customers");
+                    b.ToTable("ConsultantSlot");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.CyclePrediction", b =>
@@ -491,41 +449,6 @@ namespace DataAccessObject.Migrations
                     b.ToTable("Labtests");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Manager", b =>
-                {
-                    b.Property<string>("ManagerID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("ManagerID");
-
-                    b.ToTable("Managers");
-                });
-
             modelBuilder.Entity("BusinessObject.Model.MenstrualCycle", b =>
                 {
                     b.Property<int>("MenstrualCycleID")
@@ -552,6 +475,72 @@ namespace DataAccessObject.Migrations
                     b.HasIndex("CustomerID");
 
                     b.ToTable("MenstrualCycles");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.Message", b =>
+                {
+                    b.Property<int>("MessageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageID"));
+
+                    b.Property<string>("ConsultantID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ParentMessageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionID")
+                        .HasColumnType("int");
+
+                    b.HasKey("MessageID");
+
+                    b.HasIndex("ConsultantID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("ParentMessageId");
+
+                    b.HasIndex("QuestionID");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.Question", b =>
+                {
+                    b.Property<int>("QuestionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionID"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("QuestionID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Rating", b =>
@@ -649,24 +638,30 @@ namespace DataAccessObject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ManagerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ServicesName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ServicesPrice")
+                        .HasColumnType("float");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("servicesName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("servicesPrice")
-                        .HasColumnType("float");
-
                     b.HasKey("ServicesID");
 
                     b.HasIndex("CategoryID");
 
                     b.HasIndex("ClinicID");
+
+                    b.HasIndex("ManagerID");
 
                     b.ToTable("Services");
                 });
@@ -681,9 +676,6 @@ namespace DataAccessObject.Migrations
 
                     b.Property<int>("ClinicID")
                         .HasColumnType("int");
-
-                    b.Property<string>("ConsultantID")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -710,51 +702,17 @@ namespace DataAccessObject.Migrations
 
                     b.HasIndex("ClinicID");
 
-                    b.HasIndex("ConsultantID");
-
                     b.HasIndex("WorkingHourID");
 
                     b.ToTable("Slots");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Staff", b =>
-                {
-                    b.Property<string>("StaffID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StaffName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("StaffID");
-
-                    b.ToTable("Staffs");
-                });
-
             modelBuilder.Entity("BusinessObject.Model.Transaction", b =>
                 {
                     b.Property<string>("ResponseId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AccountId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<long>("Amount")
@@ -770,9 +728,6 @@ namespace DataAccessObject.Migrations
                     b.Property<string>("BankTranNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CustomerID")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -815,9 +770,9 @@ namespace DataAccessObject.Migrations
 
                     b.HasKey("ResponseId");
 
-                    b.HasIndex("AppointmentID");
+                    b.HasIndex("AccountId");
 
-                    b.HasIndex("CustomerID");
+                    b.HasIndex("AppointmentID");
 
                     b.ToTable("Transactions");
                 });
@@ -938,31 +893,31 @@ namespace DataAccessObject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "64604348-2ec7-4036-9e70-4609a4283f38",
+                            Id = "e79ca06f-bb99-479d-b30c-c618dcec9767",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "5e1cf87d-a50e-4469-8639-30251fe2abc3",
+                            Id = "280a170f-f7ee-4921-a6ea-6681c7405e06",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "9945f4e9-388e-4027-b408-95bf48d5b5bb",
+                            Id = "cbb87570-e14f-4783-9fd2-882a10aa0b25",
                             Name = "Consultant",
                             NormalizedName = "CONSULTANT"
                         },
                         new
                         {
-                            Id = "0874a4e7-5655-49a6-af25-5b86f94477b7",
+                            Id = "313a3482-ed6f-476c-bda3-996ee0da9f69",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "1f4d57cc-9420-4e0c-ad26-13d20b9e0a3f",
+                            Id = "3f5649c8-c1ed-47dc-bd3a-3d9a0d10da9c",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         });
@@ -1082,14 +1037,14 @@ namespace DataAccessObject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Model.Consultant", "Consultant")
-                        .WithMany("Appointments")
+                    b.HasOne("BusinessObject.Model.Account", "Consultant")
+                        .WithMany("ConsultantAppointments")
                         .HasForeignKey("ConsultantID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Model.Customer", "Customer")
-                        .WithMany("Appointments")
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
+                        .WithMany("CustomerAppointments")
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1146,37 +1101,34 @@ namespace DataAccessObject.Migrations
                     b.Navigation("Clinic");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Clinic", b =>
+            modelBuilder.Entity("BusinessObject.Model.ConsultantProfile", b =>
                 {
                     b.HasOne("BusinessObject.Model.Account", "Account")
-                        .WithOne("Clinic")
-                        .HasForeignKey("BusinessObject.Model.Clinic", "AccountID")
+                        .WithOne("ConsultantProfile")
+                        .HasForeignKey("BusinessObject.Model.ConsultantProfile", "AccountID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Consultant", b =>
+            modelBuilder.Entity("BusinessObject.Model.ConsultantSlot", b =>
                 {
-                    b.HasOne("BusinessObject.Model.Account", "Account")
-                        .WithOne("Consultant")
-                        .HasForeignKey("BusinessObject.Model.Consultant", "ConsultantID")
+                    b.HasOne("BusinessObject.Model.Account", "Consultant")
+                        .WithMany("ConsultantSlots")
+                        .HasForeignKey("ConsultantID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Model.Slot", "Slot")
+                        .WithMany("ConsultantSlots")
+                        .HasForeignKey("SlotID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
-                });
+                    b.Navigation("Consultant");
 
-            modelBuilder.Entity("BusinessObject.Model.Customer", b =>
-                {
-                    b.HasOne("BusinessObject.Model.Account", "Account")
-                        .WithOne("Customer")
-                        .HasForeignKey("BusinessObject.Model.Customer", "CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
+                    b.Navigation("Slot");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.CyclePrediction", b =>
@@ -1201,13 +1153,13 @@ namespace DataAccessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Model.LabTest", b =>
                 {
-                    b.HasOne("BusinessObject.Model.Customer", "Customer")
-                        .WithMany("LabTests")
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
+                        .WithMany()
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Model.Staff", "Staff")
+                    b.HasOne("BusinessObject.Model.Account", "Staff")
                         .WithMany("LabTests")
                         .HasForeignKey("StaffID")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1225,21 +1177,50 @@ namespace DataAccessObject.Migrations
                     b.Navigation("TreatmentOutcome");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Manager", b =>
+            modelBuilder.Entity("BusinessObject.Model.MenstrualCycle", b =>
                 {
-                    b.HasOne("BusinessObject.Model.Account", "Account")
-                        .WithOne("Manager")
-                        .HasForeignKey("BusinessObject.Model.Manager", "ManagerID")
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
+                        .WithMany("MenstrualCycles")
+                        .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.MenstrualCycle", b =>
+            modelBuilder.Entity("BusinessObject.Model.Message", b =>
                 {
-                    b.HasOne("BusinessObject.Model.Customer", "Customer")
-                        .WithMany("MenstrualCycles")
+                    b.HasOne("BusinessObject.Model.Account", "Consultant")
+                        .WithMany()
+                        .HasForeignKey("ConsultantID");
+
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID");
+
+                    b.HasOne("BusinessObject.Model.Message", "ParentMessage")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentMessageId");
+
+                    b.HasOne("BusinessObject.Model.Question", "Question")
+                        .WithMany("Messages")
+                        .HasForeignKey("QuestionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Consultant");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("ParentMessage");
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.Question", b =>
+                {
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
+                        .WithMany()
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1249,7 +1230,7 @@ namespace DataAccessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Model.Rating", b =>
                 {
-                    b.HasOne("BusinessObject.Model.Customer", "Customer")
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
                         .WithMany("Ratings")
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1283,9 +1264,17 @@ namespace DataAccessObject.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("BusinessObject.Model.Account", "Manager")
+                        .WithMany("Services")
+                        .HasForeignKey("ManagerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
 
                     b.Navigation("Clinic");
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Slot", b =>
@@ -1296,10 +1285,6 @@ namespace DataAccessObject.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Model.Consultant", "Consultant")
-                        .WithMany("Slots")
-                        .HasForeignKey("ConsultantID");
-
                     b.HasOne("BusinessObject.Model.WorkingHour", "WorkingHour")
                         .WithMany("Slots")
                         .HasForeignKey("WorkingHourID")
@@ -1308,31 +1293,22 @@ namespace DataAccessObject.Migrations
 
                     b.Navigation("Clinic");
 
-                    b.Navigation("Consultant");
-
                     b.Navigation("WorkingHour");
-                });
-
-            modelBuilder.Entity("BusinessObject.Model.Staff", b =>
-                {
-                    b.HasOne("BusinessObject.Model.Account", "Account")
-                        .WithOne("Staff")
-                        .HasForeignKey("BusinessObject.Model.Staff", "StaffID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Transaction", b =>
                 {
-                    b.HasOne("BusinessObject.Model.Appointment", null)
+                    b.HasOne("BusinessObject.Model.Account", "Account")
+                        .WithMany("Transactions")
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("BusinessObject.Model.Appointment", "Appointment")
                         .WithMany("Transactions")
                         .HasForeignKey("AppointmentID");
 
-                    b.HasOne("BusinessObject.Model.Customer", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("CustomerID");
+                    b.Navigation("Account");
+
+                    b.Navigation("Appointment");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.TreatmentOutcome", b =>
@@ -1341,13 +1317,13 @@ namespace DataAccessObject.Migrations
                         .WithOne("TreatmentOutcome")
                         .HasForeignKey("BusinessObject.Model.TreatmentOutcome", "AppointmentID");
 
-                    b.HasOne("BusinessObject.Model.Consultant", "Consultant")
-                        .WithMany("TreatmentOutcomes")
+                    b.HasOne("BusinessObject.Model.Account", "Consultant")
+                        .WithMany()
                         .HasForeignKey("ConsultantID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Model.Customer", "Customer")
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
                         .WithMany("TreatmentOutcomes")
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1424,20 +1400,25 @@ namespace DataAccessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Model.Account", b =>
                 {
-                    b.Navigation("Clinic")
-                        .IsRequired();
+                    b.Navigation("ConsultantAppointments");
 
-                    b.Navigation("Consultant")
-                        .IsRequired();
+                    b.Navigation("ConsultantProfile");
 
-                    b.Navigation("Customer")
-                        .IsRequired();
+                    b.Navigation("ConsultantSlots");
 
-                    b.Navigation("Manager")
-                        .IsRequired();
+                    b.Navigation("CustomerAppointments");
 
-                    b.Navigation("Staff")
-                        .IsRequired();
+                    b.Navigation("LabTests");
+
+                    b.Navigation("MenstrualCycles");
+
+                    b.Navigation("Ratings");
+
+                    b.Navigation("Services");
+
+                    b.Navigation("Transactions");
+
+                    b.Navigation("TreatmentOutcomes");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Appointment", b =>
@@ -1475,28 +1456,14 @@ namespace DataAccessObject.Migrations
                     b.Navigation("WorkingHours");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Consultant", b =>
+            modelBuilder.Entity("BusinessObject.Model.Message", b =>
                 {
-                    b.Navigation("Appointments");
-
-                    b.Navigation("Slots");
-
-                    b.Navigation("TreatmentOutcomes");
+                    b.Navigation("Replies");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Customer", b =>
+            modelBuilder.Entity("BusinessObject.Model.Question", b =>
                 {
-                    b.Navigation("Appointments");
-
-                    b.Navigation("LabTests");
-
-                    b.Navigation("MenstrualCycles");
-
-                    b.Navigation("Ratings");
-
-                    b.Navigation("Transactions");
-
-                    b.Navigation("TreatmentOutcomes");
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Service", b =>
@@ -1507,11 +1474,8 @@ namespace DataAccessObject.Migrations
             modelBuilder.Entity("BusinessObject.Model.Slot", b =>
                 {
                     b.Navigation("Appointments");
-                });
 
-            modelBuilder.Entity("BusinessObject.Model.Staff", b =>
-                {
-                    b.Navigation("LabTests");
+                    b.Navigation("ConsultantSlots");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.TreatmentOutcome", b =>

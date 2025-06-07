@@ -13,13 +13,11 @@ namespace BusinessObject.Model
         [Key]
         public int LabTestID { get; set; }
 
-        [ForeignKey("CustomerID")]
         public string CustomerID { get; set; }
-        public Customer Customer { get; set; }
+        public Account Customer { get; set; }
 
-        [ForeignKey("StaffID")]
         public string StaffID { get; set; }
-        public Staff Staff { get; set; }
+        public Account Staff { get; set; }
 
         [ForeignKey("TreatmentID")]
         public int? TreatmentID { get; set; }

@@ -10,21 +10,21 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class ConsultantRepository : BaseRepository<Consultant>, IConsultantRepository
+    public class ConsultantRepository : BaseRepository<ConsultantProfile>, IConsultantRepository
     {
-        private readonly ConsultantDAO _consultantDao;
+        private readonly ConsultantProfileDAO _consultantDao;
 
-        public ConsultantRepository(ConsultantDAO consultantDao) : base(consultantDao)
+        public ConsultantRepository(ConsultantProfileDAO consultantDao) : base(consultantDao)
         {
             _consultantDao = consultantDao;
         }
 
-        public async Task<Consultant> AddAsync(Consultant entity)
+        public async Task<ConsultantProfile> AddAsync(ConsultantProfile entity)
         {
             return await _consultantDao.AddAsync(entity);
         }
 
-        public async Task<Consultant> UpdateAsync(Consultant entity)
+        public async Task<ConsultantProfile> UpdateAsync(ConsultantProfile entity)
         {
             return await _consultantDao.UpdateAsync(entity);
         }

@@ -13,6 +13,10 @@ namespace BusinessObject.Model
         [Key]
         public string ResponseId { get; set; }
 
+        public Appointment? Appointment { get; set; } = null!;
+
+        public Account? Account { get; set; } = null!;
+
         public string TmnCode { get; set; }
 
         public string TxnRef { get; set; }

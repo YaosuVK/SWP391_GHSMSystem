@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace DataAccessObject
 {
-    public class ConsultantDAO : BaseDAO<Consultant>
+    public class ConsultantProfileDAO : BaseDAO<ConsultantProfile>
     {
         private readonly GHSMContext _context;
         private readonly UserManager<Account> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public ConsultantDAO(GHSMContext context, UserManager<Account> userManager,
+        public ConsultantProfileDAO(GHSMContext context, UserManager<Account> userManager,
             RoleManager<IdentityRole> roleManager) : base(context)
         {
             _context = context;
