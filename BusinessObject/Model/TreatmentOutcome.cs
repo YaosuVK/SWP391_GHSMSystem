@@ -12,12 +12,10 @@ namespace BusinessObject.Model
     {
         [Key]
         public int TreatmentID { get; set; }
-
-        
+  
         public string CustomerID { get; set; }
         public Account Customer { get; set; }
 
-        
         public string ConsultantID { get; set; }
         public Account Consultant { get; set; }
 

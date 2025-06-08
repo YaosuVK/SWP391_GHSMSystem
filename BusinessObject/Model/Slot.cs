@@ -21,6 +21,8 @@ namespace BusinessObject.Model
         public int WorkingHourID { get; set; }
         public WorkingHour WorkingHour { get; set; }
 
+        public int MaxConsultant { get; set; }
+
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }
@@ -28,9 +30,6 @@ namespace BusinessObject.Model
         public DateTime CreateAt { get; set; }
 
         public DateTime UpdateAt { get; set; }
-
-        public int MaxAppointment {  get; set; }
-        public int MaxCure { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; }
 

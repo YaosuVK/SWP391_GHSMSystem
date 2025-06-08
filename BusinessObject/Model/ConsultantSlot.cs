@@ -14,6 +14,8 @@ namespace BusinessObject.Model
         public int SlotID { get; set; }
         public Slot Slot { get; set; }
 
+        public int MaxAppointment { get; set; }
+
         // Bạn có thể thêm các trường phụ nếu cần, ví dụ:
         public DateTime AssignedDate { get; set; }
     }

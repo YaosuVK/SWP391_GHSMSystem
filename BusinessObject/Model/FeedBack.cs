@@ -8,14 +8,18 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.Model
 {
-    public class Rating
+    public class FeedBack
     {
         [Key]
-        public int RatingID { get; set; }
+        public int FeedBackID { get; set; }
 
         [ForeignKey("CustomerID")]
         public string CustomerID { get; set; }
         public Account Customer { get; set; }
+
+        public int ServicesID { get; set; }
+        [ForeignKey("ServicesID")]
+        public Service Service { get; set; }
 
         public double SumRate { get; set; }
 

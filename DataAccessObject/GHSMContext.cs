@@ -72,8 +72,14 @@ namespace DataAccessObject
 
             modelBuilder.Entity<TreatmentOutcome>()
                 .HasOne(to => to.Customer)
-                .WithMany(c => c.TreatmentOutcomes)
+                .WithMany(c => c.CustomerTreatmentOutcomes)
                 .HasForeignKey(to => to.CustomerID)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<TreatmentOutcome>()
+                .HasOne(to => to.Consultant)
+                .WithMany(c => c.ConsultantTreatmentOutcomes)
+                .HasForeignKey(to => to.ConsultantID)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<LabTest>()
@@ -87,6 +93,12 @@ namespace DataAccessObject
                 .WithMany(s => s.LabTests)    // navigation property ở Staff
                 .HasForeignKey(l => l.StaffID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FeedBack>()
+                .HasOne(f => f.Service)
+                .WithMany(s => s.FeedBacks)
+                .HasForeignKey(f => f.ServicesID)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<ConsultantSlot>()
             .HasKey(x => new { x.ConsultantID, x.SlotID }); // 👈 KHÓA CHÍNH tổ hợp
@@ -141,13 +153,14 @@ namespace DataAccessObject
         public DbSet<AppointmentDetail> AppointmentDetails { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<ImageService> ImageServices { get; set; }
         public DbSet<TreatmentOutcome> TreatmentOutcomes { get; set; }
         public DbSet<MenstrualCycle> MenstrualCycles { get; set; }
         public DbSet<CyclePrediction> CyclePredictions { get; set; }
         public DbSet<Slot> Slots { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<FeedBack> FeedBacks { get; set; }
         public DbSet<WorkingHour> WorkingHours { get; set; }
         public DbSet<Clinic> Clinics { get; set; }
         public DbSet<Transaction> Transactions { get; set; }

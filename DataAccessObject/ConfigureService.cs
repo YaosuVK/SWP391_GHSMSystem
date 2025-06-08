@@ -24,7 +24,7 @@ namespace DataAccessObject
             services.AddScoped<TreatmentOutcome>();
             services.AddScoped<Slot>();
             services.AddScoped<WorkingHour>();
-            services.AddScoped<Rating>();
+            services.AddScoped<FeedBack>();
             services.AddScoped<Transaction>();
             services.AddScoped<MenstrualCycle>();
             services.AddScoped<CyclePrediction>();

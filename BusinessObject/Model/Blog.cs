@@ -18,6 +18,9 @@ namespace BusinessObject.Model
         [Required]
         public string Content { get; set; }
 
+        [Required]
+        public string Author { get; set; }
+
         public DateTime CreateAt { get; set; }
 
         public DateTime UpdateAt { get; set; }

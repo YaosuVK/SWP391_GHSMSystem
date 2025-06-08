@@ -26,13 +26,15 @@ namespace BusinessObject.Model
         public ICollection<Appointment> CustomerAppointments { get; set; }
         public ICollection<Appointment> ConsultantAppointments { get; set; }
 
-        public ICollection<TreatmentOutcome> TreatmentOutcomes { get; set; }
+        public ICollection<TreatmentOutcome> CustomerTreatmentOutcomes { get; set; }
+
+        public ICollection<TreatmentOutcome> ConsultantTreatmentOutcomes { get; set; }
 
         public ICollection<ConsultantSlot> ConsultantSlots { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; }
         
-        public ICollection<Rating> Ratings { get; set; }
+        public ICollection<FeedBack> Ratings { get; set; }
 
         public ICollection<Service> Services { get; set; }
 

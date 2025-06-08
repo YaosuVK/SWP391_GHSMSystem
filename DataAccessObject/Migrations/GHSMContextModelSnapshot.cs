@@ -195,6 +195,10 @@ namespace DataAccessObject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogID"));
 
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("ClinicID")
                         .HasColumnType("int");
 
@@ -335,6 +339,9 @@ namespace DataAccessObject.Migrations
                     b.Property<DateTime>("AssignedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("MaxAppointment")
+                        .HasColumnType("int");
+
                     b.HasKey("ConsultantID", "SlotID");
 
                     b.HasIndex("SlotID");
@@ -372,6 +379,48 @@ namespace DataAccessObject.Migrations
                     b.ToTable("CyclePredictions");
                 });
 
+            modelBuilder.Entity("BusinessObject.Model.FeedBack", b =>
+                {
+                    b.Property<int>("FeedBackID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedBackID"));
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("FacilityRate")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ServiceRate")
+                        .HasColumnType("float");
+
+                    b.Property<int>("ServicesID")
+                        .HasColumnType("int");
+
+                    b.Property<double>("SumRate")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("FeedBackID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("ServicesID");
+
+                    b.ToTable("FeedBacks");
+                });
+
             modelBuilder.Entity("BusinessObject.Model.ImageBlog", b =>
                 {
                     b.Property<int>("ImageBlogID")
@@ -392,6 +441,28 @@ namespace DataAccessObject.Migrations
                     b.HasIndex("BlogID");
 
                     b.ToTable("ImageBlogs");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.ImageService", b =>
+                {
+                    b.Property<int>("ImageServiceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageServiceID"));
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ServicesID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ImageServiceID");
+
+                    b.HasIndex("ServicesID");
+
+                    b.ToTable("ImageServices");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.LabTest", b =>
@@ -540,43 +611,6 @@ namespace DataAccessObject.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Rating", b =>
-                {
-                    b.Property<int>("RatingID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RatingID"));
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CustomerID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("FacilityRate")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ServiceRate")
-                        .HasColumnType("float");
-
-                    b.Property<double>("SumRate")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("RatingID");
-
-                    b.HasIndex("CustomerID");
-
-                    b.ToTable("Ratings");
-                });
-
             modelBuilder.Entity("BusinessObject.Model.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -680,10 +714,7 @@ namespace DataAccessObject.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MaxAppointment")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaxCure")
+                    b.Property<int>("MaxConsultant")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartTime")
@@ -890,31 +921,31 @@ namespace DataAccessObject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e79ca06f-bb99-479d-b30c-c618dcec9767",
+                            Id = "64140929-ee2c-4e87-be28-2646d63265a1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "280a170f-f7ee-4921-a6ea-6681c7405e06",
+                            Id = "b8ac2870-a84a-4f8c-9693-21b91d570c4f",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "cbb87570-e14f-4783-9fd2-882a10aa0b25",
+                            Id = "0722a1fa-33a5-49e1-8d16-bd9d38a8f2a5",
                             Name = "Consultant",
                             NormalizedName = "CONSULTANT"
                         },
                         new
                         {
-                            Id = "313a3482-ed6f-476c-bda3-996ee0da9f69",
+                            Id = "56e527f8-5967-4df6-adbe-f79b96e9aeeb",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "3f5649c8-c1ed-47dc-bd3a-3d9a0d10da9c",
+                            Id = "701a365f-fb0a-4bf7-8b2e-da7404cbb1c0",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         });
@@ -1139,6 +1170,25 @@ namespace DataAccessObject.Migrations
                     b.Navigation("MenstrualCycle");
                 });
 
+            modelBuilder.Entity("BusinessObject.Model.FeedBack", b =>
+                {
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
+                        .WithMany("Ratings")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Model.Service", "Service")
+                        .WithMany("FeedBacks")
+                        .HasForeignKey("ServicesID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Service");
+                });
+
             modelBuilder.Entity("BusinessObject.Model.ImageBlog", b =>
                 {
                     b.HasOne("BusinessObject.Model.Blog", "Blog")
@@ -1146,6 +1196,15 @@ namespace DataAccessObject.Migrations
                         .HasForeignKey("BlogID");
 
                     b.Navigation("Blog");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.ImageService", b =>
+                {
+                    b.HasOne("BusinessObject.Model.Service", "Service")
+                        .WithMany("ImageServices")
+                        .HasForeignKey("ServicesID");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.LabTest", b =>
@@ -1218,17 +1277,6 @@ namespace DataAccessObject.Migrations
                 {
                     b.HasOne("BusinessObject.Model.Account", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("BusinessObject.Model.Rating", b =>
-                {
-                    b.HasOne("BusinessObject.Model.Account", "Customer")
-                        .WithMany("Ratings")
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1315,13 +1363,13 @@ namespace DataAccessObject.Migrations
                         .HasForeignKey("BusinessObject.Model.TreatmentOutcome", "AppointmentID");
 
                     b.HasOne("BusinessObject.Model.Account", "Consultant")
-                        .WithMany()
+                        .WithMany("ConsultantTreatmentOutcomes")
                         .HasForeignKey("ConsultantID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BusinessObject.Model.Account", "Customer")
-                        .WithMany("TreatmentOutcomes")
+                        .WithMany("CustomerTreatmentOutcomes")
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -1403,7 +1451,11 @@ namespace DataAccessObject.Migrations
 
                     b.Navigation("ConsultantSlots");
 
+                    b.Navigation("ConsultantTreatmentOutcomes");
+
                     b.Navigation("CustomerAppointments");
+
+                    b.Navigation("CustomerTreatmentOutcomes");
 
                     b.Navigation("LabTests");
 
@@ -1414,8 +1466,6 @@ namespace DataAccessObject.Migrations
                     b.Navigation("Services");
 
                     b.Navigation("Transactions");
-
-                    b.Navigation("TreatmentOutcomes");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Appointment", b =>
@@ -1466,6 +1516,10 @@ namespace DataAccessObject.Migrations
             modelBuilder.Entity("BusinessObject.Model.Service", b =>
                 {
                     b.Navigation("AppointmentDetails");
+
+                    b.Navigation("FeedBacks");
+
+                    b.Navigation("ImageServices");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Slot", b =>
