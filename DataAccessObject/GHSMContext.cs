@@ -94,11 +94,11 @@ namespace DataAccessObject
                 .HasForeignKey(l => l.StaffID)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<FeedBack>()
+            /*modelBuilder.Entity<FeedBack>()
                 .HasOne(f => f.Service)
                 .WithMany(s => s.FeedBacks)
                 .HasForeignKey(f => f.ServicesID)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.NoAction);*/
 
             modelBuilder.Entity<ConsultantSlot>()
             .HasKey(x => new { x.ConsultantID, x.SlotID }); // 👈 KHÓA CHÍNH tổ hợp

@@ -17,9 +17,9 @@ namespace BusinessObject.Model
         public string CustomerID { get; set; }
         public Account Customer { get; set; }
 
-        public int ServicesID { get; set; }
-        [ForeignKey("ServicesID")]
-        public Service Service { get; set; }
+        public int AppointmentID { get; set; }
+        [ForeignKey("AppointmentID")]
+        public Appointment Appointment { get; set; }
 
         public double SumRate { get; set; }
 

@@ -42,6 +42,5 @@ namespace BusinessObject.Model
 
         public ICollection<AppointmentDetail> AppointmentDetails { get; set; }
         public ICollection<ImageService> ImageServices { get; set; }
-        public ICollection<FeedBack> FeedBacks { get; set; }
     }
 }

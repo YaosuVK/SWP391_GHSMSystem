@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250608175919_FixDb")]
+    [Migration("20250610060639_FixDb")]
     partial class FixDb
     {
         /// <inheritdoc />
@@ -116,11 +116,16 @@ namespace DataAccessObject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentID"));
 
+                    b.Property<DateTime?>("AppointmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("AppointmentType")
+                        .HasColumnType("int");
+
                     b.Property<int>("ClinicID")
                         .HasColumnType("int");
 
                     b.Property<string>("ConsultantID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreateAt")
@@ -130,7 +135,7 @@ namespace DataAccessObject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("SlotID")
+                    b.Property<int?>("SlotID")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -390,6 +395,9 @@ namespace DataAccessObject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeedBackID"));
 
+                    b.Property<int>("AppointmentID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
@@ -406,9 +414,6 @@ namespace DataAccessObject.Migrations
                     b.Property<double>("ServiceRate")
                         .HasColumnType("float");
 
-                    b.Property<int>("ServicesID")
-                        .HasColumnType("int");
-
                     b.Property<double>("SumRate")
                         .HasColumnType("float");
 
@@ -417,9 +422,9 @@ namespace DataAccessObject.Migrations
 
                     b.HasKey("FeedBackID");
 
-                    b.HasIndex("CustomerID");
+                    b.HasIndex("AppointmentID");
 
-                    b.HasIndex("ServicesID");
+                    b.HasIndex("CustomerID");
 
                     b.ToTable("FeedBacks");
                 });
@@ -924,31 +929,31 @@ namespace DataAccessObject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "64140929-ee2c-4e87-be28-2646d63265a1",
+                            Id = "2dfde97b-3f87-4a17-bf93-df03a557f71c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b8ac2870-a84a-4f8c-9693-21b91d570c4f",
+                            Id = "d31371c0-7dea-43a2-9f09-c5829aa1b9f5",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "0722a1fa-33a5-49e1-8d16-bd9d38a8f2a5",
+                            Id = "e133e37f-4ceb-4bf4-b44a-f2ac8a73ceeb",
                             Name = "Consultant",
                             NormalizedName = "CONSULTANT"
                         },
                         new
                         {
-                            Id = "56e527f8-5967-4df6-adbe-f79b96e9aeeb",
+                            Id = "513d099a-b7ea-4f02-9909-4bbbeca1270d",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "701a365f-fb0a-4bf7-8b2e-da7404cbb1c0",
+                            Id = "847bed07-4733-4da1-84dc-4c1fe0af5e50",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         });
@@ -1071,8 +1076,7 @@ namespace DataAccessObject.Migrations
                     b.HasOne("BusinessObject.Model.Account", "Consultant")
                         .WithMany("ConsultantAppointments")
                         .HasForeignKey("ConsultantID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BusinessObject.Model.Account", "Customer")
                         .WithMany("CustomerAppointments")
@@ -1083,8 +1087,7 @@ namespace DataAccessObject.Migrations
                     b.HasOne("BusinessObject.Model.Slot", "Slot")
                         .WithMany("Appointments")
                         .HasForeignKey("SlotID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Clinic");
 
@@ -1175,21 +1178,21 @@ namespace DataAccessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Model.FeedBack", b =>
                 {
+                    b.HasOne("BusinessObject.Model.Appointment", "Appointment")
+                        .WithMany("FeedBacks")
+                        .HasForeignKey("AppointmentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("BusinessObject.Model.Account", "Customer")
                         .WithMany("Ratings")
                         .HasForeignKey("CustomerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BusinessObject.Model.Service", "Service")
-                        .WithMany("FeedBacks")
-                        .HasForeignKey("ServicesID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                    b.Navigation("Appointment");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.ImageBlog", b =>
@@ -1475,6 +1478,8 @@ namespace DataAccessObject.Migrations
                 {
                     b.Navigation("AppointmentDetails");
 
+                    b.Navigation("FeedBacks");
+
                     b.Navigation("Transactions");
 
                     b.Navigation("TreatmentOutcome")
@@ -1519,8 +1524,6 @@ namespace DataAccessObject.Migrations
             modelBuilder.Entity("BusinessObject.Model.Service", b =>
                 {
                     b.Navigation("AppointmentDetails");
-
-                    b.Navigation("FeedBacks");
 
                     b.Navigation("ImageServices");
                 });
