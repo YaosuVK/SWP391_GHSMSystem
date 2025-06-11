@@ -28,7 +28,7 @@ namespace Service.Service
     {
         private readonly IMapper _mapper;
         private readonly IAccountRepository _accountRepository;
-        private readonly IConsultantRepository _consultantRepository;
+        private readonly IConsultantProfileRepository _consultantRepository;
         private readonly UserManager<Account> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenRepository _tokenRepository;
@@ -37,7 +37,7 @@ namespace Service.Service
         public AccountService(IMapper mapper,
             IAccountRepository accountRepository,
             
-            IConsultantRepository consultantRepository,
+            IConsultantProfileRepository consultantRepository,
            
             UserManager<Account> userManager,
             RoleManager<IdentityRole> roleManager,

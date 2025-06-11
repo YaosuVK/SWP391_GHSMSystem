@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class ConsultantRepository : BaseRepository<ConsultantProfile>, IConsultantRepository
+    public class ConsultantProfileRepository : BaseRepository<ConsultantProfile>, IConsultantProfileRepository
     {
         private readonly ConsultantProfileDAO _consultantDao;
 
-        public ConsultantRepository(ConsultantProfileDAO consultantDao) : base(consultantDao)
+        public ConsultantProfileRepository(ConsultantProfileDAO consultantDao) : base(consultantDao)
         {
             _consultantDao = consultantDao;
         }

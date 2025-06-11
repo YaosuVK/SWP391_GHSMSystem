@@ -1,21 +1,21 @@
-﻿using System;
+﻿using BusinessObject.Model;
+using Service.RequestAndResponse.Response.Accounts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessObject.Model
+namespace Service.RequestAndResponse.Response.Transactions
 {
-    public class Transaction
+    public class TransactionResponse
     {
-
-        [Key]
         public string ResponseId { get; set; }
 
         public Appointment? Appointment { get; set; } = null!;
 
-        public Account? Account { get; set; } = null!;
+        public GetAccount? Account { get; set; } = null!;
 
         public string TmnCode { get; set; }
 
@@ -44,28 +44,10 @@ namespace BusinessObject.Model
         public string TransactionStatus { get; set; }
 
         public string SecureHash { get; set; }
-
-        [EnumDataType(typeof(TransactionKind))]
+ 
         public TransactionKind TransactionKind { get; set; }
-
-        [EnumDataType(typeof(StatusOfTransaction))]
+       
         public StatusOfTransaction StatusTransaction { get; set; }
     }
-
-    public enum TransactionKind
-    {
-        Deposited = 0,
-        FullPayment = 1,
-        Refund = 2
-    }
-
-    public enum StatusOfTransaction
-    {
-        Pending = 0,
-        Completed = 1,
-        Cancelled = 2,
-        RequestRefund = 3,
-        Refunded = 4,
-        RequestCancel = 5
-    }
 }
+

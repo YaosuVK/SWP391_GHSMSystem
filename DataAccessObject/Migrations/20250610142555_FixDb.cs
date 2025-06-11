@@ -527,7 +527,8 @@ namespace DataAccessObject.Migrations
                     UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<double>(type: "float", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    AppointmentType = table.Column<int>(type: "int", nullable: false)
+                    AppointmentType = table.Column<int>(type: "int", nullable: false),
+                    paymentStatus = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -659,11 +660,14 @@ namespace DataAccessObject.Migrations
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BankTranNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PayDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FinishDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BankCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TransactionNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TransactionStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SecureHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    SecureHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TransactionKind = table.Column<int>(type: "int", nullable: false),
+                    StatusTransaction = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -760,11 +764,11 @@ namespace DataAccessObject.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2dfde97b-3f87-4a17-bf93-df03a557f71c", null, "Admin", "ADMIN" },
-                    { "513d099a-b7ea-4f02-9909-4bbbeca1270d", null, "Manager", "MANAGER" },
-                    { "847bed07-4733-4da1-84dc-4c1fe0af5e50", null, "Staff", "STAFF" },
-                    { "d31371c0-7dea-43a2-9f09-c5829aa1b9f5", null, "Customer", "CUSTOMER" },
-                    { "e133e37f-4ceb-4bf4-b44a-f2ac8a73ceeb", null, "Consultant", "CONSULTANT" }
+                    { "2fb52cad-1684-4113-a512-6a923539157a", null, "Customer", "CUSTOMER" },
+                    { "41346bb0-cc27-4ff2-807c-ebea941ba8e2", null, "Manager", "MANAGER" },
+                    { "4dd4dc8a-f0c6-4aba-9f14-bb0ebe70007f", null, "Consultant", "CONSULTANT" },
+                    { "c4b6e48a-516c-4844-bcc1-f79e87e23216", null, "Admin", "ADMIN" },
+                    { "f0f61d98-2b62-4dee-b95e-f69e0bd4fda7", null, "Staff", "STAFF" }
                 });
 
             migrationBuilder.CreateIndex(

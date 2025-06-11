@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250610060639_FixDb")]
+    [Migration("20250610142555_FixDb")]
     partial class FixDb
     {
         /// <inheritdoc />
@@ -149,6 +149,9 @@ namespace DataAccessObject.Migrations
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("paymentStatus")
+                        .HasColumnType("int");
 
                     b.HasKey("AppointmentID");
 
@@ -765,6 +768,9 @@ namespace DataAccessObject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("FinishDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -784,9 +790,15 @@ namespace DataAccessObject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StatusTransaction")
+                        .HasColumnType("int");
+
                     b.Property<string>("TmnCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TransactionKind")
+                        .HasColumnType("int");
 
                     b.Property<string>("TransactionNo")
                         .IsRequired()
@@ -929,31 +941,31 @@ namespace DataAccessObject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2dfde97b-3f87-4a17-bf93-df03a557f71c",
+                            Id = "c4b6e48a-516c-4844-bcc1-f79e87e23216",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d31371c0-7dea-43a2-9f09-c5829aa1b9f5",
+                            Id = "2fb52cad-1684-4113-a512-6a923539157a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "e133e37f-4ceb-4bf4-b44a-f2ac8a73ceeb",
+                            Id = "4dd4dc8a-f0c6-4aba-9f14-bb0ebe70007f",
                             Name = "Consultant",
                             NormalizedName = "CONSULTANT"
                         },
                         new
                         {
-                            Id = "513d099a-b7ea-4f02-9909-4bbbeca1270d",
+                            Id = "41346bb0-cc27-4ff2-807c-ebea941ba8e2",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "847bed07-4733-4da1-84dc-4c1fe0af5e50",
+                            Id = "f0f61d98-2b62-4dee-b95e-f69e0bd4fda7",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         });

@@ -18,11 +18,17 @@ namespace Repository
         public static IServiceCollection ConfigureRepositoryService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAccountRepository, AccountRepository>();
-            
-            services.AddScoped<IConsultantRepository, ConsultantRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IAppointmentDetailRepository, AppointmentDetailRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IConsultantProfileRepository, ConsultantProfileRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
 
             services.AddScoped<AccountDAO>();
+            services.AddScoped<AppointmentDAO>();
+            services.AddScoped<AppointmentDetailDAO>();
+            services.AddScoped<TransactionDAO>();
+
             services.AddScoped<ConsultantProfileDAO>();
             return services;
         }
