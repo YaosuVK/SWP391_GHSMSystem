@@ -19,6 +19,11 @@ namespace Repository.Repositories
             _consultantDao = consultantDao;
         }
 
+        public async Task<ConsultantProfile?> GetConsultantProfileById(int consultantId)
+        {
+            return await _consultantDao.GetByIdAsync(consultantId);
+        }
+
         public async Task<ConsultantProfile> AddAsync(ConsultantProfile entity)
         {
             return await _consultantDao.AddAsync(entity);

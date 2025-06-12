@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Model;
 using DataAccessObject.BaseDAO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,18 @@ using System.Threading.Tasks;
 
 namespace DataAccessObject
 {
-    public class ServiceDAO : BaseDAO<Service>
+    public class ServiceDAO : BaseDAO<Services>
     {
         private readonly GHSMContext _context;
 
         public ServiceDAO(GHSMContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<Services>> GetServicesByIdsAsync(List<int> servicesIds)
+        {
+            return await _context.Services.Where(h => servicesIds.Contains(h.ServicesID)).ToListAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Model;
 using DataAccessObject.BaseDAO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,12 @@ namespace DataAccessObject
         public ClinicDAO(GHSMContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<Clinic?> GetClinicByIdAsync(int appointmentId)
+        {
+            return await _context.Clinics
+                .FirstOrDefaultAsync(o => o.ClinicID == appointmentId);
         }
     }
 }

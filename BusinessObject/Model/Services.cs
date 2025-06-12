@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BusinessObject.Model
 {
-    public class Service
+    public class Services
     {
         [Key]
         public int ServicesID { get; set; }

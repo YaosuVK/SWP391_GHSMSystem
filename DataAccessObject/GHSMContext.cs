@@ -34,7 +34,7 @@ namespace DataAccessObject
                 .WithOne(s => s.Account)
                 .HasForeignKey<ConsultantProfile>(s => s.AccountID);
 
-            modelBuilder.Entity<Service>()
+            modelBuilder.Entity<Services>()
                 .HasOne(s => s.Clinic)
                 .WithMany(c => c.Services)
                 .HasForeignKey(s => s.ClinicID)
@@ -152,7 +152,7 @@ namespace DataAccessObject
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<AppointmentDetail> AppointmentDetails { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Service> Services { get; set; }
+        public DbSet<Services> Services { get; set; }
         public DbSet<ImageService> ImageServices { get; set; }
         public DbSet<TreatmentOutcome> TreatmentOutcomes { get; set; }
         public DbSet<MenstrualCycle> MenstrualCycles { get; set; }

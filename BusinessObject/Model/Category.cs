@@ -25,6 +25,6 @@ namespace BusinessObject.Model
 
         public bool Status { get; set; }
 
-        public ICollection<Service> Services { get; set; }
+        public ICollection<Services> Services { get; set; }
     }
 }

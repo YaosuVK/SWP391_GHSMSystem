@@ -33,7 +33,7 @@ namespace BusinessObject.Model
         public ICollection<Category> Categories { get; set; }
         public ICollection<WorkingHour> WorkingHours { get; set; }
         public ICollection<Slot> Slots { get; set; }
-        public ICollection<Service> Services { get; set; }
+        public ICollection<Services> Services { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
         public ICollection<Blog> Blogs { get; set; }
     }

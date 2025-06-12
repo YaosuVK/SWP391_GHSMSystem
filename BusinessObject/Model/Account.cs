@@ -36,7 +36,7 @@ namespace BusinessObject.Model
         
         public ICollection<FeedBack> Ratings { get; set; }
 
-        public ICollection<Service> Services { get; set; }
+        public ICollection<Services> Services { get; set; }
 
         public ICollection<MenstrualCycle> MenstrualCycles { get; set; }
     }

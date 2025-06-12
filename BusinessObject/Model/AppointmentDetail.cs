@@ -20,7 +20,7 @@ namespace BusinessObject.Model
         
         public int ServicesID { get; set; }
         [ForeignKey("ServicesID")]
-        public Service Service { get; set; }
+        public Services Service { get; set; }
 
         public int Quantity { get; set; }
 

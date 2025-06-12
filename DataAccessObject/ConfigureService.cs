@@ -19,7 +19,7 @@ namespace DataAccessObject
             services.AddScoped<ConsultantProfile>();
             services.AddScoped<Clinic>();
             services.AddScoped<Category>();
-            services.AddScoped<Service>();
+            services.AddScoped<Services>();
             services.AddScoped<Blog>();
             services.AddScoped<TreatmentOutcome>();
             services.AddScoped<Slot>();
