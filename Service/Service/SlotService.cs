@@ -1,0 +1,118 @@
+﻿using AutoMapper;
+using BusinessObject.Model;
+using Repository.IRepositories;
+using Repository.Repositories;
+using Service.IService;
+using Service.RequestAndResponse.BaseResponse;
+using Service.RequestAndResponse.Enums;
+using Service.RequestAndResponse.Request.Slot;
+using Service.RequestAndResponse.Request.WorkingHours;
+using Service.RequestAndResponse.Response.Slots;
+using Service.RequestAndResponse.Response.WorkingHours;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Service.Service
+{
+    public class SlotService :  ISlotService
+    {
+        private readonly IMapper _mapper;
+        private readonly ISlotRepository _slotRepository;
+        private readonly IWorkingHourRepository _workingHourRepository;
+        private readonly IClinicRepository _clinicalRepository;
+
+        public SlotService(IMapper mapper, ISlotRepository slotRepository, IWorkingHourRepository workingHourRepository, IClinicRepository clinicalRepository)
+        {
+            _mapper = mapper;
+            _slotRepository = slotRepository;
+            _workingHourRepository = workingHourRepository;
+            _clinicalRepository = clinicalRepository;
+        }
+
+        public async Task<BaseResponse<List<Slot>>> AddAsync(CreateSlotRequest entity)
+        {
+            var workingHour = await _workingHourRepository.GetWorkingHourById(entity.WorkingHourID);
+            if(workingHour == null)
+            {
+                return new BaseResponse<List<Slot>>("Cannot find the working hour", StatusCodeEnum.NotFound_404, null);
+            }
+
+            var clinic = await _clinicalRepository.GetClinicById(entity.ClinicID);
+            if (clinic == null)
+            {
+                return new BaseResponse<List<Slot>>("Cannot find the clinic", StatusCodeEnum.NotFound_404, null);
+            }
+
+            if (entity.StartTime >= entity.EndTime)
+            {
+                return new BaseResponse<List<Slot>>("Start time must < End Time", StatusCodeEnum.BadRequest_400, null);
+            }
+            var slotList = new List<Slot>
+            {
+                new Slot
+                {
+                    ClinicID = entity.ClinicID,
+                    WorkingHourID = entity.WorkingHourID,
+                    MaxConsultant = entity.MaxConsultant,
+                    StartTime = entity.StartTime,
+                    EndTime = entity.EndTime,
+                    CreateAt = DateTime.Now,
+                    UpdateAt = DateTime.Now
+                }
+            };
+
+            await _slotRepository.AddRange(slotList);
+            
+
+            return new BaseResponse<List<Slot>>("Create Slot as base success", StatusCodeEnum.Created_201, slotList);
+        }
+
+        public async Task<BaseResponse<IEnumerable<SlotForCustomer>>> GetAllAsync()
+        {
+            IEnumerable<Slot> slot = await _slotRepository.GetAllAsync();
+            if (slot == null || !slot.Any())
+            {
+                return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong!",
+                StatusCodeEnum.BadGateway_502, null);
+            }
+            var slots = _mapper.Map<IEnumerable<SlotForCustomer>>(slot);
+            if (slots == null || !slots.Any())
+            {
+                return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong!",
+                StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<IEnumerable<SlotForCustomer>>("Get all transactions as base success",
+                StatusCodeEnum.OK_200, slots);
+        }
+
+        public async Task<BaseResponse<Slot>> UpdateAsync(int slotID, UpdateSlotRequest entity)
+        {
+            var existSlot = await _slotRepository.GetByIdAsync(slotID);
+            if (existSlot == null)
+            {
+                return new BaseResponse<Slot>("Cannot find the slot", StatusCodeEnum.NotFound_404, null);
+            }
+
+            var workingHour = await _workingHourRepository.GetWorkingHourById(entity.WorkingHourID);
+            if (workingHour == null)
+            {
+                return new BaseResponse<Slot>("Cannot find the working hour", StatusCodeEnum.NotFound_404, null);
+            }
+
+            if (entity.StartTime >= entity.EndTime)
+            {
+                return new BaseResponse<Slot>("Start time must < End Time", StatusCodeEnum.BadRequest_400, null);
+            }
+
+            _mapper.Map(entity, existSlot);
+            existSlot.UpdateAt = DateTime.UtcNow;
+
+            // 3. Cập nhật
+            await _slotRepository.UpdateAsync(existSlot);
+            return new BaseResponse<Slot>("Cập nhật phòng khám thành công.", StatusCodeEnum.OK_200, existSlot);
+        }
+    }
+}

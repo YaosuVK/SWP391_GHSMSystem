@@ -23,9 +23,9 @@ namespace Repository.Repositories
             return await _workingHourDao.GetAllAsync();
         }
 
-        public async Task<WorkingHour?> GetWorkingHourById(int clinicId)
+        public async Task<WorkingHour?> GetWorkingHourById(int workingHourID)
         {
-            return await _workingHourDao.GetByIdAsync(clinicId);
+            return await _workingHourDao.GetByIdAsync(workingHourID);
         }
 
         public async Task<WorkingHour> AddAsync(WorkingHour entity)
@@ -36,6 +36,11 @@ namespace Repository.Repositories
         public async Task<WorkingHour> UpdateAsync(WorkingHour entity)
         {
             return await _workingHourDao.UpdateAsync(entity);
+        }
+
+        public async Task<WorkingHour> GetByClinicDayAndShiftAsync(int clinicId, DayInWeek dayInWeek)
+        {
+            return await _workingHourDao.GetByClinicDayAndShiftAsync(clinicId, dayInWeek);
         }
     }
 }

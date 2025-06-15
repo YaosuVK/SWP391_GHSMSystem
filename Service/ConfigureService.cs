@@ -19,6 +19,13 @@ namespace Service
         {
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ISlotService, SlotService>();
+            services.AddScoped<IWorkingHourService, WorkingHourService>();
+            services.AddScoped<IClinicService, ClinicService>();
+            services.AddScoped<IServiceService, ServicesService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+
             return services;
         }
     }

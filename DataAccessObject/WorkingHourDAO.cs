@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Model;
 using DataAccessObject.BaseDAO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,16 @@ namespace DataAccessObject
         public WorkingHourDAO(GHSMContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<WorkingHour> GetByClinicDayAndShiftAsync(int clinicId, DayInWeek dayInWeek)
+        {
+            var workingHour = await _context.WorkingHours
+                .FirstOrDefaultAsync(w =>
+                    w.ClinicID == clinicId &&
+                    w.DayInWeek == dayInWeek);
+
+            return workingHour;
         }
     }
 }

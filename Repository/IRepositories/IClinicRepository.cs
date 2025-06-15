@@ -10,6 +10,6 @@ namespace Repository.IRepositories
 {
     public interface IClinicRepository : IBaseRepository<Clinic>
     {
-
+        Task<Clinic?> GetClinicById(int clinicId);
     }
 }

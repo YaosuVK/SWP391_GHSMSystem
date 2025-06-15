@@ -19,14 +19,27 @@ namespace Repository
         {
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IWorkingHourRepository, WorkingHourRepository>();
+            services.AddScoped<ISlotRepository, SlotRepository>();
+            services.AddScoped<IClinicRepository, ClinicRepository>();
+            services.AddScoped<IServiceRepository, ServiceRepository>();
+
             services.AddScoped<IAppointmentDetailRepository, AppointmentDetailRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IConsultantProfileRepository, ConsultantProfileRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IImageServiceRepository, ImageServiceRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
 
             services.AddScoped<AccountDAO>();
             services.AddScoped<AppointmentDAO>();
             services.AddScoped<AppointmentDetailDAO>();
+            services.AddScoped<ClinicDAO>();
+            services.AddScoped<CategoryDAO>();
+            services.AddScoped<ServiceDAO>();
+            services.AddScoped<SlotDAO>();
+            services.AddScoped<WorkingHourDAO>();
+            services.AddScoped<ImageServicesDAO>();
             services.AddScoped<TransactionDAO>();
 
             services.AddScoped<ConsultantProfileDAO>();

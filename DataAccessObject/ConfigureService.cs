@@ -29,8 +29,11 @@ namespace DataAccessObject
             services.AddScoped<MenstrualCycle>();
             services.AddScoped<CyclePrediction>();
             services.AddScoped<ImageBlog>();
+            services.AddScoped<ImageService>();
             services.AddScoped<AppointmentDetail>();
             services.AddScoped<Appointment>();
+            services.AddScoped<Question>();
+            services.AddScoped<Message>();
             services.AddScoped<LabTest>();
             services.AddScoped(typeof(IBaseDAO<>), typeof(BaseDAO<>));
             return services;

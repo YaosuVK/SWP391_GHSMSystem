@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service.RequestAndResponse.Response.Clinic;
 
 namespace Service.RequestAndResponse.Response.Appointments
 {
@@ -20,7 +21,7 @@ namespace Service.RequestAndResponse.Response.Appointments
         public Account Consultant { get; set; }
 
         public int ClinicID { get; set; }
-        public Clinic Clinic { get; set; }
+        public ClinicResponse Clinic { get; set; }
 
         public int? TreatmentID { get; set; }
         public TreatmentOutcome TreatmentOutcome { get; set; }

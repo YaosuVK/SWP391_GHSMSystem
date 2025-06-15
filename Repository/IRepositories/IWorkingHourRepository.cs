@@ -10,6 +10,7 @@ namespace Repository.IRepositories
 {
     public interface IWorkingHourRepository : IBaseRepository<WorkingHour>
     {
-
+        Task<WorkingHour> GetByClinicDayAndShiftAsync(int clinicId, DayInWeek dayInWeek);
+        Task<WorkingHour?> GetWorkingHourById(int workingHourID);
     }
 }
