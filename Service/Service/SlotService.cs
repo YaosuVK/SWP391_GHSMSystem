@@ -50,21 +50,38 @@ namespace Service.Service
             {
                 return new BaseResponse<List<Slot>>("Start time must < End Time", StatusCodeEnum.BadRequest_400, null);
             }
-            var slotList = new List<Slot>
+
+            TimeOnly startTime = TimeOnly.FromDateTime(entity.StartTime);
+            TimeOnly endTime = TimeOnly.FromDateTime(entity.EndTime);
+
+            if (startTime < workingHour.OpeningTime || endTime > workingHour.ClosingTime)
+            {
+                return new BaseResponse<List<Slot>>("Slot time must be within working hours", StatusCodeEnum.NotAcceptable_406, null);
+            }
+
+             var existingSlots = await _slotRepository.GetSlotsByWorkingHourId(entity.WorkingHourID);
+                foreach (var existing in existingSlots)
+                {
+                    if (entity.StartTime < existing.EndTime && entity.EndTime > existing.StartTime)
+                    {
+                        return new BaseResponse<List<Slot>>("Slot time overlaps with an existing slot", StatusCodeEnum.Conflict_409, null);
+                    }
+                }
+
+            var slotList = new List<Slot>()
             {
                 new Slot
-                {
-                    ClinicID = entity.ClinicID,
-                    WorkingHourID = entity.WorkingHourID,
-                    MaxConsultant = entity.MaxConsultant,
-                    StartTime = entity.StartTime,
-                    EndTime = entity.EndTime,
-                    CreateAt = DateTime.Now,
-                    UpdateAt = DateTime.Now
-                }
+                    {
+                        ClinicID = entity.ClinicID,
+                        WorkingHourID = entity.WorkingHourID,
+                        MaxConsultant = entity.MaxConsultant,
+                        StartTime = entity.StartTime,
+                        EndTime = entity.EndTime,
+                        CreateAt = DateTime.Now,
+                        UpdateAt = DateTime.Now
+                    }
             };
-
-            await _slotRepository.AddRange(slotList);
+                await _slotRepository.AddRange(slotList);
             
 
             return new BaseResponse<List<Slot>>("Create Slot as base success", StatusCodeEnum.Created_201, slotList);
@@ -107,6 +124,12 @@ namespace Service.Service
                 return new BaseResponse<Slot>("Start time must < End Time", StatusCodeEnum.BadRequest_400, null);
             }
 
+            TimeOnly startTime = TimeOnly.FromDateTime(entity.StartTime);
+            TimeOnly endTime = TimeOnly.FromDateTime(entity.EndTime);
+            if (startTime < workingHour.OpeningTime || endTime > workingHour.ClosingTime)
+            {
+                return new BaseResponse<Slot>("Slot time must be within working hours", StatusCodeEnum.NotAcceptable_406, null);
+            }
             _mapper.Map(entity, existSlot);
             existSlot.UpdateAt = DateTime.UtcNow;
 

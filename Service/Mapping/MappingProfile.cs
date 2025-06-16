@@ -28,8 +28,14 @@ namespace Service.Mapping
             CreateMap<UpdateClinicRequest, Clinic>().ReverseMap();
 
             CreateMap<WorkingHour, WorkingHourResponse>().ReverseMap();
-            CreateMap<CreateWorkingHourRequest, WorkingHour>().ReverseMap();
-            CreateMap<UpdateWorkingHourRequest, WorkingHour>().ReverseMap();
+            CreateMap<CreateWorkingHourRequest, WorkingHour>()
+                 .ForMember(dest => dest.OpeningTime, opt => opt.Ignore())
+                 .ForMember(dest => dest.ClosingTime, opt => opt.Ignore())
+                 .ReverseMap();
+            CreateMap<UpdateWorkingHourRequest, WorkingHour>()
+                 .ForMember(dest => dest.OpeningTime, opt => opt.Ignore())
+                 .ForMember(dest => dest.ClosingTime, opt => opt.Ignore())
+                 .ReverseMap();
 
             CreateMap<Slot, SlotForCustomer>().ReverseMap();
             CreateMap<CreateSlotRequest, Slot>().ReverseMap();

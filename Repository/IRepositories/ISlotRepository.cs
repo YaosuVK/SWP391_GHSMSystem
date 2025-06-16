@@ -10,5 +10,6 @@ namespace Repository.IRepositories
 {
     public interface ISlotRepository : IBaseRepository<Slot>
     {
+        Task<List<Slot>> GetSlotsByWorkingHourId(int workingHourId);
     }
 }

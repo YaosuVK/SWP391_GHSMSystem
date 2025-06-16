@@ -14,11 +14,19 @@ namespace Service.RequestAndResponse.Request.WorkingHours
         [EnumDataType(typeof(Shift), ErrorMessage = "Giá trị Shift không hợp lệ.")]
         public Shift Shift { get; set; }
 
-        [Required(ErrorMessage = "Giờ bắt đầu làm việc là bắt buộc.")]
+        /*[Required(ErrorMessage = "Giờ bắt đầu làm việc là bắt buộc.")]
         public TimeOnly OpeningTime { get; set; }
 
         [Required(ErrorMessage = "Giờ kết thúc làm việc là bắt buộc.")]
-        public TimeOnly ClosingTime { get; set; }
+        public TimeOnly ClosingTime { get; set; }*/
+
+        [Required(ErrorMessage = "Giờ bắt đầu làm việc là bắt buộc.")]
+        [RegularExpression(@"^\d{2}:\d{2}$", ErrorMessage = "Giờ bắt đầu phải theo định dạng HH:mm.")]
+        public string OpeningTime { get; set; }
+
+        [Required(ErrorMessage = "Giờ kết thúc làm việc là bắt buộc.")]
+        [RegularExpression(@"^\d{2}:\d{2}$", ErrorMessage = "Giờ kết thúc phải theo định dạng HH:mm.")]
+        public string ClosingTime { get; set; }
 
         public bool Status { get; set; }
     }

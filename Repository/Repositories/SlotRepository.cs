@@ -37,5 +37,10 @@ namespace Repository.Repositories
         {
             return await _slotDao.GetAllAsync();
         }
+
+        public async Task<List<Slot>> GetSlotsByWorkingHourId(int workingHourId)
+        {
+            return await _slotDao.GetSlotsByWorkingHourId(workingHourId);
+        }
     }
 }
