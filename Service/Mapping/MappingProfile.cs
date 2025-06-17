@@ -5,6 +5,7 @@ using Service.RequestAndResponse.Request.Clinic;
 using Service.RequestAndResponse.Request.Services;
 using Service.RequestAndResponse.Request.Slot;
 using Service.RequestAndResponse.Request.WorkingHours;
+using Service.RequestAndResponse.Response.Appointments;
 using Service.RequestAndResponse.Response.Categories;
 using Service.RequestAndResponse.Response.Clinic;
 using Service.RequestAndResponse.Response.Services;
@@ -23,6 +24,9 @@ namespace Service.Mapping
     {
         public MappingProfile() 
         {
+            CreateMap<Appointment, GetAllAppointment>().ReverseMap();
+            CreateMap<Appointment, GetAppointmentResponse>().ReverseMap();
+
             CreateMap<Clinic, ClinicResponse>().ReverseMap();
             CreateMap<CreateClinicRequest, Clinic>().ReverseMap();
             CreateMap<UpdateClinicRequest, Clinic>().ReverseMap();
