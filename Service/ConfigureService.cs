@@ -25,7 +25,7 @@ namespace Service
             services.AddScoped<IServiceService, ServicesService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ITransactionService, TransactionService>();
-
+            services.AddScoped<IVnPayService, VnPayService>();
             return services;
         }
     }
