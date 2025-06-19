@@ -31,11 +31,11 @@ namespace Service.Service
             {
                 var treatmentOutcomes = await _treatmentOutcomeRepository.GetAllAsync();
                 var response = _mapper.Map<IEnumerable<GetAllTreatmentOutcomeResponse>>(treatmentOutcomes);
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Get all treatment outcomes successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Get all treatment outcomes successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -46,15 +46,15 @@ namespace Service.Service
                 var treatmentOutcome = await _treatmentOutcomeRepository.GetTreatmentOutcomeWithDetailsAsync(id);
                 if (treatmentOutcome == null)
                 {
-                    return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Treatment outcome not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Treatment outcome not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 var response = _mapper.Map<GetTreatmentOutcomeByIdResponse>(treatmentOutcome);
-                return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Get treatment outcome successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Get treatment outcome successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetTreatmentOutcomeByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetTreatmentOutcomeByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -64,11 +64,11 @@ namespace Service.Service
             {
                 var treatmentOutcomes = await _treatmentOutcomeRepository.GetTreatmentOutcomesByCustomerIdAsync(customerId);
                 var response = _mapper.Map<IEnumerable<GetAllTreatmentOutcomeResponse>>(treatmentOutcomes);
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Get treatment outcomes by customer successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Get treatment outcomes by customer successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -78,11 +78,11 @@ namespace Service.Service
             {
                 var treatmentOutcomes = await _treatmentOutcomeRepository.GetTreatmentOutcomesByConsultantIdAsync(consultantId);
                 var response = _mapper.Map<IEnumerable<GetAllTreatmentOutcomeResponse>>(treatmentOutcomes);
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Get treatment outcomes by consultant successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Get treatment outcomes by consultant successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -92,11 +92,11 @@ namespace Service.Service
             {
                 var treatmentOutcomes = await _treatmentOutcomeRepository.GetTreatmentOutcomesByAppointmentIdAsync(appointmentId);
                 var response = _mapper.Map<IEnumerable<GetAllTreatmentOutcomeResponse>>(treatmentOutcomes);
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Get treatment outcomes by appointment successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Get treatment outcomes by appointment successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -106,11 +106,11 @@ namespace Service.Service
             {
                 var treatmentOutcomes = await _treatmentOutcomeRepository.SearchTreatmentOutcomesAsync(search, pageIndex, pageSize);
                 var response = _mapper.Map<IEnumerable<GetAllTreatmentOutcomeResponse>>(treatmentOutcomes);
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Search treatment outcomes successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>("Search treatment outcomes successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -122,11 +122,11 @@ namespace Service.Service
                 var createdTreatmentOutcome = await _treatmentOutcomeRepository.AddAsync(treatmentOutcome);
                 var result = await _treatmentOutcomeRepository.GetTreatmentOutcomeWithDetailsAsync(createdTreatmentOutcome.TreatmentID);
                 var response = _mapper.Map<GetTreatmentOutcomeByIdResponse>(result);
-                return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Create treatment outcome successfully", StatusCodeEnum.Created, response);
+                return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Create treatment outcome successfully", StatusCodeEnum.Created_201, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetTreatmentOutcomeByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetTreatmentOutcomeByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -137,18 +137,18 @@ namespace Service.Service
                 var existingTreatmentOutcome = await _treatmentOutcomeRepository.GetByIdAsync(request.TreatmentID);
                 if (existingTreatmentOutcome == null)
                 {
-                    return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Treatment outcome not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Treatment outcome not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 _mapper.Map(request, existingTreatmentOutcome);
                 await _treatmentOutcomeRepository.UpdateAsync(existingTreatmentOutcome);
                 var result = await _treatmentOutcomeRepository.GetTreatmentOutcomeWithDetailsAsync(request.TreatmentID);
                 var response = _mapper.Map<GetTreatmentOutcomeByIdResponse>(result);
-                return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Update treatment outcome successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Update treatment outcome successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetTreatmentOutcomeByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetTreatmentOutcomeByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -159,15 +159,15 @@ namespace Service.Service
                 var treatmentOutcome = await _treatmentOutcomeRepository.GetByIdAsync(id);
                 if (treatmentOutcome == null)
                 {
-                    return new BaseResponse<string>("Treatment outcome not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<string>("Treatment outcome not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 await _treatmentOutcomeRepository.DeleteAsync(treatmentOutcome);
-                return new BaseResponse<string>("Delete treatment outcome successfully", StatusCodeEnum.OK, "Deleted successfully");
+                return new BaseResponse<string>("Delete treatment outcome successfully", StatusCodeEnum.OK_200, "Deleted successfully");
             }
             catch (Exception ex)
             {
-                return new BaseResponse<string>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<string>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
     }

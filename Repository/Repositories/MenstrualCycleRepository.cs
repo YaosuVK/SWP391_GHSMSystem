@@ -38,7 +38,7 @@ namespace Repository.Repositories
             if (!string.IsNullOrWhiteSpace(search))
             {
                 query = query.Where(mc => 
-                    mc.Customer.FullName.Contains(search) ||
+                    mc.Customer.Name.Contains(search) ||
                     mc.Customer.Email.Contains(search) ||
                     mc.CustomerID.Contains(search));
             }

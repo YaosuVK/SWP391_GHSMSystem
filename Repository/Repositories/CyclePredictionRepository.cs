@@ -50,7 +50,7 @@ namespace Repository.Repositories
             if (!string.IsNullOrWhiteSpace(search))
             {
                 query = query.Where(cp => 
-                    cp.MenstrualCycle.Customer.FullName.Contains(search) ||
+                    cp.MenstrualCycle.Customer.Name.Contains(search) ||
                     cp.MenstrualCycle.Customer.Email.Contains(search) ||
                     cp.MenstrualCycle.CustomerID.Contains(search));
             }

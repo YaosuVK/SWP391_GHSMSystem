@@ -71,8 +71,8 @@ namespace Repository.Repositories
                     to.TreatmentPlan.Contains(search) ||
                     to.Prescription.Contains(search) ||
                     to.Recommendation.Contains(search) ||
-                    to.Customer.FullName.Contains(search) ||
-                    to.Consultant.FullName.Contains(search));
+                    to.Customer.Name.Contains(search) ||
+                    to.Consultant.Name.Contains(search));
             }
 
             return await query

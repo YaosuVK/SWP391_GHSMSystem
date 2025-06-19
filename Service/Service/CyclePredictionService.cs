@@ -36,11 +36,11 @@ namespace Service.Service
             {
                 var cyclePredictions = await _cyclePredictionRepository.GetAllAsync();
                 var response = _mapper.Map<IEnumerable<GetAllCyclePredictionResponse>>(cyclePredictions);
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Get all cycle predictions successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Get all cycle predictions successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -51,15 +51,15 @@ namespace Service.Service
                 var cyclePrediction = await _cyclePredictionRepository.GetCyclePredictionWithDetailsAsync(id);
                 if (cyclePrediction == null)
                 {
-                    return new BaseResponse<GetCyclePredictionByIdResponse>("Cycle prediction not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<GetCyclePredictionByIdResponse>("Cycle prediction not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 var response = _mapper.Map<GetCyclePredictionByIdResponse>(cyclePrediction);
-                return new BaseResponse<GetCyclePredictionByIdResponse>("Get cycle prediction successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<GetCyclePredictionByIdResponse>("Get cycle prediction successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetCyclePredictionByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetCyclePredictionByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -69,11 +69,11 @@ namespace Service.Service
             {
                 var cyclePredictions = await _cyclePredictionRepository.GetCyclePredictionsByMenstrualCycleIdAsync(menstrualCycleId);
                 var response = _mapper.Map<IEnumerable<GetAllCyclePredictionResponse>>(cyclePredictions);
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Get cycle predictions by menstrual cycle successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Get cycle predictions by menstrual cycle successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -83,11 +83,11 @@ namespace Service.Service
             {
                 var cyclePredictions = await _cyclePredictionRepository.GetCyclePredictionsByCustomerIdAsync(customerId);
                 var response = _mapper.Map<IEnumerable<GetAllCyclePredictionResponse>>(cyclePredictions);
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Get cycle predictions by customer successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Get cycle predictions by customer successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -97,11 +97,11 @@ namespace Service.Service
             {
                 var cyclePredictions = await _cyclePredictionRepository.SearchCyclePredictionsAsync(search, pageIndex, pageSize);
                 var response = _mapper.Map<IEnumerable<GetAllCyclePredictionResponse>>(cyclePredictions);
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Search cycle predictions successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Search cycle predictions successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -111,11 +111,11 @@ namespace Service.Service
             {
                 var cyclePredictions = await _cyclePredictionRepository.GetCyclePredictionsByDateRangeAsync(fromDate, toDate);
                 var response = _mapper.Map<IEnumerable<GetAllCyclePredictionResponse>>(cyclePredictions);
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Get cycle predictions by date range successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>("Get cycle predictions by date range successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllCyclePredictionResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -127,11 +127,11 @@ namespace Service.Service
                 var createdCyclePrediction = await _cyclePredictionRepository.AddAsync(cyclePrediction);
                 var result = await _cyclePredictionRepository.GetCyclePredictionWithDetailsAsync(createdCyclePrediction.CyclePredictionID);
                 var response = _mapper.Map<GetCyclePredictionByIdResponse>(result);
-                return new BaseResponse<GetCyclePredictionByIdResponse>("Create cycle prediction successfully", StatusCodeEnum.Created, response);
+                return new BaseResponse<GetCyclePredictionByIdResponse>("Create cycle prediction successfully", StatusCodeEnum.Created_201, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetCyclePredictionByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetCyclePredictionByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -142,18 +142,18 @@ namespace Service.Service
                 var existingCyclePrediction = await _cyclePredictionRepository.GetByIdAsync(request.CyclePredictionID);
                 if (existingCyclePrediction == null)
                 {
-                    return new BaseResponse<GetCyclePredictionByIdResponse>("Cycle prediction not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<GetCyclePredictionByIdResponse>("Cycle prediction not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 _mapper.Map(request, existingCyclePrediction);
                 await _cyclePredictionRepository.UpdateAsync(existingCyclePrediction);
                 var result = await _cyclePredictionRepository.GetCyclePredictionWithDetailsAsync(request.CyclePredictionID);
                 var response = _mapper.Map<GetCyclePredictionByIdResponse>(result);
-                return new BaseResponse<GetCyclePredictionByIdResponse>("Update cycle prediction successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<GetCyclePredictionByIdResponse>("Update cycle prediction successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetCyclePredictionByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetCyclePredictionByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -164,15 +164,15 @@ namespace Service.Service
                 var cyclePrediction = await _cyclePredictionRepository.GetByIdAsync(id);
                 if (cyclePrediction == null)
                 {
-                    return new BaseResponse<string>("Cycle prediction not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<string>("Cycle prediction not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 await _cyclePredictionRepository.DeleteAsync(cyclePrediction);
-                return new BaseResponse<string>("Delete cycle prediction successfully", StatusCodeEnum.OK, "Deleted successfully");
+                return new BaseResponse<string>("Delete cycle prediction successfully", StatusCodeEnum.OK_200, "Deleted successfully");
             }
             catch (Exception ex)
             {
-                return new BaseResponse<string>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<string>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -183,7 +183,7 @@ namespace Service.Service
                 var menstrualCycle = await _menstrualCycleRepository.GetByIdAsync(menstrualCycleId);
                 if (menstrualCycle == null)
                 {
-                    return new BaseResponse<GetCyclePredictionByIdResponse>("Menstrual cycle not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<GetCyclePredictionByIdResponse>("Menstrual cycle not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 // Delete existing predictions for this cycle
@@ -200,11 +200,11 @@ namespace Service.Service
                 var result = await _cyclePredictionRepository.GetCyclePredictionWithDetailsAsync(createdPrediction.CyclePredictionID);
                 var response = _mapper.Map<GetCyclePredictionByIdResponse>(result);
                 
-                return new BaseResponse<GetCyclePredictionByIdResponse>("Generate cycle prediction successfully", StatusCodeEnum.Created, response);
+                return new BaseResponse<GetCyclePredictionByIdResponse>("Generate cycle prediction successfully", StatusCodeEnum.Created_201, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetCyclePredictionByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetCyclePredictionByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 

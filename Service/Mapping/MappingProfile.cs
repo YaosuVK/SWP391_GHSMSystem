@@ -72,15 +72,15 @@ namespace Service.Mapping
 
             // TreatmentOutcome mappings
             CreateMap<TreatmentOutcome, GetAllTreatmentOutcomeResponse>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
-                .ForMember(dest => dest.ConsultantName, opt => opt.MapFrom(src => src.Consultant.FullName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.ConsultantName, opt => opt.MapFrom(src => src.Consultant.Name))
                 .ForMember(dest => dest.LabTestCount, opt => opt.MapFrom(src => src.LabTests.Count()));
 
             CreateMap<TreatmentOutcome, GetTreatmentOutcomeByIdResponse>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.PhoneNumber))
-                .ForMember(dest => dest.ConsultantName, opt => opt.MapFrom(src => src.Consultant.FullName))
+                .ForMember(dest => dest.ConsultantName, opt => opt.MapFrom(src => src.Consultant.Name))
                 .ForMember(dest => dest.ConsultantEmail, opt => opt.MapFrom(src => src.Consultant.Email));
 
             CreateMap<CreateTreatmentOutcomeRequest, TreatmentOutcome>()
@@ -93,14 +93,14 @@ namespace Service.Mapping
 
             // LabTest mappings
             CreateMap<LabTest, GetAllLabTestResponse>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
-                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.FullName));
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.Name));
 
             CreateMap<LabTest, GetLabTestByIdResponse>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.PhoneNumber))
-                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.FullName))
+                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.Name))
                 .ForMember(dest => dest.StaffEmail, opt => opt.MapFrom(src => src.Staff.Email))
                 .ForMember(dest => dest.TreatmentDiagnosis, opt => opt.MapFrom(src => src.TreatmentOutcome.Diagnosis));
 
@@ -111,13 +111,13 @@ namespace Service.Mapping
 
             // MenstrualCycle mappings
             CreateMap<MenstrualCycle, GetAllMenstrualCycleResponse>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.EstimatedEndDate, opt => opt.MapFrom(src => src.StartDate.AddDays(src.PeriodLength)))
                 .ForMember(dest => dest.EstimatedNextCycleDate, opt => opt.MapFrom(src => src.StartDate.AddDays(src.CycleLength)));
 
             CreateMap<MenstrualCycle, GetMenstrualCycleByIdResponse>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.PhoneNumber))
                 .ForMember(dest => dest.EstimatedEndDate, opt => opt.MapFrom(src => src.StartDate.AddDays(src.PeriodLength)))
@@ -131,13 +131,13 @@ namespace Service.Mapping
             // CyclePrediction mappings
             CreateMap<CyclePrediction, GetAllCyclePredictionResponse>()
                 .ForMember(dest => dest.CustomerID, opt => opt.MapFrom(src => src.MenstrualCycle.CustomerID))
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.FullName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.Name))
                 .ForMember(dest => dest.CycleStartDate, opt => opt.MapFrom(src => src.MenstrualCycle.StartDate))
                 .ForMember(dest => dest.CycleLength, opt => opt.MapFrom(src => src.MenstrualCycle.CycleLength));
 
             CreateMap<CyclePrediction, GetCyclePredictionByIdResponse>()
                 .ForMember(dest => dest.CustomerID, opt => opt.MapFrom(src => src.MenstrualCycle.CustomerID))
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.FullName))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.Name))
                 .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.Email))
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.PhoneNumber))
                 .ForMember(dest => dest.CycleStartDate, opt => opt.MapFrom(src => src.MenstrualCycle.StartDate))

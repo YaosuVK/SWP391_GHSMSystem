@@ -31,11 +31,11 @@ namespace Service.Service
             {
                 var labTests = await _labTestRepository.GetAllAsync();
                 var response = _mapper.Map<IEnumerable<GetAllLabTestResponse>>(labTests);
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get all lab tests successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get all lab tests successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -46,15 +46,15 @@ namespace Service.Service
                 var labTest = await _labTestRepository.GetLabTestWithDetailsAsync(id);
                 if (labTest == null)
                 {
-                    return new BaseResponse<GetLabTestByIdResponse>("Lab test not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<GetLabTestByIdResponse>("Lab test not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 var response = _mapper.Map<GetLabTestByIdResponse>(labTest);
-                return new BaseResponse<GetLabTestByIdResponse>("Get lab test successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<GetLabTestByIdResponse>("Get lab test successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetLabTestByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetLabTestByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -64,11 +64,11 @@ namespace Service.Service
             {
                 var labTests = await _labTestRepository.GetLabTestsByCustomerIdAsync(customerId);
                 var response = _mapper.Map<IEnumerable<GetAllLabTestResponse>>(labTests);
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get lab tests by customer successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get lab tests by customer successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -78,11 +78,11 @@ namespace Service.Service
             {
                 var labTests = await _labTestRepository.GetLabTestsByStaffIdAsync(staffId);
                 var response = _mapper.Map<IEnumerable<GetAllLabTestResponse>>(labTests);
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get lab tests by staff successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get lab tests by staff successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -92,11 +92,11 @@ namespace Service.Service
             {
                 var labTests = await _labTestRepository.GetLabTestsByTreatmentIdAsync(treatmentId);
                 var response = _mapper.Map<IEnumerable<GetAllLabTestResponse>>(labTests);
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get lab tests by treatment successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get lab tests by treatment successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -106,11 +106,11 @@ namespace Service.Service
             {
                 var labTests = await _labTestRepository.GetLabTestsByDateRangeAsync(fromDate, toDate);
                 var response = _mapper.Map<IEnumerable<GetAllLabTestResponse>>(labTests);
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get lab tests by date range successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Get lab tests by date range successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -120,11 +120,11 @@ namespace Service.Service
             {
                 var labTests = await _labTestRepository.SearchLabTestsAsync(search, pageIndex, pageSize);
                 var response = _mapper.Map<IEnumerable<GetAllLabTestResponse>>(labTests);
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Search lab tests successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>("Search lab tests successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<IEnumerable<GetAllLabTestResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -136,11 +136,11 @@ namespace Service.Service
                 var createdLabTest = await _labTestRepository.AddAsync(labTest);
                 var result = await _labTestRepository.GetLabTestWithDetailsAsync(createdLabTest.LabTestID);
                 var response = _mapper.Map<GetLabTestByIdResponse>(result);
-                return new BaseResponse<GetLabTestByIdResponse>("Create lab test successfully", StatusCodeEnum.Created, response);
+                return new BaseResponse<GetLabTestByIdResponse>("Create lab test successfully", StatusCodeEnum.Created_201, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetLabTestByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetLabTestByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -151,18 +151,18 @@ namespace Service.Service
                 var existingLabTest = await _labTestRepository.GetByIdAsync(request.LabTestID);
                 if (existingLabTest == null)
                 {
-                    return new BaseResponse<GetLabTestByIdResponse>("Lab test not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<GetLabTestByIdResponse>("Lab test not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 _mapper.Map(request, existingLabTest);
                 await _labTestRepository.UpdateAsync(existingLabTest);
                 var result = await _labTestRepository.GetLabTestWithDetailsAsync(request.LabTestID);
                 var response = _mapper.Map<GetLabTestByIdResponse>(result);
-                return new BaseResponse<GetLabTestByIdResponse>("Update lab test successfully", StatusCodeEnum.OK, response);
+                return new BaseResponse<GetLabTestByIdResponse>("Update lab test successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetLabTestByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<GetLabTestByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -173,15 +173,15 @@ namespace Service.Service
                 var labTest = await _labTestRepository.GetByIdAsync(id);
                 if (labTest == null)
                 {
-                    return new BaseResponse<string>("Lab test not found", StatusCodeEnum.NotFound, null);
+                    return new BaseResponse<string>("Lab test not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 await _labTestRepository.DeleteAsync(labTest);
-                return new BaseResponse<string>("Delete lab test successfully", StatusCodeEnum.OK, "Deleted successfully");
+                return new BaseResponse<string>("Delete lab test successfully", StatusCodeEnum.OK_200, "Deleted successfully");
             }
             catch (Exception ex)
             {
-                return new BaseResponse<string>(ex.Message, StatusCodeEnum.InternalServerError, null);
+                return new BaseResponse<string>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
     }

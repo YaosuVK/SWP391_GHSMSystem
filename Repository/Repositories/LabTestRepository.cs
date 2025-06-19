@@ -68,8 +68,8 @@ namespace Repository.Repositories
                     lt.Result.Contains(search) ||
                     lt.ReferenceRange.Contains(search) ||
                     lt.Unit.Contains(search) ||
-                    lt.Customer.FullName.Contains(search) ||
-                    lt.Staff.FullName.Contains(search));
+                    lt.Customer.Name.Contains(search) ||
+                    lt.Staff.Name.Contains(search));
             }
 
             return await query
