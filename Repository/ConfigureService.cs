@@ -23,6 +23,8 @@ namespace Repository
             services.AddScoped<ISlotRepository, SlotRepository>();
             services.AddScoped<IClinicRepository, ClinicRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();
+            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IImageBlogRepository, ImageBlogRepository>();
 
             services.AddScoped<IAppointmentDetailRepository, AppointmentDetailRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -39,11 +41,13 @@ namespace Repository
             services.AddScoped<AppointmentDAO>();
             services.AddScoped<AppointmentDetailDAO>();
             services.AddScoped<ClinicDAO>();
+            services.AddScoped <BlogDAO>();
             services.AddScoped<CategoryDAO>();
             services.AddScoped<ServiceDAO>();
             services.AddScoped<SlotDAO>();
             services.AddScoped<WorkingHourDAO>();
             services.AddScoped<ImageServicesDAO>();
+            services.AddScoped<ImageBlogDAO>();
             services.AddScoped<TransactionDAO>();
             services.AddScoped<TreatmentOutcomeDAO>();
             services.AddScoped<LabTestDAO>();
