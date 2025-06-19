@@ -2,6 +2,9 @@
 using BusinessObject.Model;
 using Service.RequestAndResponse.Request.Categories;
 using Service.RequestAndResponse.Request.Clinic;
+using Service.RequestAndResponse.Request.CyclePredictions;
+using Service.RequestAndResponse.Request.LabTests;
+using Service.RequestAndResponse.Request.MenstrualCycles;
 using Service.RequestAndResponse.Request.Services;
 using Service.RequestAndResponse.Request.Slot;
 using Service.RequestAndResponse.Request.TreatmentOutcomes;
@@ -9,6 +12,9 @@ using Service.RequestAndResponse.Request.WorkingHours;
 using Service.RequestAndResponse.Response.Appointments;
 using Service.RequestAndResponse.Response.Categories;
 using Service.RequestAndResponse.Response.Clinic;
+using Service.RequestAndResponse.Response.CyclePredictions;
+using Service.RequestAndResponse.Response.LabTests;
+using Service.RequestAndResponse.Response.MenstrualCycles;
 using Service.RequestAndResponse.Response.Services;
 using Service.RequestAndResponse.Response.Slots;
 using Service.RequestAndResponse.Response.Transactions;
@@ -95,6 +101,48 @@ namespace Service.Mapping
             CreateMap<CreateLabTestRequest, LabTest>();
 
             CreateMap<UpdateLabTestRequest, LabTest>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // MenstrualCycle mappings
+            CreateMap<MenstrualCycle, GetAllMenstrualCycleResponse>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
+                .ForMember(dest => dest.EstimatedEndDate, opt => opt.MapFrom(src => src.StartDate.AddDays(src.PeriodLength)))
+                .ForMember(dest => dest.EstimatedNextCycleDate, opt => opt.MapFrom(src => src.StartDate.AddDays(src.CycleLength)));
+
+            CreateMap<MenstrualCycle, GetMenstrualCycleByIdResponse>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
+                .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.PhoneNumber))
+                .ForMember(dest => dest.EstimatedEndDate, opt => opt.MapFrom(src => src.StartDate.AddDays(src.PeriodLength)))
+                .ForMember(dest => dest.EstimatedNextCycleDate, opt => opt.MapFrom(src => src.StartDate.AddDays(src.CycleLength)));
+
+            CreateMap<CreateMenstrualCycleRequest, MenstrualCycle>();
+
+            CreateMap<UpdateMenstrualCycleRequest, MenstrualCycle>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // CyclePrediction mappings
+            CreateMap<CyclePrediction, GetAllCyclePredictionResponse>()
+                .ForMember(dest => dest.CustomerID, opt => opt.MapFrom(src => src.MenstrualCycle.CustomerID))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.FullName))
+                .ForMember(dest => dest.CycleStartDate, opt => opt.MapFrom(src => src.MenstrualCycle.StartDate))
+                .ForMember(dest => dest.CycleLength, opt => opt.MapFrom(src => src.MenstrualCycle.CycleLength));
+
+            CreateMap<CyclePrediction, GetCyclePredictionByIdResponse>()
+                .ForMember(dest => dest.CustomerID, opt => opt.MapFrom(src => src.MenstrualCycle.CustomerID))
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.FullName))
+                .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.Email))
+                .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.MenstrualCycle.Customer.PhoneNumber))
+                .ForMember(dest => dest.CycleStartDate, opt => opt.MapFrom(src => src.MenstrualCycle.StartDate))
+                .ForMember(dest => dest.CycleLength, opt => opt.MapFrom(src => src.MenstrualCycle.CycleLength))
+                .ForMember(dest => dest.PeriodLength, opt => opt.MapFrom(src => src.MenstrualCycle.PeriodLength))
+                .ForMember(dest => dest.FertileWindowDays, opt => opt.MapFrom(src => (src.FertileEndDate - src.FertileStartDate).Days + 1))
+                .ForMember(dest => dest.DaysUntilNextPeriod, opt => opt.MapFrom(src => (src.NextPeriodStartDate - DateTime.Now).Days));
+
+            CreateMap<CreateCyclePredictionRequest, CyclePrediction>();
+
+            CreateMap<UpdateCyclePredictionRequest, CyclePrediction>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         }
