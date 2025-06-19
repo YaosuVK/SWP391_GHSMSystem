@@ -27,7 +27,7 @@ namespace Service
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITreatmentOutcomeService, TreatmentOutcomeService>();
             services.AddScoped<ILabTestService, LabTestService>();
-
+            services.AddScoped<IVnPayService, VnPayService>();
             return services;
         }
     }

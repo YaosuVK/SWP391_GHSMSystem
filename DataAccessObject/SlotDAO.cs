@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Model;
 using DataAccessObject.BaseDAO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,11 @@ namespace DataAccessObject
             _context = context;
         }
 
-        
+        public async Task<List<Slot>> GetSlotsByWorkingHourId(int workingHourId)
+        {
+            return await _context.Slots
+            .Where(s => s.WorkingHourID == workingHourId)
+            .ToListAsync();
+        }
     }
 }

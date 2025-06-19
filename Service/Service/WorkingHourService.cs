@@ -34,9 +34,24 @@ namespace Service.Service
                 return new BaseResponse<WorkingHour>("WorkingHour request must not be null", StatusCodeEnum.BadRequest_400, null);
             }
 
-            if(entity.OpeningTime >= entity.ClosingTime)
+            if (!TimeOnly.TryParseExact(entity.OpeningTime, "HH:mm", out var openingTime))
             {
-                return new BaseResponse<WorkingHour>("closing time must > opening time", StatusCodeEnum.NotAcceptable_406, null);
+                return new BaseResponse<WorkingHour>("Giờ bắt đầu không đúng định dạng (HH:mm).", StatusCodeEnum.NotAcceptable_406, null);
+            }
+
+            if (!TimeOnly.TryParseExact(entity.ClosingTime, "HH:mm", out var closingTime))
+            {
+                return new BaseResponse<WorkingHour>("Giờ kết thúc không đúng định dạng (HH:mm).", StatusCodeEnum.NotAcceptable_406, null);
+            }
+
+            if (openingTime > TimeOnly.MaxValue || closingTime > TimeOnly.MaxValue)
+            {
+                return new BaseResponse<WorkingHour>("Giờ làm việc không được vượt quá 23:59.", StatusCodeEnum.NotAcceptable_406, null);
+            }
+
+            if (openingTime >= closingTime)
+            {
+                return new BaseResponse<WorkingHour>("Giờ kết thúc phải sau giờ bắt đầu.", StatusCodeEnum.NotAcceptable_406, null);
             }
 
             var existWorkingHour = await _workingHourRepository.GetByClinicDayAndShiftAsync(entity.ClinicID, entity.DayInWeek);
@@ -46,7 +61,10 @@ namespace Service.Service
             }
 
             WorkingHour workinghour = _mapper.Map<WorkingHour>(entity);
-            
+
+            workinghour.OpeningTime = openingTime;
+            workinghour.ClosingTime = closingTime;
+
             await _workingHourRepository.AddAsync(workinghour);
 
             return new BaseResponse<WorkingHour>("Create workinghour as base success", StatusCodeEnum.Created_201, workinghour);
@@ -94,19 +112,35 @@ namespace Service.Service
                 return new BaseResponse<WorkingHour>("WorkingHour request must not be null", StatusCodeEnum.BadRequest_400, null);
             }
 
-            if (entity.OpeningTime >= entity.ClosingTime)
+            if (!TimeOnly.TryParseExact(entity.OpeningTime, "HH:mm", out var openingTime))
             {
-                return new BaseResponse<WorkingHour>("closing time must > opening time", StatusCodeEnum.NotAcceptable_406, null);
+                return new BaseResponse<WorkingHour>("Giờ bắt đầu không đúng định dạng (HH:mm).", StatusCodeEnum.NotAcceptable_406, null);
+            }
+
+            if (!TimeOnly.TryParseExact(entity.ClosingTime, "HH:mm", out var closingTime))
+            {
+                return new BaseResponse<WorkingHour>("Giờ kết thúc không đúng định dạng (HH:mm).", StatusCodeEnum.NotAcceptable_406, null);
+            }
+
+            if (openingTime > TimeOnly.MaxValue || closingTime > TimeOnly.MaxValue)
+            {
+                return new BaseResponse<WorkingHour>("Giờ làm việc không được vượt quá 23:59.", StatusCodeEnum.NotAcceptable_406, null);
+            }
+
+            if (openingTime >= closingTime)
+            {
+                return new BaseResponse<WorkingHour>("Giờ kết thúc phải sau giờ bắt đầu.", StatusCodeEnum.NotAcceptable_406, null);
             }
             // 2. Map dữ liệu từ request vào entity đã tồn tại
             _mapper.Map(entity, workingHourExist);
-            
 
-            
+            workingHourExist.OpeningTime = openingTime;
+            workingHourExist.ClosingTime = closingTime;
+
             await _workingHourRepository.UpdateAsync(workingHourExist);
 
             // 4. Trả về kết quả
-            return new BaseResponse<WorkingHour>("Cập nhật phòng khám thành công.", StatusCodeEnum.OK_200, workingHourExist);
+            return new BaseResponse<WorkingHour>("Cập nhật nhật giờ làm việc thành công.", StatusCodeEnum.OK_200, workingHourExist);
         }
     }
 }
