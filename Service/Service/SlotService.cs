@@ -137,5 +137,15 @@ namespace Service.Service
             await _slotRepository.UpdateAsync(existSlot);
             return new BaseResponse<Slot>("Cập nhật phòng khám thành công.", StatusCodeEnum.OK_200, existSlot);
         }
+
+        public async Task<BaseResponse<Slot>> DeleteAsync(int slotId)
+        {
+            var slot = await _slotRepository.GetByIdAsync(slotId);
+            if (slot == null)
+                return new BaseResponse<Slot>("Slot not found", StatusCodeEnum.NotFound_404, null);
+
+            await _slotRepository.DeleteAsync(slot);
+            return new BaseResponse<Slot>("Slot deleted", StatusCodeEnum.OK_200, null);
+        }
     }
 }
