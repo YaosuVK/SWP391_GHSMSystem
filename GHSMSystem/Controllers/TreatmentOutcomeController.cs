@@ -63,9 +63,13 @@ namespace GHSMSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTreatmentOutcome([FromBody] CreateTreatmentOutcomeRequest request)
         {
+
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { message = "Validation Failed", errors });
             }
 
             var result = await _treatmentOutcomeService.CreateTreatmentOutcomeAsync(request);
@@ -78,7 +82,10 @@ namespace GHSMSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { message = "Validation Failed", errors });
             }
 
             var result = await _treatmentOutcomeService.UpdateTreatmentOutcomeAsync(request);

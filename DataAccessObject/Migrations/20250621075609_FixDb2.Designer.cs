@@ -4,6 +4,7 @@ using DataAccessObject;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    partial class GHSMContextModelSnapshot : ModelSnapshot
+    [Migration("20250621075609_FixDb2")]
+    partial class FixDb2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -935,38 +938,6 @@ namespace DataAccessObject.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "41cad25a-2993-4f50-aa14-e9a9b8de183d",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "c1d517b7-6642-4822-9cf0-8b7b3476de7b",
-                            Name = "Customer",
-                            NormalizedName = "CUSTOMER"
-                        },
-                        new
-                        {
-                            Id = "755bea23-5901-48fb-b055-94dcb5d8a73f",
-                            Name = "Consultant",
-                            NormalizedName = "CONSULTANT"
-                        },
-                        new
-                        {
-                            Id = "85638ebb-650d-4542-a3b6-aeced8d3cdc9",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
-                            Id = "9224e1c4-d7f2-4c89-b0f3-9a571b29e89e",
-                            Name = "Staff",
-                            NormalizedName = "STAFF"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
