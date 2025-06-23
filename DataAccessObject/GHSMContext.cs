@@ -166,6 +166,7 @@ namespace DataAccessObject
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<LabTest> Labtests { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<ConsultantSlot> ConsultantSlots { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
