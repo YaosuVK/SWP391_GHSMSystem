@@ -101,7 +101,7 @@ namespace Service.Service
                 return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong!",
                 StatusCodeEnum.BadGateway_502, null);
             }
-            return new BaseResponse<IEnumerable<SlotForCustomer>>("Get all transactions as base success",
+            return new BaseResponse<IEnumerable<SlotForCustomer>>("Get all slot success",
                 StatusCodeEnum.OK_200, slots);
         }
 
