@@ -30,6 +30,7 @@ namespace Service
             services.AddScoped<ILabTestService, LabTestService>();
             services.AddScoped<IMenstrualCycleService, MenstrualCycleService>();
             services.AddScoped<ICyclePredictionService, CyclePredictionService>();
+            services.AddScoped<IFeedBackService, FeedBackService>();
             services.AddScoped<IVnPayService, VnPayService>();
             return services;
         }

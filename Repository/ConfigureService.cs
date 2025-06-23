@@ -36,6 +36,7 @@ namespace Repository
             services.AddScoped<ILabTestRepository, LabTestRepository>();
             services.AddScoped<IMenstrualCycleRepository, MenstrualCycleRepository>();
             services.AddScoped<ICyclePredictionRepository, CyclePredictionRepository>();
+            services.AddScoped<IFeedBackRepository, FeedBackRepository>();
 
             services.AddScoped<AccountDAO>();
             services.AddScoped<AppointmentDAO>();
@@ -53,6 +54,7 @@ namespace Repository
             services.AddScoped<LabTestDAO>();
             services.AddScoped<MenstrualCycleDAO>();
             services.AddScoped<CyclePredictionDAO>();
+            services.AddScoped<FeedBackDAO>();
 
             services.AddScoped<ConsultantProfileDAO>();
             return services;
