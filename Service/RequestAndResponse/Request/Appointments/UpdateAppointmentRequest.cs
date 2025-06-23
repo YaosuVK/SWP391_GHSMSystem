@@ -13,7 +13,7 @@ namespace Service.RequestAndResponse.Request.Appointments
 
         public int? SlotID { get; set; }
 
-        public DateTime? AppointmentDate { get; set; }
+        public DateTime AppointmentDate { get; set; }
 
         public ICollection<UpdateAppointmentDetailRequest> AppointmentDetails { get; set; }
     }

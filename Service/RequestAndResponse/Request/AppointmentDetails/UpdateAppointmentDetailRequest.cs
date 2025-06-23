@@ -13,5 +13,7 @@ namespace Service.RequestAndResponse.Request.AppointmentDetails
         public int? ServicesID { get; set; }
 
         public int? ConsultantProfileID { get; set; }
+
+        public int Quantity { get; set; }
     }
 }
