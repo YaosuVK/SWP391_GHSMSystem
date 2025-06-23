@@ -14,6 +14,10 @@ using System.Threading.Tasks;
 
 namespace Service.Service
 {
+    /// <summary>
+    /// FeedBack Service implementation with comprehensive business logic
+    /// Handles CRUD operations, validation, and auto-calculation for feedback system
+    /// </summary>
     public class FeedBackService : IFeedBackService
     {
         private readonly IFeedBackRepository _feedBackRepository;
