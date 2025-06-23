@@ -53,6 +53,11 @@ namespace Repository.Repositories
             return await _appointmentDao.GetStaticAppointments();
         }
 
+        public async Task<Appointment?> GetUnpaidAppointmentByID(string customerID)
+        {
+            return await _appointmentDao.GetUnpaidAppointmentByID(customerID);
+        }
+
         public async Task UpdateAppointmentAsync(Appointment appointment)
         {
            await _appointmentDao.UpdateAsync(appointment);

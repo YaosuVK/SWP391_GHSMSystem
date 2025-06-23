@@ -22,5 +22,13 @@ namespace DataAccessObject
         {
             return await _context.Services.Where(h => servicesIds.Contains(h.ServicesID)).ToListAsync();
         }
+
+        public async Task<Services?> GetServiceByID(int? serviceID)
+        {
+            return await _context.Services
+                .Include(x => x.Category)
+                .Include(x => x.Manager)
+                .FirstOrDefaultAsync(x => x.ServicesID == serviceID);
+        }
     }
 }

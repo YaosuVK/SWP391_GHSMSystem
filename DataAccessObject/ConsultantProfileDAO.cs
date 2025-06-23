@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Model;
 using DataAccessObject.BaseDAO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,20 @@ namespace DataAccessObject
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
+        }
+
+        public async Task<ConsultantProfile?> GetConsultantProfileByAccountID(string accountID)
+        {
+            return await _context.ConsultantProfiles
+                .Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.AccountID == accountID);
+        }
+
+        public async Task<ConsultantProfile?> GetConsultantProfileByID(int? consultantProfileID)
+        {
+            return await _context.ConsultantProfiles
+                .Include(x => x.Account)
+                .FirstOrDefaultAsync(x => x.ConsultantProfileID == consultantProfileID);
         }
     }
 }

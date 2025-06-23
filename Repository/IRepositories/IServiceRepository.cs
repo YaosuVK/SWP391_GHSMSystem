@@ -14,5 +14,6 @@ namespace Repository.IRepositories
     {
         Task<IEnumerable<Services>> GetAllServiceAsync();
         Task<IEnumerable<Services>> GetServicesByIdsAsync(List<int> servicesIds);
+        Task<Services?> GetServiceByID(int? serviceID);
     }
 }

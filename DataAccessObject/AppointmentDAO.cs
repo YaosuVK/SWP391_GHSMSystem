@@ -31,6 +31,13 @@ namespace DataAccessObject
             return await appointments.ToListAsync();
         }
 
+        public async Task<Appointment?> GetUnpaidAppointmentByID(string customerID)
+        {
+            return await _context.Appointments
+                .Include(a => a.AppointmentDetails)
+                .FirstOrDefaultAsync(a => a.CustomerID == customerID && a.Status == AppointmentStatus.Pending);
+        }
+
         public async Task<Appointment?> GetAppointmentByIdAsync(int appointmentId)
         {
             return await _context.Appointments

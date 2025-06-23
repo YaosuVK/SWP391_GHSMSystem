@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObject.Model;
+using Service.RequestAndResponse.Request.Appointments;
 using Service.RequestAndResponse.Request.Blogs;
 using Service.RequestAndResponse.Request.Categories;
 using Service.RequestAndResponse.Request.Clinic;
@@ -36,6 +37,8 @@ namespace Service.Mapping
         {
             CreateMap<Appointment, GetAllAppointment>().ReverseMap();
             CreateMap<Appointment, GetAppointmentResponse>().ReverseMap();
+            CreateMap<CreateAppointmentRequest, Appointment>().ReverseMap();
+            CreateMap<UpdateAppointmentRequest, Appointment>().ReverseMap();
 
             CreateMap<Clinic, ClinicResponse>().ReverseMap();
             CreateMap<CreateClinicRequest, Clinic>().ReverseMap();

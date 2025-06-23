@@ -77,6 +77,6 @@ namespace BusinessObject.Model
     public enum AppointmentType
     {
         Consulting = 0,
-        Curing = 1
+        Testing = 1
     }
 }

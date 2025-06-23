@@ -12,6 +12,8 @@ namespace Service.RequestAndResponse.Request.Slot
 
         public int MaxConsultant { get; set; }
 
+        public int MaxTestAppointment { get; set; }
+
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }

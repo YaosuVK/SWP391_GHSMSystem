@@ -15,6 +15,7 @@ namespace Repository.IRepositories
         Task<Appointment?> GetAppointmentByIdCanNullAsync(int? appointmentId);
         Task<IEnumerable<Appointment>> GetAppointmentsByCustomerId(string accountId);
         Task<IEnumerable<Appointment>> GetAppointmentsByConsultantId(string accountId);
+        Task<Appointment?> GetUnpaidAppointmentByID(string customerID);
         Task AddAppointmentAsync(Appointment appointment);
         Task UpdateAppointmentAsync(Appointment appointment);
         Task<(int appointmentsReturnOrCancell, int appointments, int appointmentsComplete, int appointmentsCancell, int appointmentsReturnRefund, int appointmentsReport, int appointmentConfirmed)> GetStaticAppointments();

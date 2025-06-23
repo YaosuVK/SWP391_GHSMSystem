@@ -11,5 +11,8 @@ namespace Repository.IRepositories
     public interface ISlotRepository : IBaseRepository<Slot>
     {
         Task<List<Slot>> GetSlotsByWorkingHourId(int workingHourId);
+        Task<IEnumerable<Slot>> GetAllSlotByDate(DateTime appointmentDate);
+        Task<IEnumerable<Slot>> GetAvailableSlotsForConsultantAsync(DateTime appointmentDate, string consultantId);
+        Task<IEnumerable<Slot>> GetAvailableSlotsForTestAsync(DateTime appointmentDate);
     }
 }

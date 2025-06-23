@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Model;
 using Service.RequestAndResponse.BaseResponse;
+using Service.RequestAndResponse.Request.Appointments;
 using Service.RequestAndResponse.Response.Appointments;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Service.IService
         /*Task<BaseResponse<GetAllAppointment?>> GetAppointmentByIdCanNullAsync(int? appointmentId);*/
         Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAppointmentsByCustomerId(string accountId);
         Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAppointmentsByConsultantId(string accountId);
-        /*Task AddAppointmentAsync(Appointment appointment);
-        Task UpdateAppointmentAsync(Appointment appointment);*/
+        Task<BaseResponse<int>> CreateAppointment(CreateAppointmentRequest request);
+        Task<BaseResponse<UpdateAppointmentRequest>> UpdateAppointment(int appointmentID,UpdateAppointmentRequest appointment);
     }
 }
