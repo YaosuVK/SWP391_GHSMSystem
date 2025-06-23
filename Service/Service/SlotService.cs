@@ -92,7 +92,7 @@ namespace Service.Service
             IEnumerable<Slot> slot = await _slotRepository.GetAllAsync();
             if (slot == null || !slot.Any())
             {
-                return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong!",
+                return new BaseResponse<IEnumerable<SlotForCustomer>>("No slot found!",
                 StatusCodeEnum.BadGateway_502, null);
             }
             var slots = _mapper.Map<IEnumerable<SlotForCustomer>>(slot);
