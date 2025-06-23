@@ -11,6 +11,7 @@ using Service.RequestAndResponse.Request.Services;
 using Service.RequestAndResponse.Request.Slot;
 using Service.RequestAndResponse.Request.TreatmentOutcomes;
 using Service.RequestAndResponse.Request.WorkingHours;
+using Service.RequestAndResponse.Request.FeedBacks;
 using Service.RequestAndResponse.Response.Appointments;
 using Service.RequestAndResponse.Response.Blogs;
 using Service.RequestAndResponse.Response.Categories;
@@ -23,6 +24,7 @@ using Service.RequestAndResponse.Response.Slots;
 using Service.RequestAndResponse.Response.Transactions;
 using Service.RequestAndResponse.Response.TreatmentOutcomes;
 using Service.RequestAndResponse.Response.WorkingHours;
+using Service.RequestAndResponse.Response.FeedBacks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -152,6 +154,17 @@ namespace Service.Mapping
             CreateMap<CreateCyclePredictionRequest, CyclePrediction>();
 
             CreateMap<UpdateCyclePredictionRequest, CyclePrediction>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            // FeedBack mappings
+            CreateMap<FeedBack, FeedBackResponse>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.AppointmentDate, opt => opt.MapFrom(src => src.Appointment.AppointmentDate))
+                .ForMember(dest => dest.AppointmentTime, opt => opt.MapFrom(src => src.Appointment.AppointmentTime));
+
+            CreateMap<CreateFeedBackRequest, FeedBack>();
+
+            CreateMap<UpdateFeedBackRequest, FeedBack>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         }
