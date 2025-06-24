@@ -45,7 +45,7 @@ namespace Service.Service
             if (hasAppointmentID)
             {
                 // Only HomeStay booked
-                orderInfo = $"BookingID:{requestModel.AppointmentID}, AccountID:{requestModel.AccountID}";
+                orderInfo = $"AppointmentID:{requestModel.AppointmentID}, AccountID:{requestModel.AccountID}";
                 txnRef = $"H-{requestModel.AppointmentID}-{tick}";
             }
 

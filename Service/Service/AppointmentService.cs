@@ -31,12 +31,13 @@ namespace Service.Service
         private readonly IAppointmentDetailRepository _appointmentDetailRepository;
         private readonly IConsultantProfileRepository _consultantProfileRepository;
         private readonly ISlotRepository _slotRepository;
+        private readonly ITransactionRepository _transactionRepository;
 
         public AppointmentService(IMapper mapper, IAppointmentRepository appointmentRepository,
             IServiceRepository serviceRepository, IClinicRepository clinicalRepository,
             IAppointmentDetailRepository appointmentDetailRepository, 
             IConsultantProfileRepository consultantProfileRepository,
-            ISlotRepository slotRepository)
+            ISlotRepository slotRepository, ITransactionRepository transactionRepository)
         {
             _mapper = mapper;
             _appointmentRepository = appointmentRepository;
@@ -45,6 +46,50 @@ namespace Service.Service
             _appointmentDetailRepository = appointmentDetailRepository;
             _consultantProfileRepository = consultantProfileRepository;
             _slotRepository = slotRepository;
+            _transactionRepository = transactionRepository;
+        }
+
+        public async Task<BaseResponse<Appointment>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus)
+        {
+            var appointmentExist = await _appointmentRepository.GetAppointmentByIdAsync(appointmentID);
+            if (appointmentExist == null)
+            {
+                return new BaseResponse<Appointment>("Cannot find your Appointment!",
+                         StatusCodeEnum.NotFound_404, null);
+            }
+
+            if (status == AppointmentStatus.Cancelled)
+            {
+                var now = DateTime.Now;
+                var daysBeforeAppointment = (appointmentExist.AppointmentDate.Value - now).TotalDays;
+                bool hasRefund = daysBeforeAppointment < 1;
+                if (!hasRefund)
+                {
+                    var transaction = await _transactionRepository.GetTransactionByAppointmentId(appointmentExist.AppointmentID);
+                    if (transaction != null)
+                    {
+
+                        transaction.StatusTransaction = StatusOfTransaction.Completed;
+                        transaction.FinishDate = DateTime.Now;
+                        await _transactionRepository.UpdateAsync(transaction);
+                    }
+                }
+            }
+
+            if (status == AppointmentStatus.Completed)
+            {
+                var transaction = await _transactionRepository.GetTransactionByAppointmentId(appointmentExist.AppointmentID);
+                if (transaction != null)
+                {
+
+                    transaction.StatusTransaction = StatusOfTransaction.Completed;
+                    transaction.FinishDate = DateTime.Now;
+                    await _transactionRepository.UpdateAsync(transaction);
+                }
+            }
+
+            var appointment = await _appointmentRepository.ChangeAppointmentStatus(appointmentID, status, paymentStatus);
+            return new BaseResponse<Appointment>("Change status ok", StatusCodeEnum.OK_200, appointment);
         }
 
         public async Task<BaseResponse<int>> CreateAppointment(CreateAppointmentRequest request)
@@ -460,6 +505,73 @@ namespace Service.Service
 
             await _appointmentRepository.UpdateAppointmentAsync(existingAppointment);
             return new BaseResponse<UpdateAppointmentRequest>("Booking updated successfully!", StatusCodeEnum.OK_200, request);
+        }
+
+        public async Task<Appointment> CreateAppointmentPayment(int? appointmentID, Transaction transaction)
+        {
+            var appointment = await _appointmentRepository.GetAppointmentByIdCanNullAsync(appointmentID);
+            if (appointment == null)
+            {
+                throw new Exception("Appointment not found");
+            }
+            appointment.Transactions ??= new List<Transaction>();
+
+            bool alreadyExists = appointment.Transactions.Any(t => t.ResponseId == transaction.ResponseId && transaction.ResponseId != null);
+
+            if (alreadyExists)
+            {
+                throw new Exception("Duplicate transaction detected.");
+            }
+
+            transaction.Account = appointment.Customer;
+
+            appointment.Transactions.Add(transaction);
+
+            double totalAmount = appointment.TotalAmount;  // Thay bằng cách tính tổng số tiền thanh toán của booking
+            double amountPaid = appointment.Transactions.Sum(t => t.Amount); // Tính tổng số tiền đã thanh toán từ tất cả các giao dịch
+
+            if (amountPaid >= totalAmount)
+            {
+                appointment.paymentStatus = PaymentStatus.FullyPaid; // Thanh toán đầy đủ
+                transaction.TransactionKind = TransactionKind.FullPayment;
+            }
+
+            transaction.StatusTransaction = StatusOfTransaction.Pending;
+            appointment.Status = AppointmentStatus.Confirmed;
+
+            await _appointmentRepository.UpdateAppointmentAsync(appointment);
+            return appointment;
+        }
+
+        public (int? appointmentId, string? accountId) ParseOrderInfo(string orderInfo)
+        {
+            int? appointmentId = null;
+            string? accountId = null;
+
+            if (string.IsNullOrWhiteSpace(orderInfo))
+                return (null, null);
+
+            var parts = orderInfo.Split(',', StringSplitOptions.TrimEntries);
+
+            foreach (var part in parts)
+            {
+                var keyValue = part.Split(':', StringSplitOptions.TrimEntries);
+                if (keyValue.Length == 2)
+                {
+                    switch (keyValue[0])
+                    {
+                        case "AppointmentID":
+                            if (int.TryParse(keyValue[1], out int bId))
+                                appointmentId = bId;
+                            break;
+
+                        case "AccountID":
+                            accountId = keyValue[1];
+                            break;
+                    }
+                }
+            }
+            return (appointmentId, accountId);
         }
     }
 }

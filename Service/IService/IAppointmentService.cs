@@ -14,10 +14,13 @@ namespace Service.IService
     {
         Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAllAppointment();
         Task<BaseResponse<GetAllAppointment?>> GetAppointmentByIdAsync(int appointmentId);
+        Task<BaseResponse<Appointment>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus);
+        public (int? appointmentId, string? accountId) ParseOrderInfo(string orderInfo);
         /*Task<BaseResponse<GetAllAppointment?>> GetAppointmentByIdCanNullAsync(int? appointmentId);*/
         Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAppointmentsByCustomerId(string accountId);
         Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAppointmentsByConsultantId(string accountId);
         Task<BaseResponse<int>> CreateAppointment(CreateAppointmentRequest request);
         Task<BaseResponse<UpdateAppointmentRequest>> UpdateAppointment(int appointmentID,UpdateAppointmentRequest request);
+        Task<Appointment> CreateAppointmentPayment(int? appointmentID, Transaction transaction);
     }
 }

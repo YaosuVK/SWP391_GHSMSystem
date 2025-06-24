@@ -147,7 +147,18 @@ namespace DataAccessObject
             return (appointmentsReturnOrCancell, appointments, appointmentsComplete, appointmentsCancell, appointmentsReturnRefund, appointmentsReport, appointmentConfirmed);
         }
 
-        
+        public async Task<Appointment?> ChangeAppointmentStatus(int appointmentId, AppointmentStatus status, PaymentStatus paymentStatus)
+        {
+            var appointment = await _context.Appointments.FindAsync(appointmentId);
+            if (appointment != null)
+            {
+                appointment.Status = status;
+                appointment.paymentStatus = paymentStatus;
+                await _context.SaveChangesAsync();
+            }
+
+            return await _context.Appointments.FindAsync(appointmentId);
+        }
 
 
     }
