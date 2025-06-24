@@ -55,6 +55,7 @@ namespace GHSMSystem.Controllers
 
 
         [HttpPut("swap")]
+        [Authorize(Roles = "Consultant")]
         public async Task<IActionResult> Swap(
             [FromQuery] string consultantA, [FromQuery] int slotA,
             [FromQuery] string consultantB, [FromQuery] int slotB)

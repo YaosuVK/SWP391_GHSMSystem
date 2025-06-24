@@ -13,5 +13,6 @@ namespace Service.IService
         Task<BaseResponse<ConsultantSlot>> RegisterAsync(string consultantId, int slotId, int maxAppointment);
         Task<BaseResponse<bool>> SwapAsync(string consultantIdA, int slotIdA, string consultantIdB, int slotIdB);
         Task<BaseResponse<IEnumerable<ConsultantSlot>>> GetRegisteredSlotsAsync(string consultantId);
+        Task<BaseResponse<IEnumerable<ConsultantSlot>>> GetAllAsync();
     }
 }

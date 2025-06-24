@@ -123,5 +123,13 @@ namespace Service.Service
                 StatusCodeEnum.OK_200,
                 list);
         }
+
+        public async Task<BaseResponse<IEnumerable<ConsultantSlot>>> GetAllAsync()
+        {
+            var list = await _repo.GetAllAsync();
+            if (list == null || !list.Any())
+                return new BaseResponse<IEnumerable<ConsultantSlot>>("No consultant slots found", StatusCodeEnum.NotFound_404, null);
+            return new BaseResponse<IEnumerable<ConsultantSlot>>("All consultant slots fetched", StatusCodeEnum.OK_200, list);
+        }
     }
 }
