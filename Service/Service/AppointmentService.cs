@@ -103,6 +103,11 @@ namespace Service.Service
                 {
                     return new BaseResponse<int>("Selected SlotID is not available for that consultant on the selected day.", StatusCodeEnum.BadRequest_400, 0);
                 }
+
+                if (!checkAvailableSlot.Any(s => s.ConsultantSlots.Any(x => x.ConsultantID == request.ConsultantID)))
+                {
+                    return new BaseResponse<int>("Selected ConsultantID is not available for that consultant on the selected day.", StatusCodeEnum.BadRequest_400, 0);
+                }
             }
             else
             {
@@ -271,6 +276,11 @@ namespace Service.Service
 
             bool isTestAppointment = request.AppointmentDetails.Any(d => d.ServicesID.HasValue);
             bool isConsultantAppointment = request.AppointmentDetails.Any(d => d.ConsultantProfileID.HasValue);
+            
+            if (isTestAppointment && isConsultantAppointment)
+            {
+                return new BaseResponse<UpdateAppointmentRequest>("Cannot mix ConsultantProfileID and ServicesID in one appointment.", StatusCodeEnum.BadRequest_400, null);
+            }
 
             // Nếu là lịch xét nghiệm, cấm gửi ConsultantID
             if (isTestAppointment && request.ConsultantID != null)
@@ -296,6 +306,11 @@ namespace Service.Service
                 {
                     return new BaseResponse<UpdateAppointmentRequest>("Selected SlotID is not available for that consultant on the selected day.", StatusCodeEnum.BadRequest_400, null);
                 }
+
+                if (!checkAvailableSlot.Any(s => s.ConsultantSlots.Any(x => x.ConsultantID == request.ConsultantID)))
+                {
+                    return new BaseResponse<UpdateAppointmentRequest>("Selected ConsultantID is not available for that consultant on the selected day.", StatusCodeEnum.BadRequest_400, null);
+                }
             }
             else
             {
@@ -311,7 +326,7 @@ namespace Service.Service
                 }
             }
 
-            bool isPaid = existingAppointment.paymentStatus == PaymentStatus.Deposited;
+            bool isPaid = existingAppointment.paymentStatus == PaymentStatus.FullyPaid;
             bool isCompleted = existingAppointment.Status == AppointmentStatus.Completed;
             bool isCancelled = existingAppointment.Status == AppointmentStatus.Cancelled;
 
@@ -356,7 +371,7 @@ namespace Service.Service
 
                 if (duplicatedServiceIDs.Any())
                 {
-                    return new BaseResponse<UpdateAppointmentRequest>($"RoomID(s) duplicated in request: {string.Join(", ", duplicatedServiceIDs)}", StatusCodeEnum.Conflict_409, null);
+                    return new BaseResponse<UpdateAppointmentRequest>($"ServiceID(s) duplicated in request: {string.Join(", ", duplicatedServiceIDs)}", StatusCodeEnum.Conflict_409, null);
                 }
                 /*var duplicateService = request.AppointmentDetails
                                          .Where(x => x.ServicesID.HasValue)
@@ -402,6 +417,10 @@ namespace Service.Service
                     }
 
                     double unitPrice = updateAppointmentDetail.ConsultantProfileID.HasValue ? consultantPrices : servicePrice;
+                    if (unitPrice <= 0)
+                    {
+                        return new BaseResponse<UpdateAppointmentRequest>("Invalid price detected, please check service/consultant again.", StatusCodeEnum.Conflict_409, null);
+                    }
 
                     if (updateAppointmentDetail.AppointmentDetailID.HasValue)
                     {

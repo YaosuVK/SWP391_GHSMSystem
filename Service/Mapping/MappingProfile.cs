@@ -159,8 +159,7 @@ namespace Service.Mapping
             // FeedBack mappings
             CreateMap<FeedBack, FeedBackResponse>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
-                .ForMember(dest => dest.AppointmentDate, opt => opt.MapFrom(src => src.Appointment.AppointmentDate))
-                .ForMember(dest => dest.AppointmentTime, opt => opt.MapFrom(src => src.Appointment.AppointmentTime));
+                .ForMember(dest => dest.AppointmentDate, opt => opt.MapFrom(src => src.Appointment.AppointmentDate));
 
             CreateMap<CreateFeedBackRequest, FeedBack>();
 

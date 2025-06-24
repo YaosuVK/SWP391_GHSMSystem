@@ -14,9 +14,9 @@ namespace Repository.Repositories
     {
         private readonly FeedBackDAO _feedBackDAO;
 
-        public FeedBackRepository() : base()
+        public FeedBackRepository(FeedBackDAO feedBackDAO) : base(feedBackDAO)
         {
-            _feedBackDAO = new FeedBackDAO();
+            _feedBackDAO = feedBackDAO;
         }
 
         public async Task<List<FeedBack>> GetAllFeedBacksAsync()
@@ -56,7 +56,7 @@ namespace Repository.Repositories
             feedBack.CreatedAt = DateTime.Now;
             feedBack.UpdatedAt = DateTime.Now;
 
-            return await _feedBackDAO.CreateAsync(feedBack);
+            return await _feedBackDAO.AddAsync(feedBack);
         }
 
         public async Task<FeedBack?> UpdateFeedBackAsync(FeedBack feedBack)
@@ -79,7 +79,7 @@ namespace Repository.Repositories
             if (feedBack == null)
                 return false;
 
-            await _feedBackDAO.RemoveAsync(feedBack);
+            await _feedBackDAO.DeleteAsync(feedBack);
             return true;
         }
     }

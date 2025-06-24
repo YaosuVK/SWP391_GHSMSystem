@@ -14,7 +14,7 @@ namespace DataAccessObject
     {
         private readonly GHSMContext _context;
 
-        public FeedBackDAO()
+        public FeedBackDAO(GHSMContext context) : base(context)
         {
             _context = new GHSMContext();
         }

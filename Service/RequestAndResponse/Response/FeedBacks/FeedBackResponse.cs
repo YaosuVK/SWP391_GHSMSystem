@@ -13,7 +13,6 @@ namespace Service.RequestAndResponse.Response.FeedBacks
         public string CustomerName { get; set; }
         public int AppointmentID { get; set; }
         public DateTime AppointmentDate { get; set; }
-        public string AppointmentTime { get; set; }
         public double SumRate { get; set; }
         public double ServiceRate { get; set; }
         public double FacilityRate { get; set; }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
+using Service.RequestAndResponse.Enums;
 using Service.RequestAndResponse.Request.FeedBacks;
 using System.ComponentModel.DataAnnotations;
 
@@ -20,7 +21,7 @@ namespace GHSMSystem.Controllers
         public async Task<IActionResult> GetAllFeedBacks()
         {
             var result = await _feedBackService.GetAllFeedBacksAsync();
-            if (result.IsSuccess)
+            if (result.StatusCode == StatusCodeEnum.OK_200)
             {
                 return Ok(result);
             }
@@ -31,7 +32,7 @@ namespace GHSMSystem.Controllers
         public async Task<IActionResult> GetFeedBackById(int id)
         {
             var result = await _feedBackService.GetFeedBackByIdAsync(id);
-            if (result.IsSuccess)
+            if (result.StatusCode == StatusCodeEnum.OK_200)
             {
                 return Ok(result);
             }
@@ -42,7 +43,7 @@ namespace GHSMSystem.Controllers
         public async Task<IActionResult> GetFeedBacksByCustomerId(string customerId)
         {
             var result = await _feedBackService.GetFeedBacksByCustomerIdAsync(customerId);
-            if (result.IsSuccess)
+            if (result.StatusCode == StatusCodeEnum.OK_200)
             {
                 return Ok(result);
             }
@@ -53,7 +54,7 @@ namespace GHSMSystem.Controllers
         public async Task<IActionResult> GetFeedBacksByAppointmentId(int appointmentId)
         {
             var result = await _feedBackService.GetFeedBacksByAppointmentIdAsync(appointmentId);
-            if (result.IsSuccess)
+            if (result.StatusCode == StatusCodeEnum.OK_200)
             {
                 return Ok(result);
             }
@@ -69,9 +70,9 @@ namespace GHSMSystem.Controllers
             }
 
             var result = await _feedBackService.CreateFeedBackAsync(request);
-            if (result.IsSuccess)
+            if (result.StatusCode == StatusCodeEnum.OK_200)
             {
-                return StatusCode((int)result.StatusCode, result);
+                return Ok(result);
             }
             return StatusCode((int)result.StatusCode, result);
         }
@@ -85,7 +86,7 @@ namespace GHSMSystem.Controllers
             }
 
             var result = await _feedBackService.UpdateFeedBackAsync(id, request);
-            if (result.IsSuccess)
+            if (result.StatusCode == StatusCodeEnum.OK_200)
             {
                 return Ok(result);
             }
@@ -96,7 +97,7 @@ namespace GHSMSystem.Controllers
         public async Task<IActionResult> DeleteFeedBack(int id)
         {
             var result = await _feedBackService.DeleteFeedBackAsync(id);
-            if (result.IsSuccess)
+            if (result.StatusCode == StatusCodeEnum.OK_200)
             {
                 return Ok(result);
             }

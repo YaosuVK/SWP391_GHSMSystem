@@ -17,6 +17,6 @@ namespace Service.IService
         Task<BaseResponse<GetAllFeedBackResponse>> GetFeedBacksByAppointmentIdAsync(int appointmentId);
         Task<BaseResponse<GetFeedBackByIdResponse>> CreateFeedBackAsync(CreateFeedBackRequest request);
         Task<BaseResponse<GetFeedBackByIdResponse>> UpdateFeedBackAsync(int feedBackId, UpdateFeedBackRequest request);
-        Task<BaseResponse<object>> DeleteFeedBackAsync(int feedBackId);
+        Task<BaseResponse<string>> DeleteFeedBackAsync(int feedBackId);
     }
 } 

@@ -47,23 +47,11 @@ namespace Service.Service
                     TotalCount = feedBackResponses.Count
                 };
 
-                return new BaseResponse<GetAllFeedBackResponse>
-                {
-                    StatusCode = StatusCodeEnum.OK_200,
-                    IsSuccess = true,
-                    Message = "Retrieved all feedbacks successfully",
-                    Data = response
-                };
+                return new BaseResponse<GetAllFeedBackResponse>("Retrieved all feedbacks successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetAllFeedBackResponse>
-                {
-                    StatusCode = StatusCodeEnum.InternalServerError_500,
-                    IsSuccess = false,
-                    Message = $"Error retrieving feedbacks: {ex.Message}",
-                    Data = null
-                };
+                return new BaseResponse<GetAllFeedBackResponse>($"Error retrieving feedbacks: {ex.Message}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -74,13 +62,7 @@ namespace Service.Service
                 var feedBack = await _feedBackRepository.GetFeedBackByIdAsync(feedBackId);
                 if (feedBack == null)
                 {
-                    return new BaseResponse<GetFeedBackByIdResponse>
-                    {
-                        StatusCode = StatusCodeEnum.NotFound_404,
-                        IsSuccess = false,
-                        Message = "Feedback not found",
-                        Data = null
-                    };
+                    return new BaseResponse<GetFeedBackByIdResponse> ("FeedBack not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 var feedBackResponse = _mapper.Map<FeedBackResponse>(feedBack);
@@ -89,23 +71,11 @@ namespace Service.Service
                     FeedBack = feedBackResponse
                 };
 
-                return new BaseResponse<GetFeedBackByIdResponse>
-                {
-                    StatusCode = StatusCodeEnum.OK_200,
-                    IsSuccess = true,
-                    Message = "Retrieved feedback successfully",
-                    Data = response
-                };
+                return new BaseResponse<GetFeedBackByIdResponse>("Retrieved feedback successfully", StatusCodeEnum.NotFound_404, null);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetFeedBackByIdResponse>
-                {
-                    StatusCode = StatusCodeEnum.InternalServerError_500,
-                    IsSuccess = false,
-                    Message = $"Error retrieving feedback: {ex.Message}",
-                    Data = null
-                };
+                return new BaseResponse<GetFeedBackByIdResponse>($"Error retrieving feedbacks: {ex.Message}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -122,23 +92,11 @@ namespace Service.Service
                     TotalCount = feedBackResponses.Count
                 };
 
-                return new BaseResponse<GetAllFeedBackResponse>
-                {
-                    StatusCode = StatusCodeEnum.OK_200,
-                    IsSuccess = true,
-                    Message = "Retrieved customer feedbacks successfully",
-                    Data = response
-                };
+                return new BaseResponse<GetAllFeedBackResponse>("Retrieved customer feedbacks successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetAllFeedBackResponse>
-                {
-                    StatusCode = StatusCodeEnum.InternalServerError_500,
-                    IsSuccess = false,
-                    Message = $"Error retrieving customer feedbacks: {ex.Message}",
-                    Data = null
-                };
+                return new BaseResponse<GetAllFeedBackResponse>($"Error retrieving customer feedbacks: {ex.Message}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -155,23 +113,11 @@ namespace Service.Service
                     TotalCount = feedBackResponses.Count
                 };
 
-                return new BaseResponse<GetAllFeedBackResponse>
-                {
-                    StatusCode = StatusCodeEnum.OK_200,
-                    IsSuccess = true,
-                    Message = "Retrieved appointment feedbacks successfully",
-                    Data = response
-                };
+                return new BaseResponse<GetAllFeedBackResponse>("Retrieved appointment feedbacks successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetAllFeedBackResponse>
-                {
-                    StatusCode = StatusCodeEnum.InternalServerError_500,
-                    IsSuccess = false,
-                    Message = $"Error retrieving appointment feedbacks: {ex.Message}",
-                    Data = null
-                };
+                return new BaseResponse<GetAllFeedBackResponse>($"Error retrieving appointment feedbacks: {ex.Message}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -183,52 +129,28 @@ namespace Service.Service
                 var customer = await _accountRepository.GetByAccountIdAsync(request.CustomerID);
                 if (customer == null)
                 {
-                    return new BaseResponse<GetFeedBackByIdResponse>
-                    {
-                        StatusCode = StatusCodeEnum.NotFound_404,
-                        IsSuccess = false,
-                        Message = "Customer not found",
-                        Data = null
-                    };
+                    return new BaseResponse<GetFeedBackByIdResponse>("Customer not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 // Validate appointment exists
                 var appointment = await _appointmentRepository.GetAppointmentByIdAsync(request.AppointmentID);
                 if (appointment == null)
                 {
-                    return new BaseResponse<GetFeedBackByIdResponse>
-                    {
-                        StatusCode = StatusCodeEnum.NotFound_404,
-                        IsSuccess = false,
-                        Message = "Appointment not found",
-                        Data = null
-                    };
+                    return new BaseResponse<GetFeedBackByIdResponse>("Appointment not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 // Check if customer already provided feedback for this appointment
                 var existingFeedBack = await _feedBackRepository.ExistsFeedBackByCustomerAndAppointmentAsync(request.CustomerID, request.AppointmentID);
                 if (existingFeedBack)
                 {
-                    return new BaseResponse<GetFeedBackByIdResponse>
-                    {
-                        StatusCode = StatusCodeEnum.BadRequest_400,
-                        IsSuccess = false,
-                        Message = "Customer has already provided feedback for this appointment",
-                        Data = null
-                    };
+                    return new BaseResponse<GetFeedBackByIdResponse>("Customer has already provided feedback for this appointment", StatusCodeEnum.BadRequest_400, null);
                 }
 
                 // Validate rating range (1-5)
                 if (request.ServiceRate < 1.0 || request.ServiceRate > 5.0 || 
                     request.FacilityRate < 1.0 || request.FacilityRate > 5.0)
                 {
-                    return new BaseResponse<GetFeedBackByIdResponse>
-                    {
-                        StatusCode = StatusCodeEnum.BadRequest_400,
-                        IsSuccess = false,
-                        Message = "Ratings must be between 1.0 and 5.0",
-                        Data = null
-                    };
+                    return new BaseResponse<GetFeedBackByIdResponse>("Ratings must be between 1.0 and 5.0", StatusCodeEnum.BadRequest_400, null);
                 }
 
                 var feedBack = _mapper.Map<FeedBack>(request);
@@ -243,23 +165,11 @@ namespace Service.Service
                     FeedBack = feedBackResponse
                 };
 
-                return new BaseResponse<GetFeedBackByIdResponse>
-                {
-                    StatusCode = StatusCodeEnum.Created_201,
-                    IsSuccess = true,
-                    Message = "Feedback created successfully",
-                    Data = response
-                };
+                return new BaseResponse<GetFeedBackByIdResponse>("Feedback created successfully", StatusCodeEnum.Created_201, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetFeedBackByIdResponse>
-                {
-                    StatusCode = StatusCodeEnum.InternalServerError_500,
-                    IsSuccess = false,
-                    Message = $"Error creating feedback: {ex.Message}",
-                    Data = null
-                };
+                return new BaseResponse<GetFeedBackByIdResponse>($"Error creating feedback: {ex.Message}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
@@ -270,26 +180,14 @@ namespace Service.Service
                 var existingFeedBack = await _feedBackRepository.GetFeedBackByIdAsync(feedBackId);
                 if (existingFeedBack == null)
                 {
-                    return new BaseResponse<GetFeedBackByIdResponse>
-                    {
-                        StatusCode = StatusCodeEnum.NotFound_404,
-                        IsSuccess = false,
-                        Message = "Feedback not found",
-                        Data = null
-                    };
+                    return new BaseResponse<GetFeedBackByIdResponse>("Feedback not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 // Validate rating range (1-5)
                 if (request.ServiceRate < 1.0 || request.ServiceRate > 5.0 || 
                     request.FacilityRate < 1.0 || request.FacilityRate > 5.0)
                 {
-                    return new BaseResponse<GetFeedBackByIdResponse>
-                    {
-                        StatusCode = StatusCodeEnum.BadRequest_400,
-                        IsSuccess = false,
-                        Message = "Ratings must be between 1.0 and 5.0",
-                        Data = null
-                    };
+                    return new BaseResponse<GetFeedBackByIdResponse>("Ratings must be between 1.0 and 5.0", StatusCodeEnum.BadRequest_400, null);
                 }
 
                 // Map the updates
@@ -299,13 +197,7 @@ namespace Service.Service
                 var updatedFeedBack = await _feedBackRepository.UpdateFeedBackAsync(existingFeedBack);
                 if (updatedFeedBack == null)
                 {
-                    return new BaseResponse<GetFeedBackByIdResponse>
-                    {
-                        StatusCode = StatusCodeEnum.InternalServerError_500,
-                        IsSuccess = false,
-                        Message = "Failed to update feedback",
-                        Data = null
-                    };
+                    return new BaseResponse<GetFeedBackByIdResponse>("Failed to update feedback", StatusCodeEnum.InternalServerError_500, null);
                 }
 
                 // Retrieve the updated feedback with related data
@@ -317,71 +209,35 @@ namespace Service.Service
                     FeedBack = feedBackResponse
                 };
 
-                return new BaseResponse<GetFeedBackByIdResponse>
-                {
-                    StatusCode = StatusCodeEnum.OK_200,
-                    IsSuccess = true,
-                    Message = "Feedback updated successfully",
-                    Data = response
-                };
+                return new BaseResponse<GetFeedBackByIdResponse>("Feedback updated successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetFeedBackByIdResponse>
-                {
-                    StatusCode = StatusCodeEnum.InternalServerError_500,
-                    IsSuccess = false,
-                    Message = $"Error updating feedback: {ex.Message}",
-                    Data = null
-                };
+                return new BaseResponse<GetFeedBackByIdResponse>($"Error updating feedback: {ex.Message}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
-        public async Task<BaseResponse<object>> DeleteFeedBackAsync(int feedBackId)
+        public async Task<BaseResponse<string>> DeleteFeedBackAsync(int feedBackId)
         {
             try
             {
                 var existingFeedBack = await _feedBackRepository.GetFeedBackByIdAsync(feedBackId);
                 if (existingFeedBack == null)
                 {
-                    return new BaseResponse<object>
-                    {
-                        StatusCode = StatusCodeEnum.NotFound_404,
-                        IsSuccess = false,
-                        Message = "Feedback not found",
-                        Data = null
-                    };
+                    return new BaseResponse<string>("Feedback not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 var deleted = await _feedBackRepository.DeleteFeedBackAsync(feedBackId);
                 if (!deleted)
                 {
-                    return new BaseResponse<object>
-                    {
-                        StatusCode = StatusCodeEnum.InternalServerError_500,
-                        IsSuccess = false,
-                        Message = "Failed to delete feedback",
-                        Data = null
-                    };
+                    return new BaseResponse<string>("Failed to delete feedback", StatusCodeEnum.InternalServerError_500, null);
                 }
 
-                return new BaseResponse<object>
-                {
-                    StatusCode = StatusCodeEnum.OK_200,
-                    IsSuccess = true,
-                    Message = "Feedback deleted successfully",
-                    Data = null
-                };
+                return new BaseResponse<string>("Feedback deleted successfully", StatusCodeEnum.OK_200, "Deleted");
             }
             catch (Exception ex)
             {
-                return new BaseResponse<object>
-                {
-                    StatusCode = StatusCodeEnum.InternalServerError_500,
-                    IsSuccess = false,
-                    Message = $"Error deleting feedback: {ex.Message}",
-                    Data = null
-                };
+                return new BaseResponse<string>($"Error deleting feedback: {ex.Message}", StatusCodeEnum.InternalServerError_500, null);
             }
         }
     }
