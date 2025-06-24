@@ -18,6 +18,18 @@ namespace GHSMSystem.Controllers
             _consultantSlotService = consultantSlotService;
         }
 
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var res = await _consultantSlotService.GetAllAsync();
+            return res.StatusCode switch
+            {
+                StatusCodeEnum.OK_200 => Ok(res),
+                StatusCodeEnum.NotFound_404 => NotFound(res),
+                _ => StatusCode(500, res)
+            };
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetRegistered(
         [FromQuery] string consultantId)
