@@ -46,8 +46,8 @@ namespace GHSMSystem.Controllers
         [HttpPost("register")]
         [Authorize(Roles = "Consultant")]
         public async Task<IActionResult> Register(
-    [FromQuery] int slotId,
-    [FromQuery] int maxAppointment)
+        [FromQuery] int slotId,
+        [FromQuery] int maxAppointment)
         {
             // đọc đúng claim bạn đã gán khi tạo token
             var consultantId = User.FindFirstValue("AccountID");
@@ -67,16 +67,16 @@ namespace GHSMSystem.Controllers
 
 
         [HttpPut("swap")]
-        [Authorize(Roles = "Consultant")]
         public async Task<IActionResult> Swap(
-            [FromQuery] string consultantA, [FromQuery] int slotA,
-            [FromQuery] string consultantB, [FromQuery] int slotB)
+        [FromQuery] string consultantA,
+        [FromQuery] int slotA,
+        [FromQuery] string consultantB,
+        [FromQuery] int slotB)
         {
             var res = await _consultantSlotService.SwapAsync(consultantA, slotA, consultantB, slotB);
             return res.StatusCode switch
             {
                 StatusCodeEnum.OK_200 => Ok(res),
-                StatusCodeEnum.Conflict_409 => Conflict(res),
                 StatusCodeEnum.NotFound_404 => NotFound(res),
                 _ => StatusCode(500, res)
             };

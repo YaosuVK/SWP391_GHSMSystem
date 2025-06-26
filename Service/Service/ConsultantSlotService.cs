@@ -83,27 +83,49 @@ namespace Service.Service
 
         // 2) Trao đổi ca
         public async Task<BaseResponse<bool>> SwapAsync(
-                string consA, int slotA,
-                string consB, int slotB)
+    string consultantIdA, int slotIdA,
+    string consultantIdB, int slotIdB)
         {
-            // a. Lấy hai booking
-            var a = await _repo.GetByConsultantAndSlotAsync(consA, slotA);
-            var b = await _repo.GetByConsultantAndSlotAsync(consB, slotB);
-            if (a == null || b == null)
+            // 1) Kiểm tra input
+            if (consultantIdA == consultantIdB)
+                return new BaseResponse<bool>("Cannot swap the same consultant", StatusCodeEnum.BadRequest_400, false);
+            if (slotIdA == slotIdB)
+                return new BaseResponse<bool>("Cannot swap the same slot", StatusCodeEnum.BadRequest_400, false);
+
+            // 2) Lấy hai bản ghi cũ
+            var csA = await _repo.GetByConsultantAndSlotAsync(consultantIdA, slotIdA);
+            var csB = await _repo.GetByConsultantAndSlotAsync(consultantIdB, slotIdB);
+            if (csA == null || csB == null)
                 return new BaseResponse<bool>("One or both registrations not found", StatusCodeEnum.NotFound_404, false);
 
-            // b. Hoán đổi ConsultantID
-            var temp = a.ConsultantID;
-            a.ConsultantID = b.ConsultantID;
-            b.ConsultantID = temp;
+            // 3) Xóa hai bản ghi cũ
+            await _repo.DeleteAsync(csA);
+            await _repo.DeleteAsync(csB);
 
-            // c. Lưu thay đổi
-            await _repo.DeleteAsync(a);
-            await _repo.DeleteAsync(b);
-            await _repo.AddAsync(a);
-            await _repo.AddAsync(b);
+            // 4) Tạo hai bản ghi mới (hoán đổi consultant)
+            var swappedA = new ConsultantSlot
+            {
+                ConsultantID = consultantIdB,
+                SlotID = slotIdA,
+                AssignedDate = csA.AssignedDate,
+                MaxAppointment = csA.MaxAppointment
+            };
+            var swappedB = new ConsultantSlot
+            {
+                ConsultantID = consultantIdA,
+                SlotID = slotIdB,
+                AssignedDate = csB.AssignedDate,
+                MaxAppointment = csB.MaxAppointment
+            };
+
+            // 5) Lưu hai bản ghi mới
+            await _repo.AddAsync(swappedA);
+            await _repo.AddAsync(swappedB);
+
             return new BaseResponse<bool>("Swap successful", StatusCodeEnum.OK_200, true);
         }
+
+
 
         public async Task<BaseResponse<IEnumerable<ConsultantSlot>>> GetRegisteredSlotsAsync(string consultantId)
         {
@@ -131,5 +153,7 @@ namespace Service.Service
                 return new BaseResponse<IEnumerable<ConsultantSlot>>("No consultant slots found", StatusCodeEnum.NotFound_404, null);
             return new BaseResponse<IEnumerable<ConsultantSlot>>("All consultant slots fetched", StatusCodeEnum.OK_200, list);
         }
+
+        
     }
 }
