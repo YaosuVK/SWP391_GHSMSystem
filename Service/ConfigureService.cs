@@ -19,19 +19,14 @@ namespace Service
         {
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<ISlotService, SlotService>();
             services.AddScoped<IWorkingHourService, WorkingHourService>();
             services.AddScoped<IClinicService, ClinicService>();
             services.AddScoped<IServiceService, ServicesService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ITransactionService, TransactionService>();
-            services.AddScoped<ITreatmentOutcomeService, TreatmentOutcomeService>();
-            services.AddScoped<ILabTestService, LabTestService>();
-            services.AddScoped<IMenstrualCycleService, MenstrualCycleService>();
-            services.AddScoped<ICyclePredictionService, CyclePredictionService>();
-            services.AddScoped<IFeedBackService, FeedBackService>();
-            services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<IConsultantSlotService, ConsultantSlotService>();
+
             return services;
         }
     }

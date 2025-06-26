@@ -23,8 +23,8 @@ namespace Repository
             services.AddScoped<ISlotRepository, SlotRepository>();
             services.AddScoped<IClinicRepository, ClinicRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();
-            services.AddScoped<IBlogRepository, BlogRepository>();
-            services.AddScoped<IImageBlogRepository, ImageBlogRepository>();
+            services.AddScoped<IConsultantSlotRepository, ConsultantSlotRepository>();
+
 
             services.AddScoped<IAppointmentDetailRepository, AppointmentDetailRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -32,29 +32,18 @@ namespace Repository
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageServiceRepository, ImageServiceRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
-            services.AddScoped<ITreatmentOutcomeRepository, TreatmentOutcomeRepository>();
-            services.AddScoped<ILabTestRepository, LabTestRepository>();
-            services.AddScoped<IMenstrualCycleRepository, MenstrualCycleRepository>();
-            services.AddScoped<ICyclePredictionRepository, CyclePredictionRepository>();
-            services.AddScoped<IFeedBackRepository, FeedBackRepository>();
 
             services.AddScoped<AccountDAO>();
             services.AddScoped<AppointmentDAO>();
             services.AddScoped<AppointmentDetailDAO>();
             services.AddScoped<ClinicDAO>();
-            services.AddScoped <BlogDAO>();
             services.AddScoped<CategoryDAO>();
             services.AddScoped<ServiceDAO>();
             services.AddScoped<SlotDAO>();
             services.AddScoped<WorkingHourDAO>();
             services.AddScoped<ImageServicesDAO>();
-            services.AddScoped<ImageBlogDAO>();
             services.AddScoped<TransactionDAO>();
-            services.AddScoped<TreatmentOutcomeDAO>();
-            services.AddScoped<LabTestDAO>();
-            services.AddScoped<MenstrualCycleDAO>();
-            services.AddScoped<CyclePredictionDAO>();
-            services.AddScoped<FeedBackDAO>();
+            services.AddScoped<ConsultantSlotDAO>();
 
             services.AddScoped<ConsultantProfileDAO>();
             return services;

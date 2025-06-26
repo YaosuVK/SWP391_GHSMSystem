@@ -102,7 +102,7 @@ namespace Service.Service
             IEnumerable<Slot> slot = await _slotRepository.GetAllAsync();
             if (slot == null || !slot.Any())
             {
-                return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong!",
+                return new BaseResponse<IEnumerable<SlotForCustomer>>("No slot found!",
                 StatusCodeEnum.BadGateway_502, null);
             }
             var slots = _mapper.Map<IEnumerable<SlotForCustomer>>(slot);
@@ -111,7 +111,7 @@ namespace Service.Service
                 return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong!",
                 StatusCodeEnum.BadGateway_502, null);
             }
-            return new BaseResponse<IEnumerable<SlotForCustomer>>("Get all transactions as base success",
+            return new BaseResponse<IEnumerable<SlotForCustomer>>("Get all slot success",
                 StatusCodeEnum.OK_200, slots);
         }
 
