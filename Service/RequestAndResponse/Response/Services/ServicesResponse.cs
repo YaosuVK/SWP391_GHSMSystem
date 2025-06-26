@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service.RequestAndResponse.Response.ImageService;
 
 namespace Service.RequestAndResponse.Response.Services
 {
@@ -27,5 +28,7 @@ namespace Service.RequestAndResponse.Response.Services
         public double ServicesPrice { get; set; }
 
         public bool Status { get; set; }
+
+        public ICollection<ImageServiceResponse> ImageServices { get; set; }
     }
 }

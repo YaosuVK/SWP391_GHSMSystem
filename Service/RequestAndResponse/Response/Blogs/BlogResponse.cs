@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Model;
+using Service.RequestAndResponse.Response.ImageBlog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -24,6 +25,6 @@ namespace Service.RequestAndResponse.Response.Blogs
 
         public bool Status { get; set; }
 
-        public ICollection<ImageBlog> ImageBlogs { get; set; }
+        public ICollection<ImageBlogResponse> ImageBlogs { get; set; }
     }
 }

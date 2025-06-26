@@ -1,6 +1,5 @@
 ﻿using BusinessObject.Model;
 using Service.RequestAndResponse.Response.Accounts;
-using Service.RequestAndResponse.Response.Clinic;
 using Service.RequestAndResponse.Response.TreatmentOutcomes;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Service.RequestAndResponse.Response.Appointments
 {
-    public class GetAllAppointment
+    public class GetAllAppointmentForSlot
     {
         public int AppointmentID { get; set; }
 
@@ -22,9 +21,6 @@ namespace Service.RequestAndResponse.Response.Appointments
 
         public int? TreatmentID { get; set; }
         public GetTreatmentOutcomeResponse TreatmentOutcome { get; set; }
-
-        public int? SlotID { get; set; }
-        public Slot Slot { get; set; }
 
         public DateTime CreateAt { get; set; }
 

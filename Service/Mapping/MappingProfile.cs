@@ -30,6 +30,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service.RequestAndResponse.Response.ImageService;
+using Service.RequestAndResponse.Response.ImageBlog;
+using Service.RequestAndResponse.Response.Accounts;
 
 namespace Service.Mapping
 {
@@ -37,7 +40,12 @@ namespace Service.Mapping
     {
         public MappingProfile() 
         {
+            CreateMap<Account, GetCustomerUser>().ReverseMap();
+            CreateMap<Account, GetStaffUser>().ReverseMap();
+            CreateMap<Account, GetConsultantUser>().ReverseMap();
+
             CreateMap<Appointment, GetAllAppointment>().ReverseMap();
+            CreateMap<Appointment, GetAllAppointmentForSlot>().ReverseMap();
             CreateMap<Appointment, GetAppointmentResponse>().ReverseMap();
             CreateMap<CreateAppointmentRequest, Appointment>().ReverseMap();
             CreateMap<UpdateAppointmentRequest, Appointment>().ReverseMap();
@@ -61,16 +69,19 @@ namespace Service.Mapping
             CreateMap<UpdateSlotRequest, Slot>().ReverseMap();
 
             CreateMap<Category, GetAllCategoryResponse>().ReverseMap();
+            CreateMap<Category, GetCategoryForService>().ReverseMap();
             CreateMap<CreateCategoryRequest, Category>().ReverseMap();
             CreateMap<UpdateCategoryRequest, Category>().ReverseMap();
 
             CreateMap<Services, ServicesResponse>().ReverseMap();
             CreateMap<CreateServiceRequest, Services>().ReverseMap();
             CreateMap<UpdateServiceRequest, Services>().ReverseMap();
+            CreateMap<ImageService, ImageServiceResponse>().ReverseMap();
 
             CreateMap<Blog, BlogResponse>().ReverseMap();
             CreateMap<CreateBlogRequest, Blog>().ReverseMap();
             CreateMap<UpdateBlogRequest, Blog>().ReverseMap();
+            CreateMap<ImageBlog, ImageBlogResponse>().ReverseMap();
 
 
             CreateMap<TransactionResponse, Transaction>().ReverseMap();
@@ -87,6 +98,13 @@ namespace Service.Mapping
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.PhoneNumber))
                 .ForMember(dest => dest.ConsultantName, opt => opt.MapFrom(src => src.Consultant.Name))
                 .ForMember(dest => dest.ConsultantEmail, opt => opt.MapFrom(src => src.Consultant.Email));
+
+            CreateMap<TreatmentOutcome, GetTreatmentOutcomeResponse>()
+               .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
+               .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
+               .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.PhoneNumber))
+               .ForMember(dest => dest.ConsultantName, opt => opt.MapFrom(src => src.Consultant.Name))
+               .ForMember(dest => dest.ConsultantEmail, opt => opt.MapFrom(src => src.Consultant.Email));
 
             CreateMap<CreateTreatmentOutcomeRequest, TreatmentOutcome>()
                 .ForMember(dest => dest.CreateAt, opt => opt.MapFrom(src => DateTime.Now))
