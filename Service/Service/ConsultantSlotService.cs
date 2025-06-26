@@ -151,7 +151,7 @@ namespace Service.Service
             var list = await _repo.GetAllAsync();
             if (list == null || !list.Any())
                 return new BaseResponse<IEnumerable<ConsultantSlot>>("No consultant slots found", StatusCodeEnum.NotFound_404, null);
-            return new BaseResponse<IEnumerable<ConsultantSlot>>("All consultant slots fetched", StatusCodeEnum.OK_200, list);
+            return new BaseResponse<IEnumerable<ConsultantSlot>>("Get all slot success", StatusCodeEnum.OK_200, list);
         }
 
         

@@ -18,7 +18,7 @@ namespace Repository.Repositories
             _slotDao = slotDao;
         }
 
-        public async Task<List<Slot>> AddListAsync(List<Slot> entity)
+        public async Task<List<Slot>> AddSLotAsync(List<Slot> entity)
         {
             return await _slotDao.AddRange(entity);
         }

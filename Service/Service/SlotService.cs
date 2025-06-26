@@ -94,7 +94,7 @@ namespace Service.Service
                 await _slotRepository.AddRange(slotList);
             
 
-            return new BaseResponse<List<Slot>>("Create Slot as base success", StatusCodeEnum.Created_201, slotList);
+            return new BaseResponse<List<Slot>>("Create slot success", StatusCodeEnum.Created_201, slotList);
         }
 
         public async Task<BaseResponse<IEnumerable<SlotForCustomer>>> GetAllAsync()
@@ -155,7 +155,7 @@ namespace Service.Service
 
             // 3. Cập nhật
             await _slotRepository.UpdateAsync(existSlot);
-            return new BaseResponse<Slot>("Cập nhật phòng khám thành công.", StatusCodeEnum.OK_200, existSlot);
+            return new BaseResponse<Slot>("Update slot success.", StatusCodeEnum.OK_200, existSlot);
         }
 
         public async Task<BaseResponse<Slot>> DeleteAsync(int slotId)
