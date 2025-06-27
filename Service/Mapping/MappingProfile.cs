@@ -33,6 +33,7 @@ using System.Threading.Tasks;
 using Service.RequestAndResponse.Response.ImageService;
 using Service.RequestAndResponse.Response.ImageBlog;
 using Service.RequestAndResponse.Response.Accounts;
+using Service.RequestAndResponse.Request.ConsultantProfiles;
 
 namespace Service.Mapping
 {
@@ -53,6 +54,9 @@ namespace Service.Mapping
             CreateMap<Clinic, ClinicResponse>().ReverseMap();
             CreateMap<CreateClinicRequest, Clinic>().ReverseMap();
             CreateMap<UpdateClinicRequest, Clinic>().ReverseMap();
+
+            CreateMap<CreateConsultantProfile, ConsultantProfile>().ReverseMap();
+            CreateMap<UpdateConsultantProfile, ConsultantProfile>().ReverseMap();
 
             CreateMap<WorkingHour, WorkingHourResponse>().ReverseMap();
             CreateMap<CreateWorkingHourRequest, WorkingHour>()

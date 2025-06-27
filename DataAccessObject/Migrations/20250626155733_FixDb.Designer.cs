@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250621161725_FixDb3")]
-    partial class FixDb3
+    [Migration("20250626155733_FixDb")]
+    partial class FixDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -177,13 +177,16 @@ namespace DataAccessObject.Migrations
                     b.Property<int>("AppointmentID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ConsultantProfileID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<double>("ServicePrice")
                         .HasColumnType("float");
 
-                    b.Property<int>("ServicesID")
+                    b.Property<int?>("ServicesID")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
@@ -192,6 +195,8 @@ namespace DataAccessObject.Migrations
                     b.HasKey("AppointmentDetailID");
 
                     b.HasIndex("AppointmentID");
+
+                    b.HasIndex("ConsultantProfileID");
 
                     b.HasIndex("ServicesID");
 
@@ -322,6 +327,9 @@ namespace DataAccessObject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<double>("ConsultantPrice")
+                        .HasColumnType("float");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -357,7 +365,7 @@ namespace DataAccessObject.Migrations
 
                     b.HasIndex("SlotID");
 
-                    b.ToTable("ConsultantSlot");
+                    b.ToTable("ConsultantSlots");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.CyclePrediction", b =>
@@ -729,6 +737,9 @@ namespace DataAccessObject.Migrations
                     b.Property<int>("MaxConsultant")
                         .HasColumnType("int");
 
+                    b.Property<int>("MaxTestAppointment")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
@@ -942,31 +953,31 @@ namespace DataAccessObject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "41cad25a-2993-4f50-aa14-e9a9b8de183d",
+                            Id = "64b8f6e8-0dd1-4760-9a6f-fddd952e119c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c1d517b7-6642-4822-9cf0-8b7b3476de7b",
+                            Id = "76d262fa-46d2-4768-9c39-7762bb228e1a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "755bea23-5901-48fb-b055-94dcb5d8a73f",
+                            Id = "5281f337-ded0-4e06-bbe8-6b7b5a24653a",
                             Name = "Consultant",
                             NormalizedName = "CONSULTANT"
                         },
                         new
                         {
-                            Id = "85638ebb-650d-4542-a3b6-aeced8d3cdc9",
+                            Id = "7e7139a6-2464-43a2-998e-92e7d29dd346",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "9224e1c4-d7f2-4c89-b0f3-9a571b29e89e",
+                            Id = "9dfd03b5-94b8-49d6-994d-db3b8a799b2b",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         });
@@ -1119,13 +1130,18 @@ namespace DataAccessObject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BusinessObject.Model.ConsultantProfile", "ConsultantProfile")
+                        .WithMany("AppointmentDetails")
+                        .HasForeignKey("ConsultantProfileID");
+
                     b.HasOne("BusinessObject.Model.Services", "Service")
                         .WithMany("AppointmentDetails")
                         .HasForeignKey("ServicesID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Appointment");
+
+                    b.Navigation("ConsultantProfile");
 
                     b.Navigation("Service");
                 });
@@ -1522,6 +1538,11 @@ namespace DataAccessObject.Migrations
                     b.Navigation("Slots");
 
                     b.Navigation("WorkingHours");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.ConsultantProfile", b =>
+                {
+                    b.Navigation("AppointmentDetails");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.MenstrualCycle", b =>

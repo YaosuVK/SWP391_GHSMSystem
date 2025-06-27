@@ -174,13 +174,16 @@ namespace DataAccessObject.Migrations
                     b.Property<int>("AppointmentID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ConsultantProfileID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<double>("ServicePrice")
                         .HasColumnType("float");
 
-                    b.Property<int>("ServicesID")
+                    b.Property<int?>("ServicesID")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
@@ -189,6 +192,8 @@ namespace DataAccessObject.Migrations
                     b.HasKey("AppointmentDetailID");
 
                     b.HasIndex("AppointmentID");
+
+                    b.HasIndex("ConsultantProfileID");
 
                     b.HasIndex("ServicesID");
 
@@ -319,6 +324,9 @@ namespace DataAccessObject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<double>("ConsultantPrice")
+                        .HasColumnType("float");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -382,7 +390,8 @@ namespace DataAccessObject.Migrations
 
                     b.HasKey("CyclePredictionID");
 
-                    b.HasIndex("MenstrualCycleID");
+                    b.HasIndex("MenstrualCycleID")
+                        .IsUnique();
 
                     b.ToTable("CyclePredictions");
                 });
@@ -725,6 +734,9 @@ namespace DataAccessObject.Migrations
                     b.Property<int>("MaxConsultant")
                         .HasColumnType("int");
 
+                    b.Property<int>("MaxTestAppointment")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
@@ -938,31 +950,31 @@ namespace DataAccessObject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7396c599-db2d-41bb-a108-13954ae87fb8",
+                            Id = "64b8f6e8-0dd1-4760-9a6f-fddd952e119c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "461c5bb0-bd26-421a-bca8-bc9714c511ce",
+                            Id = "76d262fa-46d2-4768-9c39-7762bb228e1a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "c1523d27-0905-4f4a-89a2-1b4ebce93f32",
+                            Id = "5281f337-ded0-4e06-bbe8-6b7b5a24653a",
                             Name = "Consultant",
                             NormalizedName = "CONSULTANT"
                         },
                         new
                         {
-                            Id = "f3e8b913-68a1-4fd8-a813-0e4ba792a3c8",
+                            Id = "7e7139a6-2464-43a2-998e-92e7d29dd346",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "a0970298-9c81-4516-b4d7-142f70fcbb58",
+                            Id = "9dfd03b5-94b8-49d6-994d-db3b8a799b2b",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         });
@@ -1115,13 +1127,18 @@ namespace DataAccessObject.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BusinessObject.Model.ConsultantProfile", "ConsultantProfile")
+                        .WithMany("AppointmentDetails")
+                        .HasForeignKey("ConsultantProfileID");
+
                     b.HasOne("BusinessObject.Model.Services", "Service")
                         .WithMany("AppointmentDetails")
                         .HasForeignKey("ServicesID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Appointment");
+
+                    b.Navigation("ConsultantProfile");
 
                     b.Navigation("Service");
                 });
@@ -1177,8 +1194,8 @@ namespace DataAccessObject.Migrations
             modelBuilder.Entity("BusinessObject.Model.CyclePrediction", b =>
                 {
                     b.HasOne("BusinessObject.Model.MenstrualCycle", "MenstrualCycle")
-                        .WithMany()
-                        .HasForeignKey("MenstrualCycleID")
+                        .WithOne("Prediction")
+                        .HasForeignKey("BusinessObject.Model.CyclePrediction", "MenstrualCycleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1518,6 +1535,17 @@ namespace DataAccessObject.Migrations
                     b.Navigation("Slots");
 
                     b.Navigation("WorkingHours");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.ConsultantProfile", b =>
+                {
+                    b.Navigation("AppointmentDetails");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.MenstrualCycle", b =>
+                {
+                    b.Navigation("Prediction")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Message", b =>
