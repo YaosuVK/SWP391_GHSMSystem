@@ -51,7 +51,7 @@ namespace Service.Service
 
             vnpay.AddRequestData("vnp_OrderInfo", orderInfo);
             vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
-            vnpay.AddRequestData("vnp_ReturnUrl", _configuration["VnPay:PaymentBackReturnUrl2"]);
+            vnpay.AddRequestData("vnp_ReturnUrl", _configuration["VnPay:PaymentBackReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", txnRef);
             var paymentUrl = vnpay.CreateRequestUrl(_configuration["VnPay:BaseUrl"],
                 _configuration["VnPay:HashSecret"]);

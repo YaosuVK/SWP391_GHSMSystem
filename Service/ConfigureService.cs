@@ -26,7 +26,10 @@ namespace Service
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IConsultantSlotService, ConsultantSlotService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IVnPayService, VnPayService>();
             services.AddScoped<IConsultantProfileServive, ConsultantProfileService>();
+
 
             return services;
         }
