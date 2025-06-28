@@ -300,5 +300,27 @@ namespace GHSMSystem.Controllers
             var appointment = await _appointmentService.UpdateAppointment( appointmentID, request);
             return appointment;
         }
+
+        [HttpPut]
+        [Route("ChangeAppointmentSlot")]
+        public async Task<ActionResult<BaseResponse<UpdateAppointmentSlot>>> ChangeAppointmentSlot(int appointmentID, UpdateAppointmentSlot request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Please Implement all Information");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Trả về lỗi chi tiết từ ModelState
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { message = "Validation Failed", errors });
+            }
+
+            var appointment = await _appointmentService.ChangeAppointmentSlot(appointmentID, request);
+            return appointment;
+        }
     }
 }

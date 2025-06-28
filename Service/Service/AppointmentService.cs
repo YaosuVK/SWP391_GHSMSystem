@@ -573,5 +573,59 @@ namespace Service.Service
             }
             return (appointmentId, accountId);
         }
+
+        public async Task<BaseResponse<UpdateAppointmentSlot>> ChangeAppointmentSlot(int appointmentID, UpdateAppointmentSlot request)
+        {
+            var existingAppointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentID);
+            if (existingAppointment == null)
+            {
+                return new BaseResponse<UpdateAppointmentSlot>("Cannot find your Appointment!",
+                         StatusCodeEnum.NotFound_404, null);
+            }
+
+            if (existingAppointment.paymentStatus != PaymentStatus.FullyPaid)
+            {
+                return new BaseResponse<UpdateAppointmentSlot>("Cannot change the slot of appointment!",
+                         StatusCodeEnum.NotFound_404, null);
+            }
+
+            bool isTestAppointment = existingAppointment.AppointmentDetails.Any(d => d.ServicesID.HasValue);
+            bool isConsultantAppointment = existingAppointment.AppointmentDetails.Any(d => d.ConsultantProfileID.HasValue);
+            
+            if (isConsultantAppointment)
+            {
+                var checkAvailableSlot = await _slotRepository.GetAvailableSlotsForConsultantAsync(request.AppointmentDate, existingAppointment.ConsultantID);
+                if (checkAvailableSlot == null || !checkAvailableSlot.Any())
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>("Cannot find the slot suitalble for that day, please choose another day. ", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                if (!checkAvailableSlot.Any(s => s.SlotID == request.SlotID))
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>("Selected SlotID is not available for that consultant on the selected day.", StatusCodeEnum.BadRequest_400, null);
+                }
+            }
+
+            if(isTestAppointment)
+            {
+                var checkTestAvailableSlot = await _slotRepository.GetAvailableSlotsForTestAsync(request.AppointmentDate);
+                if (checkTestAvailableSlot == null || !checkTestAvailableSlot.Any())
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>("Cannot find the slot suitalble for that day, please choose another day. ", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                if (!checkTestAvailableSlot.Any(s => s.SlotID == request.SlotID))
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>("Selected SlotID is not available for test services on the selected day.", StatusCodeEnum.BadRequest_400, null);
+                }
+            }
+
+            existingAppointment.SlotID = request.SlotID;
+            existingAppointment.UpdateAt = DateTime.Now;
+            existingAppointment.AppointmentDate = request.AppointmentDate;
+
+            await _appointmentRepository.UpdateAppointmentAsync(existingAppointment);
+            return new BaseResponse<UpdateAppointmentSlot>("Appointment updated successfully!", StatusCodeEnum.OK_200, request);
+        }
     }
 }
