@@ -1,19 +1,17 @@
 ﻿using BusinessObject.Model;
+using Service.RequestAndResponse.Response.Accounts;
+using Service.RequestAndResponse.Response.Clinic;
+using Service.RequestAndResponse.Response.Slots;
+using Service.RequestAndResponse.Response.TreatmentOutcomes;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Service.RequestAndResponse.Response.Clinic;
-using Service.RequestAndResponse.Response.TreatmentOutcomes;
-using Service.RequestAndResponse.Response.Accounts;
-using Service.RequestAndResponse.Response.Slots;
 
 namespace Service.RequestAndResponse.Response.Appointments
 {
-    public class GetAppointmentResponse
+    public class GetAppointmentForTransaction
     {
         public int AppointmentID { get; set; }
 

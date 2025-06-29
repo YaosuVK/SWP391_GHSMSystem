@@ -32,12 +32,14 @@ namespace Service.Service
         private readonly IConsultantProfileRepository _consultantProfileRepository;
         private readonly ISlotRepository _slotRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IAccountRepository _accountRepository;
 
         public AppointmentService(IMapper mapper, IAppointmentRepository appointmentRepository,
             IServiceRepository serviceRepository, IClinicRepository clinicalRepository,
             IAppointmentDetailRepository appointmentDetailRepository, 
             IConsultantProfileRepository consultantProfileRepository,
-            ISlotRepository slotRepository, ITransactionRepository transactionRepository)
+            ISlotRepository slotRepository, ITransactionRepository transactionRepository,
+            IAccountRepository accountRepository)
         {
             _mapper = mapper;
             _appointmentRepository = appointmentRepository;
@@ -47,6 +49,7 @@ namespace Service.Service
             _consultantProfileRepository = consultantProfileRepository;
             _slotRepository = slotRepository;
             _transactionRepository = transactionRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<BaseResponse<Appointment>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus)
@@ -543,6 +546,76 @@ namespace Service.Service
             return appointment;
         }
 
+        public async Task<Appointment> CreateAppointmentRefundPayment(int? appointmentID, Transaction transaction)
+        {
+            var appointment = await _appointmentRepository.GetAppointmentByIdCanNullAsync(appointmentID);
+            if (appointment == null)
+            {
+                throw new Exception("Appointment not found");
+            }
+
+            var originalTransaction = appointment.Transactions
+                      .FirstOrDefault(t => (t.TransactionKind == TransactionKind.FullPayment || t.TransactionKind == TransactionKind.Deposited)
+                      && (t.StatusTransaction == StatusOfTransaction.Pending || t.StatusTransaction == StatusOfTransaction.RequestCancel ||
+                      t.StatusTransaction == StatusOfTransaction.RequestRefund));
+
+            if (originalTransaction == null)
+                throw new Exception("No pending or request cancel payment transaction found to refund.");
+
+            bool wasRequestCancel = originalTransaction.StatusTransaction == StatusOfTransaction.RequestCancel;
+
+            originalTransaction.StatusTransaction = StatusOfTransaction.Cancelled;
+            originalTransaction.FinishDate = DateTime.Now;
+            await _transactionRepository.UpdateAsync(originalTransaction);
+
+            appointment.Transactions ??= new List<Transaction>();
+
+            bool alreadyExists = appointment.Transactions.Any(t =>
+            t.ResponseId == transaction.ResponseId && transaction.ResponseId != null);
+
+            if (alreadyExists)
+            {
+                throw new Exception("Duplicate transaction detected.");
+            }
+
+            transaction.TransactionKind = TransactionKind.Refund;
+            transaction.StatusTransaction = StatusOfTransaction.Refunded;
+            transaction.FinishDate = DateTime.Now;
+
+            appointment.Transactions.Add(transaction);
+            double amountPaid = transaction.Amount;
+
+            if (wasRequestCancel)
+            {
+                var recipientEmail = appointment.Customer?.Email;
+                if (!string.IsNullOrEmpty(recipientEmail))
+                {
+                    string subject = "Yêu cầu hủy đặt phòng đã được xử lý";
+                    string body = $@"
+                    <html>
+                    <body>
+                        <p>Xin chào {appointment.Customer?.Name ?? "quý khách"},</p>
+                        <p>Do sự cố phát sinh từ phía Clinic <strong>{appointment.Clinic.Name}</strong>, 
+                        đơn đặt phòng của bạn (mã: <strong>{appointment.AppointmentID}</strong>) đã được hủy và hoàn tiền.</p>
+                        <p>Số tiền đã hoàn: <strong>{transaction.Amount:N0} VND</strong>.</p>
+                        <p>Chúng tôi rất lấy làm tiếc về sự việc này, rất mong quý khách thông cảm cho bên Clinic</p>
+                        <br>
+                        <p>Trân trọng,</p>
+                        <p><strong>ChoTot-Travel-CTT</strong></p>
+                    </body>
+                    </html>";
+
+                    _accountRepository.SendEmail(recipientEmail, subject, body);
+                }
+            }
+
+            appointment.paymentStatus = PaymentStatus.Refunded;
+            appointment.Status = AppointmentStatus.Cancelled;
+
+            await _appointmentRepository.UpdateAppointmentAsync(appointment);
+            return appointment;
+        }
+
         public (int? appointmentId, string? accountId) ParseOrderInfo(string orderInfo)
         {
             int? appointmentId = null;
@@ -627,5 +700,7 @@ namespace Service.Service
             await _appointmentRepository.UpdateAppointmentAsync(existingAppointment);
             return new BaseResponse<UpdateAppointmentSlot>("Appointment updated successfully!", StatusCodeEnum.OK_200, request);
         }
+
+        
     }
 }

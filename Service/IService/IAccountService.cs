@@ -23,5 +23,6 @@ namespace Service.IService
         Task<BaseResponse<string>> ResetPasswordToken(ResetTokenModel resetTokenModel);
         Task<BaseResponse<AccountResetPasswordResponse>> ResetPassword([FromBody] ResetToken resetToken);
         Task<BaseResponse<AccountChangePasswordResponse>> ChangePassword([FromBody] ChangePasswordModel changePassword);
+        Task<Account> GetByStringId(string id);
     }
 }

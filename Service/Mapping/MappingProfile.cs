@@ -48,6 +48,7 @@ namespace Service.Mapping
             CreateMap<Appointment, GetAllAppointment>().ReverseMap();
             CreateMap<Appointment, GetAllAppointmentForSlot>().ReverseMap();
             CreateMap<Appointment, GetAppointmentResponse>().ReverseMap();
+            CreateMap<Appointment, GetAppointmentForTransaction>().ReverseMap();
             CreateMap<CreateAppointmentRequest, Appointment>().ReverseMap();
             CreateMap<UpdateAppointmentRequest, Appointment>().ReverseMap();
             CreateMap<UpdateAppointmentSlot, Appointment>().ReverseMap();

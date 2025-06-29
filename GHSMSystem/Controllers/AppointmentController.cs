@@ -32,11 +32,13 @@ namespace GHSMSystem.Controllers
         private readonly IAppointmentService _appointmentService;
         private readonly IVnPayService _vpnPayService;
         private readonly IConfiguration _configuration;
+        private readonly IAccountService _accountService;
 
         public AppointmentController(IClinicService clinicService, ISlotService slotService, 
                      IWorkingHourService workingHourService, IServiceService serviceService,
                      ICategoryService categoryService, IAppointmentService appointmentService, 
-                     IVnPayService vpnPayService, IConfiguration configuration)
+                     IVnPayService vpnPayService, IConfiguration configuration, 
+                     IAccountService accountService)
         {
             _clinicService = clinicService;
             _slotService = slotService;
@@ -46,6 +48,7 @@ namespace GHSMSystem.Controllers
             _appointmentService = appointmentService;
             _vpnPayService = vpnPayService;
             _configuration = configuration;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -132,6 +135,46 @@ namespace GHSMSystem.Controllers
             return BadRequest("Cannot find Appointment");
         }
 
+        [HttpGet("vnpay-return-refunded")]
+        public async Task<IActionResult> HandleVnPayReturnRefund([FromQuery] VnPayReturnModel model)
+        {
+            if (model.Vnp_TransactionStatus != "00") return BadRequest();
+            var (appointmentId, accountId) = _appointmentService.ParseOrderInfo(model.Vnp_OrderInfo);
+
+            var account = await _accountService.GetByStringId(accountId);
+
+            var transaction = new Transaction
+            {
+                Account = account,
+                Amount = model.Vnp_Amount / 100,
+                BankCode = model.Vnp_BankCode,
+                BankTranNo = model.Vnp_BankTranNo,
+                TransactionType = model.Vnp_CardType,
+                OrderInfo = model.Vnp_OrderInfo,
+                PayDate = DateTime.ParseExact((string)model.Vnp_PayDate, "yyyyMMddHHmmss", CultureInfo.InvariantCulture),
+                ResponseCode = model.Vnp_ResponseCode,
+                TmnCode = model.Vnp_TmnCode,
+                TransactionNo = model.Vnp_TransactionNo,
+                TransactionStatus = model.Vnp_TransactionStatus,
+                TxnRef = model.Vnp_TxnRef,
+                SecureHash = model.Vnp_SecureHash,
+                ResponseId = model.Vnp_TransactionNo,
+                Message = model.Vnp_ResponseCode
+            };
+
+            if (appointmentId.HasValue)
+            {
+                var appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentId.Value);
+                if (appointment == null)
+                    return BadRequest($"Appointment with ID {appointmentId} not found.");
+
+                await _appointmentService.CreateAppointmentRefundPayment(appointmentId, transaction);
+                return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{appointmentId}");
+            }
+
+            return BadRequest("Cannot find Appointment");
+        }
+
         [HttpPost]
         [Route("CreateAppointment")]
         public async Task<ActionResult<BaseResponse<int>>> CreateAppointment(CreateAppointmentRequest request)
@@ -191,6 +234,40 @@ namespace GHSMSystem.Controllers
             };
             return _vpnPayService.CreatePaymentUrlWeb(HttpContext, vnPayModel);
         }
+
+        [HttpPost]
+        [Route("AppointmentPayment-Refund-Full")]
+        public async Task<ActionResult<string>> CheckOutRefundAppointmentFull(int appointmentID, string accountId)
+        {
+            var appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentID);
+
+            if (appointment.Data.Status == AppointmentStatus.RequestCancel) 
+            {
+                double amount = 0;
+
+                if (appointment.Data.paymentStatus == PaymentStatus.FullyPaid)
+                {
+                    amount = appointment.Data.TotalAmount;
+                }
+
+                var vnPayModel = new VnPayRequestModel
+                {
+                    AppointmentID = appointment.Data.AppointmentID,
+                    AccountID = accountId,
+                    FullName = appointment.Data.Customer.Name,
+                    Description = $"{appointment.Data.Customer.Name} {appointment.Data.Customer.Phone}",
+                    Amount = amount,
+                    CreatedDate = DateTime.UtcNow
+                };
+                return _vpnPayService.CreatePaymentUrlWebRefund(HttpContext, vnPayModel);
+            }
+            else
+            {
+                return BadRequest("Cannot Refunded");
+            }
+        }
+
+
 
         [HttpPost]
         [Route("CreateClinic")]
