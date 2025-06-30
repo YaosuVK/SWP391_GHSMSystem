@@ -29,10 +29,12 @@ namespace Service.Service
         private readonly IServiceRepository _serviceRepository;
         private readonly IImageServiceRepository _imageServiceRepository;
         private readonly Cloudinary _cloudinary;
+        private readonly IAppointmentDetailRepository _appointmentDetailRepository;
 
         public ServicesService(IMapper mapper, IClinicRepository clinicRepository,
                 ICategoryRepository categoryRepository, IServiceRepository serviceRepository,
-                Cloudinary cloudinary, IImageServiceRepository imageServiceRepository)
+                Cloudinary cloudinary, IImageServiceRepository imageServiceRepository,
+                IAppointmentDetailRepository appointmentDetailRepository)
         {
             _mapper = mapper;
             _clinicRepository = clinicRepository;
@@ -40,6 +42,7 @@ namespace Service.Service
             _serviceRepository = serviceRepository;
             _cloudinary = cloudinary;
             _imageServiceRepository = imageServiceRepository;
+            _appointmentDetailRepository = appointmentDetailRepository;
         }
 
         public async Task<BaseResponse<Services>> AddAsync(CreateServiceRequest entity)
@@ -81,6 +84,24 @@ namespace Service.Service
             }
 
             return new BaseResponse<Services>("Create Slot as base success", StatusCodeEnum.Created_201, service);
+        }
+
+        public async Task<BaseResponse<List<GetServiceStats>>> GetServiceUsageStats()
+        {
+            var rawStats = await _appointmentDetailRepository.GetServiceUsageStatsAsync();
+            var stats = rawStats.Select(tuple => new GetServiceStats
+            {
+                serviceName = tuple.serviceName,
+                Count = tuple.count,
+
+            }).ToList();
+            if (stats == null || !stats.Any())
+            {
+                return new BaseResponse<List<GetServiceStats>>("Something went wrong!",
+                StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<List<GetServiceStats>>("Get all bookings as base success",
+                StatusCodeEnum.OK_200, stats);
         }
 
         public async Task<BaseResponse<IEnumerable<ServicesResponse>>> GetAllAsync()

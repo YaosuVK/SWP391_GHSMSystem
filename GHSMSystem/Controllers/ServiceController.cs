@@ -26,6 +26,14 @@ namespace GHSMSystem.Controllers
             return Ok(service);
         }
 
+        [HttpGet]
+        [Route("GetServiceStats")]
+        public async Task<ActionResult<BaseResponse<List<GetServiceStats>>>> GetServiceUsageStats()
+        {
+            var services = await _serviceService.GetServiceUsageStats();
+            return Ok(services);
+        }
+
         [HttpPost]
         [Route("CreateService")]
         public async Task<ActionResult<BaseResponse<Services>>> AddService(CreateServiceRequest entity)

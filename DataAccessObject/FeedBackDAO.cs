@@ -16,7 +16,7 @@ namespace DataAccessObject
 
         public FeedBackDAO(GHSMContext context) : base(context)
         {
-            _context = new GHSMContext();
+            _context = context;
         }
 
         public async Task<List<FeedBack>> GetAllFeedBacksAsync()

@@ -71,7 +71,7 @@ namespace Service.Service
                     FeedBack = feedBackResponse
                 };
 
-                return new BaseResponse<GetFeedBackByIdResponse>("Retrieved feedback successfully", StatusCodeEnum.NotFound_404, null);
+                return new BaseResponse<GetFeedBackByIdResponse>("Retrieved feedback successfully", StatusCodeEnum.OK_200, response);
             }
             catch (Exception ex)
             {
