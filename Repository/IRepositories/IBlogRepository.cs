@@ -11,5 +11,6 @@ namespace Repository.IRepositories
     public interface IBlogRepository : IBaseRepository<Blog>
     {
         Task<IEnumerable<Blog>> GetAllBlogsAsync();
+        Task<Blog> GetBlogByIdAsync(int id);
     }
 }

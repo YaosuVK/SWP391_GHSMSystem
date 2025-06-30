@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Repository.Repositories;
 using Google.Api;
 using Service.RequestAndResponse.Enums;
+using Service.RequestAndResponse.Response.Transactions;
 
 namespace Service.Service
 {
@@ -61,12 +62,12 @@ namespace Service.Service
                 }
             }
 
-            return new BaseResponse<Blog>("Create Slot as base success", StatusCodeEnum.Created_201, blog);
+            return new BaseResponse<Blog>("Create blog as base success", StatusCodeEnum.Created_201, blog);
         }
 
         public async Task<BaseResponse<IEnumerable<BlogResponse>>> GetAllAsync()
         {
-            IEnumerable<Blog> blog = await _blogRepository.GetAllAsync();
+            IEnumerable<Blog> blog = await _blogRepository.GetAllBlogsAsync();
             if (blog == null || !blog.Any())
             {
                 return new BaseResponse<IEnumerable<BlogResponse>>("Something went wrong!",
@@ -80,6 +81,17 @@ namespace Service.Service
             }
             return new BaseResponse<IEnumerable<BlogResponse>>("Get all transactions as base success",
                 StatusCodeEnum.OK_200, blogs);
+        }
+
+        public async Task<BaseResponse<BlogResponse?>> GetBlogById(int blogID)
+        {
+            Blog? blog = await _blogRepository.GetBlogByIdAsync(blogID);
+            var result = _mapper.Map<BlogResponse>(blog);
+            if (result == null)
+            {
+                return new BaseResponse<BlogResponse?>("Something Went Wrong!", StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<BlogResponse?>("Get Blog as base success", StatusCodeEnum.OK_200, result);
         }
 
         public async Task<BaseResponse<Blog>> UpdateAsync(int blogID, UpdateBlogRequest entity)

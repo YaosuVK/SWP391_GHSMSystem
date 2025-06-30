@@ -43,5 +43,10 @@ namespace Repository.Repositories
         {
             return _blogDao.DeleteAsync(entity);
         }
+
+        public async Task<Blog> GetBlogByIdAsync(int id)
+        {
+            return await _blogDao.GetBlogByIdAsync(id);
+        }
     }
 }
