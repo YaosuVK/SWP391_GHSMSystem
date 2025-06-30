@@ -30,6 +30,7 @@ namespace Repository
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IConsultantProfileRepository, ConsultantProfileRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IFeedBackRepository, FeedBackRepository>();
             services.AddScoped<IImageServiceRepository, ImageServiceRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
 
@@ -44,6 +45,7 @@ namespace Repository
             services.AddScoped<ImageServicesDAO>();
             services.AddScoped<TransactionDAO>();
             services.AddScoped<ConsultantSlotDAO>();
+            services.AddScoped<FeedBackDAO>();
 
             services.AddScoped<ConsultantProfileDAO>();
             return services;

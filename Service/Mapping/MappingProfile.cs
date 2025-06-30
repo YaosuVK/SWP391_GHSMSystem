@@ -34,6 +34,7 @@ using Service.RequestAndResponse.Response.ImageService;
 using Service.RequestAndResponse.Response.ImageBlog;
 using Service.RequestAndResponse.Response.Accounts;
 using Service.RequestAndResponse.Request.ConsultantProfiles;
+using Service.RequestAndResponse.Response.ConsultantSlots;
 
 namespace Service.Mapping
 {
@@ -74,6 +75,7 @@ namespace Service.Mapping
             CreateMap<Slot, GetSlotResponse>().ReverseMap();
             CreateMap<CreateSlotRequest, Slot>().ReverseMap();
             CreateMap<UpdateSlotRequest, Slot>().ReverseMap();
+            CreateMap<ConsultantSlot, ConsultantSlotResponse>().ReverseMap();
 
             CreateMap<Category, GetAllCategoryResponse>().ReverseMap();
             CreateMap<Category, GetCategoryForService>().ReverseMap();

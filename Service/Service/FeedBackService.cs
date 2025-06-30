@@ -126,7 +126,7 @@ namespace Service.Service
             try
             {
                 // Validate customer exists
-                var customer = await _accountRepository.GetByAccountIdAsync(request.CustomerID);
+                var customer = await _accountRepository.GetByStringId(request.CustomerID);
                 if (customer == null)
                 {
                     return new BaseResponse<GetFeedBackByIdResponse>("Customer not found", StatusCodeEnum.NotFound_404, null);

@@ -24,6 +24,7 @@ namespace Service
             services.AddScoped<IClinicService, ClinicService>();
             services.AddScoped<IServiceService, ServicesService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IFeedBackService, FeedBackService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IConsultantSlotService, ConsultantSlotService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
