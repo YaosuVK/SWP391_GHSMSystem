@@ -26,10 +26,20 @@ namespace Service.Service
         public async Task<BaseResponse<Message>> CreateMessageAsync(string userId, int questionId, CreateMessageRequest req)
         {
             var q = await _qRepo.GetByIdAsync(questionId);
-            if (q == null) return new BaseResponse<Message>("Không tìm thấy câu hỏi", StatusCodeEnum.NotFound_404, null);
+            if (q == null) return new BaseResponse<Message>("Question not found", StatusCodeEnum.NotFound_404, null);
 
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return new BaseResponse<Message>("Không tìm thấy người dùng", StatusCodeEnum.NotFound_404, null);
+            if (user == null) return new BaseResponse<Message>("User not found", StatusCodeEnum.NotFound_404, null);
+
+            // Validate parent message if present
+            if (req.ParentMessageId.HasValue)
+            {
+                var parent = await _repo.GetByIdAsync(req.ParentMessageId.Value);
+                if (parent == null || parent.QuestionID != questionId)
+                {
+                    return new BaseResponse<Message>("Parent message not found or mismatched question", StatusCodeEnum.BadRequest_400, null);
+                }
+            }
 
             // Xác định role của user
             bool isConsultant = await _userManager.IsInRoleAsync(user, "Consultant");
@@ -44,16 +54,16 @@ namespace Service.Service
                 ParentMessageId = req.ParentMessageId
             };
             var added = await _repo.AddAsync(m);
-            return new BaseResponse<Message>("Tạo câu trả lời thành công", StatusCodeEnum.Created_201, added);
+            return new BaseResponse<Message>("Message created", StatusCodeEnum.Created_201, added);
         }
 
         public async Task<BaseResponse<IEnumerable<Message>>> GetMessagesByQuestionAsync(int questionId)
         {
             var q = await _qRepo.GetByIdAsync(questionId);
-            if (q == null) return new BaseResponse<IEnumerable<Message>>("Không tìm thấy câu hỏi", StatusCodeEnum.NotFound_404, null);
+            if (q == null) return new BaseResponse<IEnumerable<Message>>("Question not found", StatusCodeEnum.NotFound_404, null);
             var list = await _repo.GetByQuestionAsync(questionId);
-            return list.Any() ? new BaseResponse<IEnumerable<Message>>("Tìm câu trả lời thành công", StatusCodeEnum.OK_200, list)
-                               : new BaseResponse<IEnumerable<Message>>("Không có câu trả lời", StatusCodeEnum.NotFound_404, null);
+            return list.Any() ? new BaseResponse<IEnumerable<Message>>("Fetched", StatusCodeEnum.OK_200, list)
+                               : new BaseResponse<IEnumerable<Message>>("No messages", StatusCodeEnum.NotFound_404, null);
         }
     }
 }

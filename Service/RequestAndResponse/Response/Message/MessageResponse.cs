@@ -11,11 +11,8 @@ namespace Service.RequestAndResponse.Response.Message
         public int MessageID { get; set; }
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
-
-        public string? CustomerID { get; set; }
-        public string? ConsultantID { get; set; }
-
-        // Nested replies
+        public int? ParentMessageId { get; set; }
         public List<MessageResponse> Replies { get; set; }
+
     }
 }

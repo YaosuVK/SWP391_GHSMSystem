@@ -22,25 +22,25 @@ namespace Service.Service
         public async Task<BaseResponse<Question>> CreateQuestionAsync(string customerId, CreateQuestionRequest req)
         {
             var user = await _userManager.FindByIdAsync(customerId);
-            if (user == null) return new BaseResponse<Question>("Không tìm thấy khách hàng", StatusCodeEnum.NotFound_404, null);
+            if (user == null) return new BaseResponse<Question>("Customer not found", StatusCodeEnum.NotFound_404, null);
 
             var q = new Question { CustomerID = customerId, Content = req.Content, CreatedAt = System.DateTime.UtcNow };
             var added = await _repo.AddAsync(q);
-            return new BaseResponse<Question>("Tạo câu hỏi thành công", StatusCodeEnum.Created_201, added);
+            return new BaseResponse<Question>("Question created", StatusCodeEnum.Created_201, added);
         }
 
         public async Task<BaseResponse<IEnumerable<Question>>> GetAllQuestionsAsync()
         {
             var list = await _repo.GetAllAsync();
-            return list.Any() ? new BaseResponse<IEnumerable<Question>>("Lấy tất cả câu hỏi thành công", StatusCodeEnum.OK_200, list)
-                               : new BaseResponse<IEnumerable<Question>>("Không có câu hỏi", StatusCodeEnum.NotFound_404, null);
+            return list.Any() ? new BaseResponse<IEnumerable<Question>>("Fetched", StatusCodeEnum.OK_200, list)
+                               : new BaseResponse<IEnumerable<Question>>("No questions", StatusCodeEnum.NotFound_404, null);
         }
 
         public async Task<BaseResponse<Question>> GetQuestionByIdAsync(int id)
         {
             var q = await _repo.GetByIdAsync(id);
-            return q != null ? new BaseResponse<Question>("Lấy câu hỏi theo id thành công", StatusCodeEnum.OK_200, q)
-                             : new BaseResponse<Question>("Không tìm thấy câu hỏi", StatusCodeEnum.NotFound_404, null);
+            return q != null ? new BaseResponse<Question>("Fetched", StatusCodeEnum.OK_200, q)
+                             : new BaseResponse<Question>("Not found", StatusCodeEnum.NotFound_404, null);
         }
     }
 }
