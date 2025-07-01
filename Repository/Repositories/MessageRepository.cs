@@ -26,5 +26,6 @@ namespace Repository.Repositories
             return await _messageDAO.GetByQuestionAsync(questionId);
         }
 
+        public Task<Message> GetByIdAsync(int messageId) => _messageDAO.GetByIdAsync(messageId);
     }
 }

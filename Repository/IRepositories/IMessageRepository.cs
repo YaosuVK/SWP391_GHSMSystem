@@ -12,5 +12,6 @@ namespace Repository.IRepositories
     {
         Task<Message> AddAsync(Message m);
         Task<IEnumerable<Message>> GetByQuestionAsync(int questionId);
+        Task<Message> GetByIdAsync(int messageId);
     }
 }
