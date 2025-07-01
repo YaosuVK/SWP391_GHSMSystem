@@ -31,6 +31,7 @@ namespace Service
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IVnPayService, VnPayService>();
             services.AddScoped<IConsultantProfileServive, ConsultantProfileService>();
+            services.AddScoped<IAutoCheckoutAppointmentService, AutoCheckoutAppointmentService>();
 
 
             return services;

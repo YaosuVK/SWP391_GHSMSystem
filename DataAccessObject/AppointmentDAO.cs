@@ -37,6 +37,27 @@ namespace DataAccessObject
             return await _context.Appointments.AnyAsync(b => b.AppointmentCode == code);
         }
 
+        public async Task<IEnumerable<Appointment>> GetExpiredAppointmentsAsync()
+        {
+            return await _context.Appointments
+                .Include(b => b.Transactions)
+                .Include(b => b.Slot)
+                .Include(b => b.AppointmentDetails)
+                .Where(b => (b.ExpiredTime < DateTime.Now && b.Status == AppointmentStatus.Pending) ||
+                       (b.SlotID != null && DateTime.Now > b.Slot.StartTime.AddMinutes(30) && b.Status == AppointmentStatus.Confirmed))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Appointment>> GetCheckOutAppointmentsAsync()
+        {
+            return await _context.Appointments
+                .Include(b => b.Transactions)
+                .Include(b => b.Slot)
+                .Include(b => b.AppointmentDetails)
+                .Where(b => b.Status == AppointmentStatus.WaitingForResult)  
+                .ToListAsync();
+        }
+
         public async Task<Appointment?> GetUnpaidAppointmentByID(string customerID)
         {
             return await _context.Appointments

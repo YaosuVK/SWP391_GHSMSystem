@@ -58,6 +58,16 @@ namespace Repository.Repositories
             return await _appointmentDao.GetAppointmentsByCustomerId(accountId);
         }
 
+        public async Task<IEnumerable<Appointment>> GetCheckOutAppointmentsAsync()
+        {
+            return await _appointmentDao.GetCheckOutAppointmentsAsync();
+        }
+
+        public async Task<IEnumerable<Appointment>> GetExpiredAppointmentsAsync()
+        {
+            return await _appointmentDao.GetExpiredAppointmentsAsync();
+        }
+
         public async Task<(int appointmentsReturnOrCancell, int appointments, int appointmentsComplete, int appointmentsCancell, int appointmentsReturnRefund, int appointmentsReport, int appointmentConfirmed)> GetStaticAppointments()
         {
             return await _appointmentDao.GetStaticAppointments();
