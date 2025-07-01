@@ -28,6 +28,11 @@ namespace Repository.Repositories
             return await _appointmentDao.ChangeAppointmentStatus(appointmentId, status, paymentStatus);
         }
 
+        public async Task<bool> ExistsAppointmentCodeAsync(string code)
+        {
+            return await _appointmentDao.ExistsAppointmentCodeAsync(code);
+        }
+
         public async Task<IEnumerable<Appointment>> GetAllAppointment()
         {
             return await _appointmentDao.GetAllAppointment();

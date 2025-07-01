@@ -32,6 +32,11 @@ namespace DataAccessObject
             return await appointments.ToListAsync();
         }
 
+        public async Task<bool> ExistsAppointmentCodeAsync(string code)
+        {
+            return await _context.Appointments.AnyAsync(b => b.AppointmentCode == code);
+        }
+
         public async Task<Appointment?> GetUnpaidAppointmentByID(string customerID)
         {
             return await _context.Appointments

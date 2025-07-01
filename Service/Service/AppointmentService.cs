@@ -230,8 +230,10 @@ namespace Service.Service
                 ConsultantID = isConsultantAppointment ? request.ConsultantID : null,
                 ClinicID = request.ClinicID,
                 SlotID = request.SlotID,
+                AppointmentCode = await GenerateUniqueAppointmentCodeAsync(),
                 CreateAt = DateTime.Now,
                 UpdateAt = DateTime.Now,
+                ExpiredTime = DateTime.Now.AddHours(1),
                 AppointmentDate = request.AppointmentDate,
                 Status = AppointmentStatus.Pending,
                 paymentStatus = PaymentStatus.Pending,
@@ -701,6 +703,31 @@ namespace Service.Service
             return new BaseResponse<UpdateAppointmentSlot>("Appointment updated successfully!", StatusCodeEnum.OK_200, request);
         }
 
-        
+        private string GenerateShortAppointmentCode(int length = 8)
+        {
+            var guidBytes = Guid.NewGuid().ToByteArray();
+            var base64 = Convert.ToBase64String(guidBytes);
+
+            var safeCode = base64
+                .Replace("/", "")
+                .Replace("+", "")
+                .Replace("=", "")
+                .ToUpper();
+
+            return safeCode.Substring(0, length);
+        }
+
+        private async Task<string> GenerateUniqueAppointmentCodeAsync()
+        {
+            string code;
+            do
+            {
+                code = GenerateShortAppointmentCode();
+            }
+            while (await _appointmentRepository.ExistsAppointmentCodeAsync(code));
+
+            return code;
+        }
+
     }
 }

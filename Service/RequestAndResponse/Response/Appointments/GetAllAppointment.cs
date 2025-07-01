@@ -27,6 +27,10 @@ namespace Service.RequestAndResponse.Response.Appointments
         public int? SlotID { get; set; }
         public GetSlotResponse Slot { get; set; }
 
+        public string AppointmentCode { get; set; }
+
+        public DateTime ExpiredTime { get; set; }
+
         public DateTime CreateAt { get; set; }
 
         public DateTime? AppointmentDate { get; set; }

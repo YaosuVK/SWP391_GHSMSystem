@@ -18,6 +18,7 @@ namespace Repository.IRepositories
         Task<Appointment?> GetUnpaidAppointmentByID(string customerID);
         Task AddAppointmentAsync(Appointment appointment);
         Task UpdateAppointmentAsync(Appointment appointment);
+        Task<bool> ExistsAppointmentCodeAsync(string code);
         Task<Appointment?> ChangeAppointmentStatus(int appointmentId, AppointmentStatus status, PaymentStatus paymentStatus);
         Task<(int appointmentsReturnOrCancell, int appointments, int appointmentsComplete, int appointmentsCancell, int appointmentsReturnRefund, int appointmentsReport, int appointmentConfirmed)> GetStaticAppointments();
 
