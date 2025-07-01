@@ -32,5 +32,12 @@ namespace DataAccessObject
                 .Include(m => m.Replies)
                 .ToListAsync();
         }
+
+        public async Task<Message> GetByIdAsync(int messageId)
+        {
+            return await _context.Messages
+                .Include(m => m.Replies)
+                .FirstOrDefaultAsync(m => m.MessageID == messageId);
+        }
     }
 }
