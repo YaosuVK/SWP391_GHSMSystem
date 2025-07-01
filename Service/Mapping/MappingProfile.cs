@@ -2,11 +2,15 @@
 using BusinessObject.Model;
 using Service.RequestAndResponse.Request.Categories;
 using Service.RequestAndResponse.Request.Clinic;
+using Service.RequestAndResponse.Request.Message;
+using Service.RequestAndResponse.Request.Question;
 using Service.RequestAndResponse.Request.Services;
 using Service.RequestAndResponse.Request.Slot;
 using Service.RequestAndResponse.Request.WorkingHours;
 using Service.RequestAndResponse.Response.Categories;
 using Service.RequestAndResponse.Response.Clinic;
+using Service.RequestAndResponse.Response.Message;
+using Service.RequestAndResponse.Response.Question;
 using Service.RequestAndResponse.Response.Services;
 using Service.RequestAndResponse.Response.Slots;
 using Service.RequestAndResponse.Response.Transactions;
@@ -51,6 +55,13 @@ namespace Service.Mapping
 
 
             CreateMap<TransactionResponse, Transaction>().ReverseMap();
+
+
+            CreateMap<Message, MessageResponse>().ReverseMap();
+            CreateMap<CreateMessageRequest, Message>().ReverseMap();
+
+            CreateMap<Question, QuestionResponse>().ReverseMap();
+            CreateMap<CreateQuestionRequest, Question>().ReverseMap();
 
         }
     }
