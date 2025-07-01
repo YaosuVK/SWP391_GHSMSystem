@@ -20,10 +20,10 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer,Consultant")]
         public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionRequest request)
         {
-            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customerId = User.FindFirstValue("AccountID");
             var result = await _questionService.CreateQuestionAsync(customerId, request);
             if (result.StatusCode == StatusCodeEnum.Created_201)
                 return CreatedAtAction(nameof(GetQuestionById), new { questionId = result.Data.QuestionID }, result);

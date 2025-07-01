@@ -24,7 +24,7 @@ namespace GHSMSystem.Controllers
         [Authorize(Roles = "Customer,Consultant")]
         public async Task<IActionResult> CreateMessage(int questionId, [FromBody] CreateMessageRequest request)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue("AccountID");
             var result = await _messageService.CreateMessageAsync(userId, questionId, request);
             if (result.StatusCode == StatusCodeEnum.Created_201)
                 return CreatedAtAction(nameof(GetMessagesByQuestion), new { questionId }, result);
