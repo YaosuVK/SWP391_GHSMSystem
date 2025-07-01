@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Model;
 using Service.RequestAndResponse.BaseResponse;
+using Service.RequestAndResponse.Request.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace Service.IService
 {
     public interface IMessageService
     {
-        
+        Task<BaseResponse<Message>> CreateMessageAsync(string userId, int questionId, CreateMessageRequest req);
+        Task<BaseResponse<IEnumerable<Message>>> GetMessagesByQuestionAsync(int questionId);
     }
 }
