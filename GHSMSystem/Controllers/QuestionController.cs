@@ -20,7 +20,7 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Customer,Consultant")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionRequest request)
         {
             var customerId = User.FindFirstValue("AccountID");
