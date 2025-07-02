@@ -30,6 +30,10 @@ namespace BusinessObject.Model
         public int? SlotID { get; set; }
         public Slot Slot { get; set; }
 
+        public string AppointmentCode { get; set; }
+
+        public DateTime ExpiredTime { get; set; }
+
         public DateTime CreateAt { get; set; }
 
         public DateTime? AppointmentDate { get; set; }
@@ -77,6 +81,6 @@ namespace BusinessObject.Model
     public enum AppointmentType
     {
         Consulting = 0,
-        Curing = 1
+        Testing = 1
     }
 }

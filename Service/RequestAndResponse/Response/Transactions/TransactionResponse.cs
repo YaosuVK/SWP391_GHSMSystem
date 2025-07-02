@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Model;
 using Service.RequestAndResponse.Response.Accounts;
+using Service.RequestAndResponse.Response.Appointments;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,7 +14,7 @@ namespace Service.RequestAndResponse.Response.Transactions
     {
         public string ResponseId { get; set; }
 
-        public Appointment? Appointment { get; set; } = null!;
+        public GetAppointmentForTransaction? Appointment { get; set; } = null!;
 
         public GetAccount? Account { get; set; } = null!;
 

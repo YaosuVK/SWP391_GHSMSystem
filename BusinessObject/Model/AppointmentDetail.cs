@@ -18,9 +18,13 @@ namespace BusinessObject.Model
         public Appointment Appointment { get; set; }
 
         
-        public int ServicesID { get; set; }
+        public int? ServicesID { get; set; }
         [ForeignKey("ServicesID")]
         public Services Service { get; set; }
+
+        public int? ConsultantProfileID { get; set; }
+        [ForeignKey("ConsultantProfileID")]
+        public ConsultantProfile ConsultantProfile { get; set; }
 
         public int Quantity { get; set; }
 

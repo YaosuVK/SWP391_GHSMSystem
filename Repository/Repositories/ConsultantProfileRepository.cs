@@ -33,5 +33,15 @@ namespace Repository.Repositories
         {
             return await _consultantDao.UpdateAsync(entity);
         }
+
+        public async Task<ConsultantProfile?> GetConsultantProfileByAccountID(string accountID)
+        {
+           return await _consultantDao.GetConsultantProfileByAccountID(accountID);
+        }
+
+        public async Task<ConsultantProfile?> GetConsultantProfileByID(int? consultantProfileID)
+        {
+            return await _consultantDao.GetConsultantProfileByID(consultantProfileID);
+        }
     }
 }

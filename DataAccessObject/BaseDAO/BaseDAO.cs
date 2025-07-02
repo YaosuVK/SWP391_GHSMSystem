@@ -108,5 +108,10 @@ namespace DataAccessObject.BaseDAO
             await _dbContext.SaveChangesAsync();
             return entities;
         }
+
+        public IQueryable<T> GetQueryable()
+        {
+            return _dbContext.Set<T>().AsQueryable();
+        }
     }
 }

@@ -26,9 +26,43 @@ namespace DataAccessObject
                 .Include(b => b.Customer)
                 .Include(b => b.Consultant)
                 .Include(b => b.FeedBacks)
-                .Include(b => b.Slot);
+                .Include(b => b.Slot)
+                .Include(b => b.Transactions);
 
             return await appointments.ToListAsync();
+        }
+
+        public async Task<bool> ExistsAppointmentCodeAsync(string code)
+        {
+            return await _context.Appointments.AnyAsync(b => b.AppointmentCode == code);
+        }
+
+        public async Task<IEnumerable<Appointment>> GetExpiredAppointmentsAsync()
+        {
+            return await _context.Appointments
+                .Include(b => b.Transactions)
+                .Include(b => b.Slot)
+                .Include(b => b.AppointmentDetails)
+                .Where(b => (b.ExpiredTime < DateTime.Now && b.Status == AppointmentStatus.Pending) ||
+                       (b.SlotID != null && DateTime.Now > b.Slot.StartTime.AddMinutes(30) && b.Status == AppointmentStatus.Confirmed))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Appointment>> GetCheckOutAppointmentsAsync()
+        {
+            return await _context.Appointments
+                .Include(b => b.Transactions)
+                .Include(b => b.Slot)
+                .Include(b => b.AppointmentDetails)
+                .Where(b => b.Status == AppointmentStatus.WaitingForResult)  
+                .ToListAsync();
+        }
+
+        public async Task<Appointment?> GetUnpaidAppointmentByID(string customerID)
+        {
+            return await _context.Appointments
+                .Include(a => a.AppointmentDetails)
+                .FirstOrDefaultAsync(a => a.CustomerID == customerID && a.Status == AppointmentStatus.Pending);
         }
 
         public async Task<Appointment?> GetAppointmentByIdAsync(int appointmentId)
@@ -40,6 +74,7 @@ namespace DataAccessObject
                 .Include(b => b.Consultant)
                 .Include(b => b.FeedBacks)
                 .Include(b => b.Slot)
+                .Include(b => b.Transactions)
                 .FirstOrDefaultAsync(o => o.AppointmentID == appointmentId);
         }
 
@@ -52,6 +87,7 @@ namespace DataAccessObject
                 .Include(b => b.Consultant)
                 .Include(b => b.FeedBacks)
                 .Include(b => b.Slot)
+                .Include(b => b.Transactions)
                 .FirstOrDefaultAsync(o => o.AppointmentID == appointmentId);
         }
 
@@ -64,6 +100,7 @@ namespace DataAccessObject
                  .Include(b => b.Consultant)
                  .Include(b => b.FeedBacks)
                  .Include(b => b.Slot)
+                 .Include(b => b.Transactions)
                  .Where(b => b.CustomerID == accountId)
                 .ToListAsync();
         }
@@ -77,6 +114,7 @@ namespace DataAccessObject
                  .Include(b => b.Consultant)
                  .Include(b => b.FeedBacks)
                  .Include(b => b.Slot)
+                 .Include(b => b.Transactions)
                  .Where(b => b.ConsultantID == accountId)
                  .ToListAsync();
         }
@@ -140,7 +178,18 @@ namespace DataAccessObject
             return (appointmentsReturnOrCancell, appointments, appointmentsComplete, appointmentsCancell, appointmentsReturnRefund, appointmentsReport, appointmentConfirmed);
         }
 
-        
+        public async Task<Appointment?> ChangeAppointmentStatus(int appointmentId, AppointmentStatus status, PaymentStatus paymentStatus)
+        {
+            var appointment = await _context.Appointments.FindAsync(appointmentId);
+            if (appointment != null)
+            {
+                appointment.Status = status;
+                appointment.paymentStatus = paymentStatus;
+                await _context.SaveChangesAsync();
+            }
+
+            return await _context.Appointments.FindAsync(appointmentId);
+        }
 
 
     }

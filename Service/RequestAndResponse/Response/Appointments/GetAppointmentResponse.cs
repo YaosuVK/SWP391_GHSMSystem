@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Service.RequestAndResponse.Response.Clinic;
+using Service.RequestAndResponse.Response.TreatmentOutcomes;
+using Service.RequestAndResponse.Response.Accounts;
+using Service.RequestAndResponse.Response.Slots;
 
 namespace Service.RequestAndResponse.Response.Appointments
 {
@@ -15,19 +18,23 @@ namespace Service.RequestAndResponse.Response.Appointments
         public int AppointmentID { get; set; }
 
         public string CustomerID { get; set; }
-        public Account Customer { get; set; }
+        public GetCustomerUser Customer { get; set; }
 
         public string? ConsultantID { get; set; }
-        public Account Consultant { get; set; }
+        public GetConsultantUser Consultant { get; set; }
 
         public int ClinicID { get; set; }
         public ClinicResponse Clinic { get; set; }
 
         public int? TreatmentID { get; set; }
-        public TreatmentOutcome TreatmentOutcome { get; set; }
+        public GetTreatmentOutcomeResponse TreatmentOutcome { get; set; }
 
         public int? SlotID { get; set; }
-        public Slot Slot { get; set; }
+        public GetSlotResponse Slot { get; set; }
+
+        public string AppointmentCode { get; set; }
+
+        public DateTime ExpiredTime { get; set; }
 
         public DateTime CreateAt { get; set; }
 

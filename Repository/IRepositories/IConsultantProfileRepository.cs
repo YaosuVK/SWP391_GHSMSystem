@@ -10,6 +10,7 @@ namespace Repository.IRepositories
 {
     public interface IConsultantProfileRepository : IBaseRepository<ConsultantProfile>
     {
-
+        Task<ConsultantProfile?> GetConsultantProfileByAccountID(string accountID);
+        Task<ConsultantProfile?> GetConsultantProfileByID(int? consultantProfileID);
     }
 }

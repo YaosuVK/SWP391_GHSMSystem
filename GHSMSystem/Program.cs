@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Model;
 using CloudinaryDotNet;
 using DataAccessObject;
+using GHSMSystem.HangFireSetUp;
 using GHSMSystem.Ultilities;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -13,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Repository;
 using Service;
+using Service.IService;
 using Account = BusinessObject.Model.Account;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +25,7 @@ AppDomain.CurrentDomain.SetData("TimeZone", vietnamZone);
 // Add services to the container.
 var allowedOrigins = new[]
 {
-    "https://cho-tot-travel-managements.vercel.app", // Web FE
+    /*"https://cho-tot-travel-managements.vercel.app", // Web FE*/
     "http://localhost:5173", // Dev FE
     "https://localhost:7221" // Dev BE
 };
@@ -209,10 +211,21 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "swagger";
 });
 
-/*app.UseHangfireDashboard("/hangfire", new DashboardOptions
+var recurringJobManager = app.Services.GetRequiredService<IRecurringJobManager>();
+recurringJobManager.AddOrUpdate<IAutoCheckoutAppointmentService>(
+    "cancel-expired-bookings",
+    service => service.CancelExpiredAppointments(),
+    Cron.MinuteInterval(5));
+
+recurringJobManager.AddOrUpdate<IAutoCheckoutAppointmentService>(
+    "check-out-bookings",
+    service => service.AutoCheckOutAppointments(),
+    Cron.MinuteInterval(5));
+
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = new[] { new DashboardNoAuthFilter() }
-});*/
+});
 
 app.MapControllers();
 app.MapHangfireDashboard();

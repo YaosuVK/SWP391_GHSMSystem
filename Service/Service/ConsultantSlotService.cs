@@ -1,9 +1,11 @@
-﻿using BusinessObject.Model;
+﻿using AutoMapper;
+using BusinessObject.Model;
 using Microsoft.AspNetCore.Identity;
 using Repository.IRepositories;
 using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Enums;
+using Service.RequestAndResponse.Response.ConsultantSlots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +19,17 @@ namespace Service.Service
         private readonly IConsultantSlotRepository _repo;
         private readonly ISlotRepository _slotRepo;
         private readonly UserManager<Account> _userManager;
+        private readonly IMapper _mapper;
 
         public ConsultantSlotService(
             IConsultantSlotRepository repo,
             ISlotRepository slotRepo,
-            UserManager<Account> userManager)
+            UserManager<Account> userManager, IMapper mapper)
         {
             _repo = repo;
             _slotRepo = slotRepo;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task<BaseResponse<ConsultantSlot>> RegisterAsync(
@@ -127,31 +131,36 @@ namespace Service.Service
 
 
 
-        public async Task<BaseResponse<IEnumerable<ConsultantSlot>>> GetRegisteredSlotsAsync(string consultantId)
+        public async Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetRegisteredSlotsAsync(string consultantId)
         {
             // 1. Lấy danh sách booking của consultant
             var list = await _repo.GetByConsultantAsync(consultantId);
 
             // 2. Nếu không tìm thấy, trả về 404
             if (list == null || !list.Any())
-                return new BaseResponse<IEnumerable<ConsultantSlot>>(
+                return new BaseResponse<IEnumerable<ConsultantSlotResponse>>(
                     "No registrations found",
                     StatusCodeEnum.NotFound_404,
                     null);
 
+            var mappedList = _mapper.Map<IEnumerable<ConsultantSlotResponse>>(list);
+
             // 3. Trả về danh sách
-            return new BaseResponse<IEnumerable<ConsultantSlot>>(
+            return new BaseResponse<IEnumerable<ConsultantSlotResponse>>(
                 "Registered slots fetched successfully",
                 StatusCodeEnum.OK_200,
-                list);
+                mappedList);
         }
 
-        public async Task<BaseResponse<IEnumerable<ConsultantSlot>>> GetAllAsync()
+        public async Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetAllAsync()
         {
-            var list = await _repo.GetAllAsync();
+            var list = await _repo.GetAllConsultantSlot();
             if (list == null || !list.Any())
-                return new BaseResponse<IEnumerable<ConsultantSlot>>("No consultant slots found", StatusCodeEnum.NotFound_404, null);
-            return new BaseResponse<IEnumerable<ConsultantSlot>>("Get all slot success", StatusCodeEnum.OK_200, list);
+                return new BaseResponse<IEnumerable<ConsultantSlotResponse>>("No consultant slots found", StatusCodeEnum.NotFound_404, null);
+
+            var mappedList = _mapper.Map<IEnumerable<ConsultantSlotResponse>>(list);
+
+            return new BaseResponse<IEnumerable<ConsultantSlotResponse>>("Get all slot success", StatusCodeEnum.OK_200, mappedList);
         }
 
         

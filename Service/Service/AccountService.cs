@@ -565,5 +565,15 @@ namespace Service.Service
             };
             return new BaseResponse<AccountChangePasswordResponse>($"I{result.Errors}", StatusCodeEnum.OK_200, response);
         }
+
+        public async Task<Account> GetByStringId(string id)
+        {
+            var account = await _accountRepository.GetByStringId(id);
+            if (account == null)
+            {
+                throw new ArgumentException("Cannot Find account!");
+            }
+            return account;
+        }
     }
 }

@@ -24,6 +24,11 @@ namespace Repository.Repositories
             return _consultantSlotDao.AddSlotAsync(cs);
         }
 
+        public Task<IEnumerable<ConsultantSlot>> GetAllConsultantSlot()
+        {
+            return _consultantSlotDao.GetAllConsultantSlotAsync();
+        }
+
         public Task<ConsultantSlot> GetByConsultantAndSlotAsync(string consultantId, int slotId)
         {
             return _consultantSlotDao.GetByConsultantAndSlotAsync(consultantId, slotId);

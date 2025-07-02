@@ -23,6 +23,16 @@ namespace Repository.Repositories
             await _appointmentDao.AddAppointmentAsync(appointment);
         }
 
+        public async Task<Appointment?> ChangeAppointmentStatus(int appointmentId, AppointmentStatus status, PaymentStatus paymentStatus)
+        {
+            return await _appointmentDao.ChangeAppointmentStatus(appointmentId, status, paymentStatus);
+        }
+
+        public async Task<bool> ExistsAppointmentCodeAsync(string code)
+        {
+            return await _appointmentDao.ExistsAppointmentCodeAsync(code);
+        }
+
         public async Task<IEnumerable<Appointment>> GetAllAppointment()
         {
             return await _appointmentDao.GetAllAppointment();
@@ -48,9 +58,24 @@ namespace Repository.Repositories
             return await _appointmentDao.GetAppointmentsByCustomerId(accountId);
         }
 
+        public async Task<IEnumerable<Appointment>> GetCheckOutAppointmentsAsync()
+        {
+            return await _appointmentDao.GetCheckOutAppointmentsAsync();
+        }
+
+        public async Task<IEnumerable<Appointment>> GetExpiredAppointmentsAsync()
+        {
+            return await _appointmentDao.GetExpiredAppointmentsAsync();
+        }
+
         public async Task<(int appointmentsReturnOrCancell, int appointments, int appointmentsComplete, int appointmentsCancell, int appointmentsReturnRefund, int appointmentsReport, int appointmentConfirmed)> GetStaticAppointments()
         {
             return await _appointmentDao.GetStaticAppointments();
+        }
+
+        public async Task<Appointment?> GetUnpaidAppointmentByID(string customerID)
+        {
+            return await _appointmentDao.GetUnpaidAppointmentByID(customerID);
         }
 
         public async Task UpdateAppointmentAsync(Appointment appointment)

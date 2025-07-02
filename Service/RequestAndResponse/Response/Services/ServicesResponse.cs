@@ -6,6 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service.RequestAndResponse.Response.ImageService;
+using Service.RequestAndResponse.Response.Categories;
 
 namespace Service.RequestAndResponse.Response.Services
 {
@@ -14,7 +16,7 @@ namespace Service.RequestAndResponse.Response.Services
         public int ServicesID { get; set; }
         
         public int CategoryID { get; set; }
-        public Category Category { get; set; }
+        public GetCategoryForService Category { get; set; }
 
         public string ServicesName { get; set; }
 
@@ -27,5 +29,7 @@ namespace Service.RequestAndResponse.Response.Services
         public double ServicesPrice { get; set; }
 
         public bool Status { get; set; }
+
+        public ICollection<ImageServiceResponse> ImageServices { get; set; }
     }
 }

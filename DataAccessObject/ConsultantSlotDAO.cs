@@ -25,6 +25,13 @@ namespace DataAccessObject
             return entity;
         }
 
+        public async Task<IEnumerable<ConsultantSlot>> GetAllConsultantSlotAsync()
+        {
+            return await _context.ConsultantSlots
+                .Include(cs => cs.Slot)
+                .Include(cs => cs.Consultant)
+            .ToListAsync();
+        }
 
         /// Lấy một ConsultantSlot theo ConsultantID và SlotID
 
@@ -32,6 +39,7 @@ namespace DataAccessObject
         {
             return await _context.ConsultantSlots
                                  .Include(cs => cs.Slot)
+                                 .Include(cs => cs.Consultant)
                                  .FirstOrDefaultAsync(cs => cs.ConsultantID == consultantId && cs.SlotID == slotId);
         }
 
@@ -41,6 +49,8 @@ namespace DataAccessObject
         public async Task<ConsultantSlot> GetByConsultantAndSlotAsync(string consultantId, int slotId)
         {
             return await _context.ConsultantSlots
+                                .Include(cs => cs.Slot)
+                                .Include(cs => cs.Consultant)
                                  .FirstOrDefaultAsync(cs => cs.ConsultantID == consultantId
                                                          && cs.SlotID == slotId);
         }
@@ -62,6 +72,7 @@ namespace DataAccessObject
         {
             var query = _context.ConsultantSlots
                                 .Include(cs => cs.Slot)
+                                .Include(cs => cs.Consultant)
                                 .Where(cs => cs.ConsultantID == consultantId);
 
 

@@ -28,8 +28,10 @@ namespace DataAccessObject
         public async Task<List<(string serviceName, int count)>> GetServiceUsageStatsAsync()
         {
             var stats = await _context.AppointmentDetails
-                .Where(b => (b.Appointment.Status == AppointmentStatus.Confirmed ||
-                       b.Appointment.Status == AppointmentStatus.Completed))
+                .Include(b => b.Service)
+                .Where(b => b.Service != null &&
+                (b.Appointment.Status == AppointmentStatus.Confirmed ||
+                 b.Appointment.Status == AppointmentStatus.Completed))
                 .GroupBy(b => b.Service.ServicesName)
                 .Select(g => new
                 {

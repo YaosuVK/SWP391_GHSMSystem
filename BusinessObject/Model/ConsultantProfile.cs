@@ -22,5 +22,9 @@ namespace BusinessObject.Model
         public string? Specialty { get; set; }
 
         public string? Experience { get; set; }
+
+        public double ConsultantPrice { get; set; }
+
+        public ICollection<AppointmentDetail> AppointmentDetails { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BusinessObject.Model;
 using Service.RequestAndResponse.BaseResponse;
+using Service.RequestAndResponse.Response.ConsultantSlots;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Service.IService
         Task<BaseResponse<bool>> SwapAsync(
     string consultantIdA, int slotIdA,
     string consultantIdB, int slotIdB);
-        Task<BaseResponse<IEnumerable<ConsultantSlot>>> GetRegisteredSlotsAsync(string consultantId);
-        Task<BaseResponse<IEnumerable<ConsultantSlot>>> GetAllAsync();
+        Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetRegisteredSlotsAsync(string consultantId);
+        Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetAllAsync();
     }
 }
