@@ -3,7 +3,7 @@ using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Response.Transactions;
 
-namespace GHSMSystem
+namespace GHSMSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

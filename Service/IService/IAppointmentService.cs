@@ -1,5 +1,7 @@
 ﻿using BusinessObject.Model;
 using Service.RequestAndResponse.BaseResponse;
+using Service.RequestAndResponse.Request.Appointments;
+using Service.RequestAndResponse.Response.Appointments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +12,17 @@ namespace Service.IService
 {
     public interface IAppointmentService
     {
-        Task<BaseResponse<IEnumerable<Appointment>>> GetAllAppointment();
-        Task<BaseResponse<Appointment?>> GetAppointmentByIdAsync(int appointmentId);
-        Task<BaseResponse<Appointment?>> GetAppointmentByIdCanNullAsync(int? appointmentId);
-        Task<BaseResponse<IEnumerable<Appointment>>> GetAppointmentsByCustomerId(string accountId);
-        Task<BaseResponse<IEnumerable<Appointment>>> GetAppointmentsByConsultantId(string accountId);
-        Task AddAppointmentAsync(Appointment appointment);
-        Task UpdateAppointmentAsync(Appointment appointment);
+        Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAllAppointment();
+        Task<BaseResponse<GetAllAppointment?>> GetAppointmentByIdAsync(int appointmentId);
+        Task<BaseResponse<Appointment>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus);
+        public (int? appointmentId, string? accountId) ParseOrderInfo(string orderInfo);
+        /*Task<BaseResponse<GetAllAppointment?>> GetAppointmentByIdCanNullAsync(int? appointmentId);*/
+        Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAppointmentsByCustomerId(string accountId);
+        Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAppointmentsByConsultantId(string accountId);
+        Task<BaseResponse<int>> CreateAppointment(CreateAppointmentRequest request);
+        Task<BaseResponse<UpdateAppointmentRequest>> UpdateAppointment(int appointmentID,UpdateAppointmentRequest request);
+        Task<Appointment> CreateAppointmentPayment(int? appointmentID, Transaction transaction);
+        Task<Appointment> CreateAppointmentRefundPayment(int? appointmentID, Transaction transaction);
+        Task<BaseResponse<UpdateAppointmentSlot>> ChangeAppointmentSlot(int appointmentID, UpdateAppointmentSlot request);
     }
 }

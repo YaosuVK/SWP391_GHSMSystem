@@ -15,5 +15,6 @@ namespace Repository.IRepositories
         Task<ConsultantSlot> GetByConsultantAndSlotAsync(string consultantId, int slotId);
         Task DeleteAsync(ConsultantSlot cs);
         Task<IEnumerable<ConsultantSlot>> GetByConsultantAsync(string consId);
+        Task<IEnumerable<ConsultantSlot>> GetAllConsultantSlot();
     }
 }

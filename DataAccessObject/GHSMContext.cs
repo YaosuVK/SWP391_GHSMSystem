@@ -94,6 +94,11 @@ namespace DataAccessObject
                 .HasForeignKey(l => l.StaffID)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<MenstrualCycle>()
+                .HasOne(m => m.Prediction)
+                .WithOne(p => p.MenstrualCycle)
+                .HasForeignKey<CyclePrediction>(p => p.MenstrualCycleID);
+
             /*modelBuilder.Entity<FeedBack>()
                 .HasOne(f => f.Service)
                 .WithMany(s => s.FeedBacks)

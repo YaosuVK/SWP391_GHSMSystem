@@ -1,0 +1,20 @@
+Username: Consultant
+Pass:Consultant@123
+
+Username: Consultant2
+Pass:Consultant@1234
+
+
+Username: Manager
+Pass:Manager@123
+
+Username: Staff
+Pass:Staff@123
+
+Username: Customer
+Pass:Customer@123
+
+Username: Admin
+Pass:Admin@123
+
+

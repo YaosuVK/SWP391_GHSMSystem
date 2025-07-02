@@ -5,6 +5,7 @@ using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Enums;
 using Service.RequestAndResponse.Request.Slot;
 using Service.RequestAndResponse.Response.Slots;
+using static Google.Cloud.Dialogflow.V2.EntityType.Types;
 
 namespace GHSMSystem.Controllers
 {
@@ -31,6 +32,20 @@ namespace GHSMSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSlot([FromBody] CreateSlotRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest("Please Implement all Information");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Trả về lỗi chi tiết từ ModelState
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { message = "Validation Failed", errors });
+            }
+
             var response = await _slotService.AddAsync(request);
             return response.StatusCode switch
             {
@@ -49,6 +64,20 @@ namespace GHSMSystem.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateSlot(int slotId, [FromBody] UpdateSlotRequest request)
         {
+            if (request == null)
+            {
+                return BadRequest("Please Implement all Information");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Trả về lỗi chi tiết từ ModelState
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { message = "Validation Failed", errors });
+            }
+
             var response = await _slotService.UpdateAsync(slotId, request);
             return response.StatusCode switch
             {

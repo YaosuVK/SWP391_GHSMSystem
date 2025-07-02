@@ -42,5 +42,20 @@ namespace Repository.Repositories
         {
             return await _slotDao.GetSlotsByWorkingHourId(workingHourId);
         }
+
+        public async Task<IEnumerable<Slot>> GetAllSlotByDate(DateTime appointmentDate)
+        {
+            return await _slotDao.GetAllSlotByDate(appointmentDate);
+        }
+
+        public async Task<IEnumerable<Slot>> GetAvailableSlotsForConsultantAsync(DateTime appointmentDate, string consultantId)
+        {
+            return await _slotDao.GetAvailableSlotsForConsultantAsync(appointmentDate, consultantId);
+        }
+
+        public async Task<IEnumerable<Slot>> GetAvailableSlotsForTestAsync(DateTime appointmentDate)
+        {
+            return await _slotDao.GetAvailableSlotsForTestAsync(appointmentDate);
+        }
     }
 }

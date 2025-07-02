@@ -53,5 +53,10 @@ namespace Repository.Repositories
         {
             return await _serviceDao.GetServicesByIdsAsync(servicesIds);
         }
+
+        public async Task<Services?> GetServiceByID(int? serviceID)
+        {
+            return await _serviceDao.GetServiceByID(serviceID);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Model;
+using Microsoft.AspNetCore.Mvc;
 using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Request.Services;
 using Service.RequestAndResponse.Request.Slot;
@@ -17,5 +18,6 @@ namespace Service.IService
         Task<BaseResponse<IEnumerable<ServicesResponse>>> GetAllAsync();
         Task<BaseResponse<Services>> AddAsync(CreateServiceRequest entity);
         Task<BaseResponse<Services>> UpdateAsync(int serviceID, UpdateServiceRequest entity);
+        Task<BaseResponse<List<GetServiceStats>>> GetServiceUsageStats();
     }
 }

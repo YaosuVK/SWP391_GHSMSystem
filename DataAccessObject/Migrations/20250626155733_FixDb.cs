@@ -192,7 +192,8 @@ namespace DataAccessObject.Migrations
                     AccountID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Specialty = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Experience = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Experience = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConsultantPrice = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -471,6 +472,7 @@ namespace DataAccessObject.Migrations
                     ClinicID = table.Column<int>(type: "int", nullable: false),
                     WorkingHourID = table.Column<int>(type: "int", nullable: false),
                     MaxConsultant = table.Column<int>(type: "int", nullable: false),
+                    MaxTestAppointment = table.Column<int>(type: "int", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -560,7 +562,7 @@ namespace DataAccessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ConsultantSlot",
+                name: "ConsultantSlots",
                 columns: table => new
                 {
                     ConsultantID = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -570,15 +572,15 @@ namespace DataAccessObject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ConsultantSlot", x => new { x.ConsultantID, x.SlotID });
+                    table.PrimaryKey("PK_ConsultantSlots", x => new { x.ConsultantID, x.SlotID });
                     table.ForeignKey(
-                        name: "FK_ConsultantSlot_AspNetUsers_ConsultantID",
+                        name: "FK_ConsultantSlots_AspNetUsers_ConsultantID",
                         column: x => x.ConsultantID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ConsultantSlot_Slots_SlotID",
+                        name: "FK_ConsultantSlots_Slots_SlotID",
                         column: x => x.SlotID,
                         principalTable: "Slots",
                         principalColumn: "SlotID",
@@ -592,7 +594,8 @@ namespace DataAccessObject.Migrations
                     AppointmentDetailID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AppointmentID = table.Column<int>(type: "int", nullable: false),
-                    ServicesID = table.Column<int>(type: "int", nullable: false),
+                    ServicesID = table.Column<int>(type: "int", nullable: true),
+                    ConsultantProfileID = table.Column<int>(type: "int", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     ServicePrice = table.Column<double>(type: "float", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false)
@@ -606,6 +609,11 @@ namespace DataAccessObject.Migrations
                         principalTable: "Appointments",
                         principalColumn: "AppointmentID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppointmentDetails_ConsultantProfiles_ConsultantProfileID",
+                        column: x => x.ConsultantProfileID,
+                        principalTable: "ConsultantProfiles",
+                        principalColumn: "ConsultantProfileID");
                     table.ForeignKey(
                         name: "FK_AppointmentDetails_Services_ServicesID",
                         column: x => x.ServicesID,
@@ -764,17 +772,22 @@ namespace DataAccessObject.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2fb52cad-1684-4113-a512-6a923539157a", null, "Customer", "CUSTOMER" },
-                    { "41346bb0-cc27-4ff2-807c-ebea941ba8e2", null, "Manager", "MANAGER" },
-                    { "4dd4dc8a-f0c6-4aba-9f14-bb0ebe70007f", null, "Consultant", "CONSULTANT" },
-                    { "c4b6e48a-516c-4844-bcc1-f79e87e23216", null, "Admin", "ADMIN" },
-                    { "f0f61d98-2b62-4dee-b95e-f69e0bd4fda7", null, "Staff", "STAFF" }
+                    { "5281f337-ded0-4e06-bbe8-6b7b5a24653a", null, "Consultant", "CONSULTANT" },
+                    { "64b8f6e8-0dd1-4760-9a6f-fddd952e119c", null, "Admin", "ADMIN" },
+                    { "76d262fa-46d2-4768-9c39-7762bb228e1a", null, "Customer", "CUSTOMER" },
+                    { "7e7139a6-2464-43a2-998e-92e7d29dd346", null, "Manager", "MANAGER" },
+                    { "9dfd03b5-94b8-49d6-994d-db3b8a799b2b", null, "Staff", "STAFF" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppointmentDetails_AppointmentID",
                 table: "AppointmentDetails",
                 column: "AppointmentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppointmentDetails_ConsultantProfileID",
+                table: "AppointmentDetails",
+                column: "ConsultantProfileID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppointmentDetails_ServicesID",
@@ -857,14 +870,15 @@ namespace DataAccessObject.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ConsultantSlot_SlotID",
-                table: "ConsultantSlot",
+                name: "IX_ConsultantSlots_SlotID",
+                table: "ConsultantSlots",
                 column: "SlotID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CyclePredictions_MenstrualCycleID",
                 table: "CyclePredictions",
-                column: "MenstrualCycleID");
+                column: "MenstrualCycleID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_FeedBacks_AppointmentID",
@@ -1016,10 +1030,7 @@ namespace DataAccessObject.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ConsultantProfiles");
-
-            migrationBuilder.DropTable(
-                name: "ConsultantSlot");
+                name: "ConsultantSlots");
 
             migrationBuilder.DropTable(
                 name: "CyclePredictions");
@@ -1044,6 +1055,9 @@ namespace DataAccessObject.Migrations
 
             migrationBuilder.DropTable(
                 name: "Transactions");
+
+            migrationBuilder.DropTable(
+                name: "ConsultantProfiles");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

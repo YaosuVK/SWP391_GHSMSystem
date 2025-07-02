@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
+using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Enums;
+using Service.RequestAndResponse.Request.ConsultantProfiles;
+using Service.Service;
 using System.Security.Claims;
 
 namespace GHSMSystem.Controllers
@@ -12,10 +15,12 @@ namespace GHSMSystem.Controllers
     public class ConsultantSlotController : ControllerBase
     {
         private readonly IConsultantSlotService _consultantSlotService;
+        private readonly IConsultantProfileServive _consultantProfileServive;
 
-        public ConsultantSlotController(IConsultantSlotService consultantSlotService)
+        public ConsultantSlotController(IConsultantSlotService consultantSlotService, IConsultantProfileServive consultantProfileServive)
         {
             _consultantSlotService = consultantSlotService;
+            _consultantProfileServive = consultantProfileServive;
         }
 
         [HttpGet("GetAll")]
@@ -64,7 +69,47 @@ namespace GHSMSystem.Controllers
             };
         }
 
+        [HttpPost("CreateConsultantProfile")]
+        public async Task<ActionResult<BaseResponse<CreateConsultantProfile>>> CreateConsultantProfile(CreateConsultantProfile request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Please Implement all Information");
+            }
 
+            if (!ModelState.IsValid)
+            {
+                // Trả về lỗi chi tiết từ ModelState
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { message = "Validation Failed", errors });
+            }
+
+            var consultantProfile = await _consultantProfileServive.CreateConsultantProfile(request);
+            return Ok(consultantProfile);
+        }
+
+        [HttpPut("UpdateConsultantProfile")]
+        public async Task<ActionResult<BaseResponse<UpdateConsultantProfile>>> UpdateConsultantProfile(int consultantProfileID, UpdateConsultantProfile request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Please Implement all Information");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Trả về lỗi chi tiết từ ModelState
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { message = "Validation Failed", errors });
+            }
+
+            var consultantProfile = await _consultantProfileServive.UpdateConsultantProfile(consultantProfileID, request);
+            return Ok(consultantProfile);
+        }
 
         [HttpPut("swap")]
         public async Task<IActionResult> Swap(

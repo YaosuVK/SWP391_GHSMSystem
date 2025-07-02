@@ -46,6 +46,16 @@ namespace Service.Service
                 return new BaseResponse<List<Slot>>("Cannot find the clinic", StatusCodeEnum.NotFound_404, null);
             }
 
+            if (entity.MaxConsultant <= 0)
+            {
+                return new BaseResponse<List<Slot>>("MaxConsultant must > 0", StatusCodeEnum.BadRequest_400, null);
+            }
+
+            if (entity.MaxTestAppointment <= 0)
+            {
+                return new BaseResponse<List<Slot>>("MaxTestAppointment must > 0", StatusCodeEnum.BadRequest_400, null);
+            }
+
             if (entity.StartTime >= entity.EndTime)
             {
                 return new BaseResponse<List<Slot>>("Start time must < End Time", StatusCodeEnum.BadRequest_400, null);
@@ -117,6 +127,16 @@ namespace Service.Service
             if (workingHour == null)
             {
                 return new BaseResponse<Slot>("Cannot find the working hour", StatusCodeEnum.NotFound_404, null);
+            }
+
+            if (entity.MaxConsultant <= 0)
+            {
+                return new BaseResponse<Slot>("MaxConsultant must > 0", StatusCodeEnum.BadRequest_400, null);
+            }
+
+            if (entity.MaxTestAppointment <= 0)
+            {
+                return new BaseResponse<Slot>("MaxTestAppointment must > 0", StatusCodeEnum.BadRequest_400, null);
             }
 
             if (entity.StartTime >= entity.EndTime)

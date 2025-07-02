@@ -23,5 +23,7 @@ namespace BusinessObject.Model
         public int PeriodLength { get; set; } // Số ngày có kinh
 
         public int CycleLength { get; set; }  // Độ dài chu kỳ
+
+        public CyclePrediction Prediction { get; set; }
     }
 }
