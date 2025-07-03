@@ -598,12 +598,12 @@ namespace Service.Service
                     <body>
                         <p>Xin chào {appointment.Customer?.Name ?? "quý khách"},</p>
                         <p>Do sự cố phát sinh từ phía Clinic <strong>{appointment.Clinic.Name}</strong>, 
-                        đơn đặt phòng của bạn (mã: <strong>{appointment.AppointmentID}</strong>) đã được hủy và hoàn tiền.</p>
+                        đơn đặt phòng của bạn (mã: <strong>{appointment.AppointmentCode}</strong>) đã được hủy và hoàn tiền.</p>
                         <p>Số tiền đã hoàn: <strong>{transaction.Amount:N0} VND</strong>.</p>
                         <p>Chúng tôi rất lấy làm tiếc về sự việc này, rất mong quý khách thông cảm cho bên Clinic</p>
                         <br>
                         <p>Trân trọng,</p>
-                        <p><strong>ChoTot-Travel-CTT</strong></p>
+                        <p><strong>Gender-HealthCare-Service-System</strong></p>
                     </body>
                     </html>";
 
@@ -729,5 +729,110 @@ namespace Service.Service
             return code;
         }
 
+        public async Task<BaseResponse<UpdateAppointmentSlot>> RescheduleAppointmentWithEmail(int appointmentID, UpdateAppointmentSlot request)
+        {
+            var existingAppointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentID);
+            if (existingAppointment == null)
+            {
+                return new BaseResponse<UpdateAppointmentSlot>("Cannot find your Appointment!",
+                         StatusCodeEnum.NotFound_404, null);
+            }
+
+            if (existingAppointment.paymentStatus != PaymentStatus.FullyPaid)
+            {
+                return new BaseResponse<UpdateAppointmentSlot>("Cannot change the slot of appointment!",
+                         StatusCodeEnum.NotFound_404, null);
+            }
+
+            bool isTestAppointment = existingAppointment.AppointmentDetails.Any(d => d.ServicesID.HasValue);
+            bool isConsultantAppointment = existingAppointment.AppointmentDetails.Any(d => d.ConsultantProfileID.HasValue);
+
+            if (isConsultantAppointment)
+            {
+                var checkAvailableSlot = await _slotRepository.GetAvailableSlotsForConsultantAsync(request.AppointmentDate, existingAppointment.ConsultantID);
+                if (checkAvailableSlot == null || !checkAvailableSlot.Any())
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>("Cannot find the slot suitalble for that day, please choose another day. ", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                if (!checkAvailableSlot.Any(s => s.SlotID == request.SlotID))
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>("Selected SlotID is not available for that consultant on the selected day.", StatusCodeEnum.BadRequest_400, null);
+                }
+            }
+
+            if (isTestAppointment)
+            {
+                var checkTestAvailableSlot = await _slotRepository.GetAvailableSlotsForTestAsync(request.AppointmentDate);
+                if (checkTestAvailableSlot == null || !checkTestAvailableSlot.Any())
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>("Cannot find the slot suitalble for that day, please choose another day. ", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                if (!checkTestAvailableSlot.Any(s => s.SlotID == request.SlotID))
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>("Selected SlotID is not available for test services on the selected day.", StatusCodeEnum.BadRequest_400, null);
+                }
+            }
+
+            existingAppointment.SlotID = request.SlotID;
+            existingAppointment.UpdateAt = DateTime.Now;
+            existingAppointment.AppointmentDate = request.AppointmentDate;
+
+            await _appointmentRepository.UpdateAppointmentAsync(existingAppointment);
+
+            var recipientEmail = existingAppointment.Customer?.Email;
+            if (!string.IsNullOrEmpty(recipientEmail) && IsValidEmail(recipientEmail))
+            {
+                string subject = "Thông báo dời lịch hẹn do sự cố từ phía phòng khám";
+                string body = $@"
+                    <html>
+                    <body>
+                        <p>Xin chào {existingAppointment.Customer?.Name ?? "quý khách"},</p>
+                        <p>Do sự cố phát sinh từ phía Clinic <strong>{existingAppointment.Clinic.Name}</strong>, 
+                        đơn đặt phòng của bạn (mã: <strong>{existingAppointment.AppointmentCode}</strong>) đã được dời lịch sang thời gian khác</p>
+                        <p>Chúng tôi rất xin lỗi vì sự bất tiện này. Lịch hẹn mới của bạn đã được cập nhật như sau:</p>
+
+                        <ul>
+                            <li><strong>Ngày mới:</strong> {request.AppointmentDate:dd/MM/yyyy}</li>
+                            <li><strong>Khung giờ mới:</strong> {request.SlotID}</li>
+                        </ul>
+
+                        <p>Mọi thắc mắc, quý khách vui lòng liên hệ bộ phận hỗ trợ qua số điện thoại: <strong>{existingAppointment.Clinic.Phone}</strong> để được giải đáp.</p>
+                        <br>
+                        <p>Chúng tôi rất mong nhận được sự thông cảm từ quý khách.</p>
+                        <br>
+                        <p>Trân trọng,</p>
+                        <p><strong>Gender-HealthCare-Service-System</strong></p>
+                    </body>
+                    </html>";
+                try
+                {
+                    _accountRepository.SendEmail(recipientEmail, subject, body);
+                }
+                catch (Exception ex)
+                {
+                    return new BaseResponse<UpdateAppointmentSlot>($"Gửi email thất bại: {ex.Message}", StatusCodeEnum.BadRequest_400, null);
+                }
+            }
+            else
+            {
+                return new BaseResponse<UpdateAppointmentSlot>("Send Email Fail!", StatusCodeEnum.BadRequest_400, null);
+            }
+            return new BaseResponse<UpdateAppointmentSlot>("Appointment updated successfully!", StatusCodeEnum.OK_200, request);
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

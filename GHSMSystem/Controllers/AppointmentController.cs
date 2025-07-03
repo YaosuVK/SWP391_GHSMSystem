@@ -407,5 +407,13 @@ namespace GHSMSystem.Controllers
             var appointment = await _appointmentService.ChangeAppointmentStatus(appointmentID, status, paymentStatus);
             return Ok(appointment);
         }
+
+        [HttpPut]
+        [Route("RescheduleAppointmentWithEmail")]
+        public async Task<ActionResult<BaseResponse<UpdateAppointmentSlot>>> RescheduleAppointmentWithEmail(int appointmentID, UpdateAppointmentSlot request)
+        {
+            var appointment = await _appointmentService.RescheduleAppointmentWithEmail(appointmentID, request);
+            return Ok(appointment);
+        }
     }
 }

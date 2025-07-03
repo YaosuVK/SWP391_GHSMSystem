@@ -24,5 +24,6 @@ namespace Service.IService
         Task<Appointment> CreateAppointmentPayment(int? appointmentID, Transaction transaction);
         Task<Appointment> CreateAppointmentRefundPayment(int? appointmentID, Transaction transaction);
         Task<BaseResponse<UpdateAppointmentSlot>> ChangeAppointmentSlot(int appointmentID, UpdateAppointmentSlot request);
+        Task<BaseResponse<UpdateAppointmentSlot>> RescheduleAppointmentWithEmail(int appointmentID, UpdateAppointmentSlot request);
     }
 }
