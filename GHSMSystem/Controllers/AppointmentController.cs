@@ -399,5 +399,13 @@ namespace GHSMSystem.Controllers
             var appointment = await _appointmentService.ChangeAppointmentSlot(appointmentID, request);
             return appointment;
         }
+
+        [HttpPut]
+        [Route("ChangeAppointmentStatus")]
+        public async Task<ActionResult<BaseResponse<Appointment>>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus)
+        {
+            var appointment = await _appointmentService.ChangeAppointmentStatus(appointmentID, status, paymentStatus);
+            return Ok(appointment);
+        }
     }
 }
