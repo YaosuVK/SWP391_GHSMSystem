@@ -13,6 +13,7 @@ namespace Repository.IRepositories
         Task<IEnumerable<Appointment>> GetAllAppointment();
         Task<Appointment?> GetAppointmentByIdAsync(int appointmentId);
         Task<Appointment?> GetAppointmentByIdCanNullAsync(int? appointmentId);
+        Task<Appointment?> GetAppointmentByCodeAsync(string appointmentCode);
         Task<IEnumerable<Appointment>> GetAppointmentsByCustomerId(string accountId);
         Task<IEnumerable<Appointment>> GetAppointmentsByConsultantId(string accountId);
         Task<Appointment?> GetUnpaidAppointmentByID(string customerID);

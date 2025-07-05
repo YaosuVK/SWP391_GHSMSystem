@@ -78,6 +78,19 @@ namespace DataAccessObject
                 .FirstOrDefaultAsync(o => o.AppointmentID == appointmentId);
         }
 
+        public async Task<Appointment?> GetAppointmentByCodeAsync(string appointmentCode)
+        {
+            return await _context.Appointments
+                .Include(b => b.AppointmentDetails)
+                .ThenInclude(b => b.Service)
+                .Include(b => b.Customer)
+                .Include(b => b.Consultant)
+                .Include(b => b.FeedBacks)
+                .Include(b => b.Slot)
+                .Include(b => b.Transactions)
+                .FirstOrDefaultAsync(o => o.AppointmentCode == appointmentCode);
+        }
+
         public async Task<Appointment?> GetAppointmentByIdCanNullAsync(int? appointmentId)
         {
             return await _context.Appointments

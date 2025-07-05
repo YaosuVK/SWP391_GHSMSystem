@@ -834,5 +834,16 @@ namespace Service.Service
                 return false;
             }
         }
+
+        public async Task<BaseResponse<GetAllAppointment?>> GetAppointmentByCodeAsync(string appointmentCode)
+        {
+            Appointment? appointment = await _appointmentRepository.GetAppointmentByCodeAsync(appointmentCode);
+            var result = _mapper.Map<GetAllAppointment>(appointment);
+            if (result == null)
+            {
+                return new BaseResponse<GetAllAppointment?>("Something Went Wrong!", StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<GetAllAppointment?>("Get Transaction as base success", StatusCodeEnum.OK_200, result);
+        }
     }
 }

@@ -68,6 +68,14 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpGet]
+        [Route("GetAppointmentByCode/{appointmentCode}")]
+        public async Task<ActionResult<BaseResponse<GetAllAppointment?>>> GetAppointmentByCodeAsync(string appointmentCode)
+        {
+            var appointment = await _appointmentService.GetAppointmentByCodeAsync(appointmentCode);
+            return Ok(appointment);
+        }
+
+        [HttpGet]
         [Route("GetAppointmentByConsultantID/{accountId}")]
         public async Task<ActionResult<BaseResponse<IEnumerable<GetAllAppointment>>>> GetAppointmentsByConsultantId(string accountId)
         {

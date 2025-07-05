@@ -14,6 +14,7 @@ namespace Service.IService
     {
         Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAllAppointment();
         Task<BaseResponse<GetAllAppointment?>> GetAppointmentByIdAsync(int appointmentId);
+        Task<BaseResponse<GetAllAppointment?>> GetAppointmentByCodeAsync(string appointmentCode);
         Task<BaseResponse<Appointment>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus);
         public (int? appointmentId, string? accountId) ParseOrderInfo(string orderInfo);
         /*Task<BaseResponse<GetAllAppointment?>> GetAppointmentByIdCanNullAsync(int? appointmentId);*/
