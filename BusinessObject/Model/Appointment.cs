@@ -42,11 +42,17 @@ namespace BusinessObject.Model
 
         public double TotalAmount { get; set; }
 
+        public double remainingBalance { get; set; }
+
+        public double ConsultationFee { get; set; } // Tiền tư vấn
+
+        public double STIsTestFee { get; set; }     // Tiền xét nghiệm STI
+
         [EnumDataType(typeof(AppointmentStatus))]
         public AppointmentStatus Status { get; set; }
 
-        [EnumDataType(typeof(AppointmentType))]
-        public AppointmentType AppointmentType { get; set; }
+        /*[EnumDataType(typeof(AppointmentType))]
+        public AppointmentType AppointmentType { get; set; }*/
 
         [EnumDataType(typeof(PaymentStatus))]
         public PaymentStatus paymentStatus { get; set; }
@@ -63,11 +69,12 @@ namespace BusinessObject.Model
         Pending = 0,
         Confirmed = 1,
         InProgress = 2,
-        WaitingForResult = 3,
-        Completed = 4,
-        Cancelled = 5,
-        RequestRefund = 6,
-        RequestCancel = 7
+        RequireSTIsTest = 3,
+        WaitingForResult = 4,
+        Completed = 5,
+        Cancelled = 6,
+        RequestRefund = 7,
+        RequestCancel = 8
     }
 
     public enum PaymentStatus
@@ -78,9 +85,9 @@ namespace BusinessObject.Model
         Refunded = 3
     }
 
-    public enum AppointmentType
+   /* public enum AppointmentType
     {
         Consulting = 0,
         Testing = 1
-    }
+    }*/
 }

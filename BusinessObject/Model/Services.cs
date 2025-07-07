@@ -40,7 +40,16 @@ namespace BusinessObject.Model
 
         public bool Status { get; set; }
 
+        [EnumDataType(typeof(ServiceType))]
+        public ServiceType ServiceType { get; set; }
+
         public ICollection<AppointmentDetail> AppointmentDetails { get; set; }
         public ICollection<ImageService> ImageServices { get; set; }
+    }
+
+    public enum ServiceType
+    {
+        Consultation = 0,
+        TestingSTI = 1
     }
 }

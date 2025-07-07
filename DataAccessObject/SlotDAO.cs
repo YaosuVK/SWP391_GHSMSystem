@@ -46,7 +46,7 @@ namespace DataAccessObject
                     cs.ConsultantID == consultantId &&
                     _context.Appointments.Count(a =>
                         a.SlotID == s.SlotID &&
-                        a.ConsultantID == consultantId) < cs.MaxAppointment))
+                        a.ConsultantID == consultantId) <= cs.MaxAppointment))
                 .ToListAsync();
         }
 
@@ -57,7 +57,7 @@ namespace DataAccessObject
                 .Include(s => s.Appointments)
                 .Where(s => s.StartTime.Date == appointmentDate.Date)
                 .Where(s =>
-                    s.Appointments.Count(a => a.SlotID == s.SlotID && a.ConsultantID == null) < s.MaxTestAppointment)
+                    s.Appointments.Count(a => a.SlotID == s.SlotID && a.ConsultantID == null) <= s.MaxTestAppointment)
                 .ToListAsync();
         }
     }

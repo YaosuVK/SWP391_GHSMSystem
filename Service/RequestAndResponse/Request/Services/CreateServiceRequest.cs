@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BusinessObject.Model;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,8 +23,10 @@ namespace Service.RequestAndResponse.Request.Services
         [MaxLength(1000, ErrorMessage = "Mô tả không được vượt quá 1000 ký tự.")]
         public string Description { get; set; }
 
-        [Range(1000, double.MaxValue, ErrorMessage = "Giá dịch vụ phải từ 1.000 VND trở lên.")]
-        public double ServicesPrice { get; set; }
+        public double? ServicesPrice { get; set; }
+
+        [Required]
+        public ServiceType ServiceType { get; set; }
 
         [Required]
         public List<IFormFile> Images { get; set; }

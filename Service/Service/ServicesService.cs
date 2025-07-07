@@ -59,14 +59,20 @@ namespace Service.Service
                 return new BaseResponse<Services>("Cannot find the category", StatusCodeEnum.NotFound_404, null);
             }
 
-            if (entity.ServicesPrice <=0)
+            if (entity.ServiceType == ServiceType.TestingSTI && (!entity.ServicesPrice.HasValue || entity.ServicesPrice <= 0))
             {
-                return new BaseResponse<Services>("ServicePrice must > 0", StatusCodeEnum.BadRequest_400, null);
+                return new BaseResponse<Services>("ServicesPrice is required and must be greater than 0 for STI Testing services.", StatusCodeEnum.BadRequest_400, null);
+            }
+
+            if (entity.ServiceType == ServiceType.Consultation && entity.ServicesPrice.HasValue)
+            {
+                return new BaseResponse<Services>("ServicesPrice should not be provided for Consultation services.", StatusCodeEnum.BadRequest_400, null);
             }
 
             Services service = _mapper.Map<Services>(entity);
             service.CreateAt = DateTime.Now;
             service.UpdateAt = DateTime.Now;
+            service.ServicesPrice = entity.ServiceType == ServiceType.TestingSTI ? entity.ServicesPrice.Value : 0;
             await _serviceRepository.AddAsync(service);
 
             if (entity.Images != null && entity.Images.Any())
@@ -83,7 +89,7 @@ namespace Service.Service
                 }
             }
 
-            return new BaseResponse<Services>("Create Slot as base success", StatusCodeEnum.Created_201, service);
+            return new BaseResponse<Services>("Create Service as base success", StatusCodeEnum.Created_201, service);
         }
 
         public async Task<BaseResponse<List<GetServiceStats>>> GetServiceUsageStats()
@@ -127,20 +133,26 @@ namespace Service.Service
             var existService = await _serviceRepository.GetByIdAsync(serviceID);
             if (existService == null)
             {
-                return new BaseResponse<Services>("Cannot find the slot", StatusCodeEnum.NotFound_404, null);
+                return new BaseResponse<Services>("Cannot find the service", StatusCodeEnum.NotFound_404, null);
             }
 
-            if (entity.ServicesPrice <= 0)
+            if (entity.ServiceType == ServiceType.TestingSTI && (!entity.ServicesPrice.HasValue || entity.ServicesPrice <= 0))
             {
-                return new BaseResponse<Services>("Start time must < End Time", StatusCodeEnum.BadRequest_400, null);
+                return new BaseResponse<Services>("ServicesPrice is required and must be greater than 0 for STI Testing services.", StatusCodeEnum.BadRequest_400, null);
+            }
+
+            if (entity.ServiceType == ServiceType.Consultation && entity.ServicesPrice.HasValue)
+            {
+                return new BaseResponse<Services>("ServicesPrice should not be provided for Consultation services.", StatusCodeEnum.BadRequest_400, null);
             }
 
             _mapper.Map(entity, existService);
             existService.UpdateAt = DateTime.UtcNow;
+            existService.ServicesPrice = entity.ServiceType == ServiceType.TestingSTI ? entity.ServicesPrice.Value : 0;
 
             // 3. Cập nhật
             await _serviceRepository.UpdateAsync(existService);
-            return new BaseResponse<Services>("Cập nhật phòng khám thành công.", StatusCodeEnum.OK_200, existService);
+            return new BaseResponse<Services>("Cập nhật dịch vụ thành công.", StatusCodeEnum.OK_200, existService);
         }
 
         private async Task<List<string>> UploadImagesToCloudinary(List<IFormFile> files)

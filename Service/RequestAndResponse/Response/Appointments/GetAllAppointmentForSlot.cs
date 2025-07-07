@@ -36,8 +36,6 @@ namespace Service.RequestAndResponse.Response.Appointments
 
         public AppointmentStatus Status { get; set; }
 
-        public AppointmentType AppointmentType { get; set; }
-
         public PaymentStatus paymentStatus { get; set; }
     }
 }

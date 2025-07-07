@@ -43,15 +43,6 @@ namespace Service.Service
                     throw new InvalidOperationException("The appointment does not have a TreatmentOutcome, cannot auto checkout!");
                 }
 
-                // Nếu là lịch xét nghiệm, phải có LabTest
-                if (appointment.AppointmentType == AppointmentType.Testing)
-                {
-                    if (appointment.TreatmentOutcome.LabTests == null || !appointment.TreatmentOutcome.LabTests.Any())
-                    {
-                        throw new InvalidOperationException("The appointment is a LabTest type but does not have any LabTest result, cannot auto checkout!");
-                    }
-                }
-
                 appointment.Status = AppointmentStatus.Completed;
 
                 var transaction = await _transactionRepository.GetTransactionByAppointmentId(appointment.AppointmentID);
