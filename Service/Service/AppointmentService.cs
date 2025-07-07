@@ -308,7 +308,7 @@ namespace Service.Service
             var existingAppointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentID);
             if (existingAppointment == null)
             {
-                return new BaseResponse<UpdateAppointmentRequest>("Cannot find your Booking!",
+                return new BaseResponse<UpdateAppointmentRequest>("Cannot find your Appointment!",
                          StatusCodeEnum.NotFound_404, null);
             }
 
@@ -477,9 +477,123 @@ namespace Service.Service
                 existingAppointment.TotalAmount = totalPriceExistAppointment;
                 existingAppointment.ConsultationFee = totalConsultationFee;
                 existingAppointment.STIsTestFee = totalSTIsTestFee;
+                existingAppointment.remainingBalance = totalPriceExistAppointment - (totalConsultationFee + totalSTIsTestFee);
             
             await _appointmentRepository.UpdateAppointmentAsync(existingAppointment);
             return new BaseResponse<UpdateAppointmentRequest>("Booking updated successfully!", StatusCodeEnum.OK_200, request);
+        }
+
+        public async Task<BaseResponse<UpdateApppointmentRequestSTI>> UpdateAppointmentForTesting(int appointmentID, UpdateApppointmentRequestSTI request)
+        {
+            var existingAppointment = await _appointmentRepository.GetAppointmentByIdAsync(appointmentID);
+            if (existingAppointment == null)
+            {
+                return new BaseResponse<UpdateApppointmentRequestSTI>("Cannot find your Appointment!",
+                         StatusCodeEnum.NotFound_404, null);
+            }
+
+            bool hasExistingSTITest = existingAppointment.AppointmentDetails
+                        .Any(d => d.ServicesID.HasValue && d.Service?.ServiceType == ServiceType.TestingSTI);
+
+            if (hasExistingSTITest)
+            {
+                return new BaseResponse<UpdateApppointmentRequestSTI>("This Appointment already contains STI Testing services, cannot add more.", StatusCodeEnum.Conflict_409, null);
+            }
+
+            bool isCompleted = existingAppointment.Status == AppointmentStatus.Completed;
+            bool isCancelled = existingAppointment.Status == AppointmentStatus.Cancelled;
+
+            if (isCompleted)
+            {
+                return new BaseResponse<UpdateApppointmentRequestSTI>("This booking is already completed and cannot be modified.",
+                           StatusCodeEnum.NotFound_404, null);
+            }
+
+            if (isCancelled)
+            {
+                return new BaseResponse<UpdateApppointmentRequestSTI>("This booking is already cancelled and cannot be modified.",
+                           StatusCodeEnum.NotFound_404, null);
+            }
+
+            if (request.AppointmentDetails == null || !request.AppointmentDetails.Any())
+                return new BaseResponse<UpdateApppointmentRequestSTI>("AppointmentDetails is required.", StatusCodeEnum.BadRequest_400, null);
+
+            if(existingAppointment.Status != AppointmentStatus.RequireSTIsTest)
+            {
+                return new BaseResponse<UpdateApppointmentRequestSTI>("Cannot change the Appointment due to the test requirement immediately.", StatusCodeEnum.BadRequest_400, null);
+            }
+
+            var duplicatedServiceIDs = request.AppointmentDetails
+                   .Where(d => d.ServicesID.HasValue)
+                   .GroupBy(d => d.ServicesID)
+                   .Where(g => g.Count() > 1)
+                   .Select(g => g.Key)
+                   .ToList();
+
+            if (duplicatedServiceIDs.Any())
+            {
+                return new BaseResponse<UpdateApppointmentRequestSTI>($"ServiceID(s) duplicated in request: {string.Join(", ", duplicatedServiceIDs)}", StatusCodeEnum.Conflict_409, null);
+            }
+
+            double totalSTIsTestFee = 0;
+            foreach (var updateAppointmentDetail in request.AppointmentDetails)
+            {
+                if (!updateAppointmentDetail.ServicesID.HasValue || updateAppointmentDetail.ServicesID <= 0)
+                    return new BaseResponse<UpdateApppointmentRequestSTI>("ServicesID is required for each AppointmentDetail.", StatusCodeEnum.BadRequest_400, null);
+
+                var service = await _serviceRepository.GetServiceByID(updateAppointmentDetail.ServicesID);
+                if (service == null)
+                {
+                    return new BaseResponse<UpdateApppointmentRequestSTI>("Cannot find service", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                double unitPrice = 0;
+
+                if (service.ServiceType == ServiceType.TestingSTI)
+                {
+                    unitPrice = service.ServicesPrice;
+                    totalSTIsTestFee += unitPrice * updateAppointmentDetail.Quantity;
+                }
+                else
+                {
+                    return new BaseResponse<UpdateApppointmentRequestSTI>("Unsupported with ServiceType is Consultation, please check again.", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                if (updateAppointmentDetail.Quantity <= 0)
+                {
+                    return new BaseResponse<UpdateApppointmentRequestSTI>("Quantity must be > 0, please check again.", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                if (unitPrice <= 0)
+                {
+                    return new BaseResponse<UpdateApppointmentRequestSTI>("Invalid price detected, please check service/consultant again.", StatusCodeEnum.Conflict_409, null);
+                }
+
+                existingAppointment.AppointmentDetails.Add(new AppointmentDetail
+                {
+                    ConsultantProfileID = null,
+                    ServicesID = updateAppointmentDetail.ServicesID,
+                    Quantity = updateAppointmentDetail.Quantity, // Always be 1 For FE
+                    ServicePrice = unitPrice,
+                    TotalPrice = updateAppointmentDetail.Quantity * unitPrice
+                });
+            }
+
+            if (totalSTIsTestFee > 0)
+            {
+                var availableTestSlots = await _slotRepository.GetAvailableSlotsForTestCanNullAsync(existingAppointment.AppointmentDate);
+                if (availableTestSlots == null || !availableTestSlots.Any() || !availableTestSlots.Any(s => s.SlotID == existingAppointment.SlotID))
+                    return new BaseResponse<UpdateApppointmentRequestSTI>("Selected SlotID is not available for STI Testing on the selected day.", StatusCodeEnum.BadRequest_400, null);
+            }
+
+            double totalPriceExistAppointment = existingAppointment.AppointmentDetails.Sum(d => d.TotalPrice);
+            existingAppointment.UpdateAt = DateTime.Now;
+            existingAppointment.TotalAmount = totalPriceExistAppointment;
+            existingAppointment.STIsTestFee = totalSTIsTestFee;
+            existingAppointment.remainingBalance = totalSTIsTestFee;
+
+            await _appointmentRepository.UpdateAppointmentAsync(existingAppointment);
+            return new BaseResponse<UpdateApppointmentRequestSTI>("Appointment updated successfully!", StatusCodeEnum.OK_200, request);
         }
 
         public async Task<Appointment> CreateAppointmentPayment(int? appointmentID, Transaction transaction)
@@ -634,7 +748,7 @@ namespace Service.Service
                          StatusCodeEnum.NotFound_404, null);
             }
 
-            bool isTestAppointment = existingAppointment.AppointmentDetails.Any(d => d.ServicesID.HasValue);
+            bool isTestAppointment = existingAppointment.AppointmentDetails.Any(d => d.ServicesID.HasValue && d.Service.ServiceType == ServiceType.TestingSTI);
             bool isConsultantAppointment = existingAppointment.AppointmentDetails.Any(d => d.ConsultantProfileID.HasValue);
             
             if (isConsultantAppointment)
@@ -714,7 +828,7 @@ namespace Service.Service
                          StatusCodeEnum.NotFound_404, null);
             }
 
-            bool isTestAppointment = existingAppointment.AppointmentDetails.Any(d => d.ServicesID.HasValue);
+            bool isTestAppointment = existingAppointment.AppointmentDetails.Any(d => d.ServicesID.HasValue && d.Service.ServiceType == ServiceType.TestingSTI);
             bool isConsultantAppointment = existingAppointment.AppointmentDetails.Any(d => d.ConsultantProfileID.HasValue);
 
             if (isConsultantAppointment)

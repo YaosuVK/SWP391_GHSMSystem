@@ -22,6 +22,7 @@ namespace Service.IService
         Task<BaseResponse<IEnumerable<GetAllAppointment>>> GetAppointmentsByConsultantId(string accountId);
         Task<BaseResponse<int>> CreateAppointment(CreateAppointmentRequest request);
         Task<BaseResponse<UpdateAppointmentRequest>> UpdateAppointment(int appointmentID,UpdateAppointmentRequest request);
+        Task<BaseResponse<UpdateApppointmentRequestSTI>> UpdateAppointmentForTesting(int appointmentID, UpdateApppointmentRequestSTI request);
         Task<Appointment> CreateAppointmentPayment(int? appointmentID, Transaction transaction);
         Task<Appointment> CreateAppointmentRefundPayment(int? appointmentID, Transaction transaction);
         Task<BaseResponse<UpdateAppointmentSlot>> ChangeAppointmentSlot(int appointmentID, UpdateAppointmentSlot request);

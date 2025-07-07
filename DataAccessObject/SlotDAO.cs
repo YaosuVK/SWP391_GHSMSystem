@@ -60,5 +60,16 @@ namespace DataAccessObject
                     s.Appointments.Count(a => a.SlotID == s.SlotID && a.ConsultantID == null) <= s.MaxTestAppointment)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Slot>> GetAvailableSlotsForTestCanNullAsync(DateTime? appointmentDate)
+        {
+            return await _context.Slots
+                .Include(s => s.WorkingHour)
+                .Include(s => s.Appointments)
+                .Where(s => s.StartTime.Date == appointmentDate.Value.Date)
+                .Where(s =>
+                    s.Appointments.Count(a => a.SlotID == s.SlotID && a.ConsultantID == null) <= s.MaxTestAppointment)
+                .ToListAsync();
+        }
     }
 }
