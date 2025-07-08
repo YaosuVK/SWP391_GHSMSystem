@@ -30,6 +30,8 @@ namespace Service.RequestAndResponse.Response.Services
 
         public bool Status { get; set; }
 
+        public ServiceType ServiceType { get; set; }
+
         public ICollection<ImageServiceResponse> ImageServices { get; set; }
     }
 }

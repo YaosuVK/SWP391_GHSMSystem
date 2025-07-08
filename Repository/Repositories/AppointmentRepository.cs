@@ -38,6 +38,11 @@ namespace Repository.Repositories
             return await _appointmentDao.GetAllAppointment();
         }
 
+        public async Task<Appointment?> GetAppointmentByCodeAsync(string appointmentCode)
+        {
+            return await _appointmentDao.GetAppointmentByCodeAsync(appointmentCode);
+        }
+
         public async Task<Appointment?> GetAppointmentByIdAsync(int appointmentId)
         {
             return await _appointmentDao.GetAppointmentByIdAsync(appointmentId);

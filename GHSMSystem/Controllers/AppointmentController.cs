@@ -68,6 +68,14 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpGet]
+        [Route("GetAppointmentByCode/{appointmentCode}")]
+        public async Task<ActionResult<BaseResponse<GetAllAppointment?>>> GetAppointmentByCodeAsync(string appointmentCode)
+        {
+            var appointment = await _appointmentService.GetAppointmentByCodeAsync(appointmentCode);
+            return Ok(appointment);
+        }
+
+        [HttpGet]
         [Route("GetAppointmentByConsultantID/{accountId}")]
         public async Task<ActionResult<BaseResponse<IEnumerable<GetAllAppointment>>>> GetAppointmentsByConsultantId(string accountId)
         {
@@ -129,8 +137,16 @@ namespace GHSMSystem.Controllers
                 if (appointment == null)
                     return BadRequest($"Appointment with ID {appointmentId} not found.");
 
-                await _appointmentService.CreateAppointmentPayment(appointmentId, transaction);
-                return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{appointmentId}");
+                if (appointment.Data.remainingBalance <= 0 && appointment.Data.Status != AppointmentStatus.Completed)
+                {               
+                    await _appointmentService.CreateAppointmentPayment(appointmentId, transaction);
+                    return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{appointmentId}");
+                }
+                else
+                {
+                    await _appointmentService.AppointmentPaymentForMoreService(appointmentId, transaction);
+                    return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{appointmentId}");
+                }
             }
             return BadRequest("Cannot find Appointment");
         }
@@ -222,7 +238,17 @@ namespace GHSMSystem.Controllers
                 return BadRequest("This appointment already paid, cannot have a payment");
             }
 
-            double amount = appointment.Data.TotalAmount;
+            double amount = 0;
+
+            if (appointment.Data.paymentStatus == PaymentStatus.PartiallyPaid)
+            {
+                amount = appointment.Data.remainingBalance;
+            }
+            else
+            {
+                amount = appointment.Data.TotalAmount;
+            }
+
             var vnPayModel = new VnPayRequestModel
             {
                 AppointmentID = appointment.Data.AppointmentID,
@@ -249,6 +275,11 @@ namespace GHSMSystem.Controllers
                 {
                     amount = appointment.Data.TotalAmount;
                 }
+
+                /*if (appointment.Data.paymentStatus == PaymentStatus.PartialRefund)
+                {
+
+                }*/
 
                 var vnPayModel = new VnPayRequestModel
                 {
@@ -379,6 +410,28 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpPut]
+        [Route("UpdateAppointmentWithSTIRequest")]
+        public async Task<ActionResult<BaseResponse<UpdateApppointmentRequestSTI>>> UpdateAppointmentForTesting(int appointmentID, UpdateApppointmentRequestSTI request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Please Implement all Information");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // Trả về lỗi chi tiết từ ModelState
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(new { message = "Validation Failed", errors });
+            }
+
+            var appointment = await _appointmentService.UpdateAppointmentForTesting(appointmentID, request);
+            return appointment;
+        }
+
+        [HttpPut]
         [Route("ChangeAppointmentSlot")]
         public async Task<ActionResult<BaseResponse<UpdateAppointmentSlot>>> ChangeAppointmentSlot(int appointmentID, UpdateAppointmentSlot request)
         {
@@ -405,6 +458,14 @@ namespace GHSMSystem.Controllers
         public async Task<ActionResult<BaseResponse<Appointment>>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus)
         {
             var appointment = await _appointmentService.ChangeAppointmentStatus(appointmentID, status, paymentStatus);
+            return Ok(appointment);
+        }
+
+        [HttpPut]
+        [Route("RescheduleAppointmentWithEmail")]
+        public async Task<ActionResult<BaseResponse<UpdateAppointmentSlot>>> RescheduleAppointmentWithEmail(int appointmentID, UpdateAppointmentSlot request)
+        {
+            var appointment = await _appointmentService.RescheduleAppointmentWithEmail(appointmentID, request);
             return Ok(appointment);
         }
     }

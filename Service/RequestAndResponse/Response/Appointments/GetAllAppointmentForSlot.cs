@@ -34,9 +34,13 @@ namespace Service.RequestAndResponse.Response.Appointments
 
         public double TotalAmount { get; set; }
 
-        public AppointmentStatus Status { get; set; }
+        public double remainingBalance { get; set; }
 
-        public AppointmentType AppointmentType { get; set; }
+        public double ConsultationFee { get; set; } // Tiền tư vấn
+
+        public double STIsTestFee { get; set; }     // Tiền xét nghiệm STI
+
+        public AppointmentStatus Status { get; set; }
 
         public PaymentStatus paymentStatus { get; set; }
     }
