@@ -24,6 +24,14 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpGet]
+        [Route("GetAllTransactionByAppointmentId/{appointmentID}")]
+        public async Task<ActionResult<BaseResponse<IEnumerable<TransactionResponse>>>> GetListTransactionsByAppointmentId(int appointmentID)
+        {
+            var transactions = await _transactionsService.GetListTransactionsByAppointmentId(appointmentID);
+            return Ok(transactions);
+        }
+
+        [HttpGet]
         [Route("GetTransactionByID/{transactionID}")]
         public async Task<ActionResult<BaseResponse<TransactionResponse?>>> GetTransactionById(string transactionID)
         {

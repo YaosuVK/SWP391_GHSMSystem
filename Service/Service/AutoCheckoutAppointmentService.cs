@@ -45,12 +45,18 @@ namespace Service.Service
 
                 appointment.Status = AppointmentStatus.Completed;
 
-                var transaction = await _transactionRepository.GetTransactionByAppointmentId(appointment.AppointmentID);
-                if (transaction != null && transaction.StatusTransaction == StatusOfTransaction.Pending)
+                var transactions = await _transactionRepository.GetListTransactionsByAppointmentId(appointment.AppointmentID);
+                if (transactions != null)
                 {
-                    transaction.StatusTransaction = StatusOfTransaction.Completed;
-                    transaction.FinishDate = DateTime.Now;
-                    await _transactionRepository.UpdateAsync(transaction);
+                    foreach (var transactionItem in transactions)
+                    {
+                        if (transactionItem != null && transactionItem.StatusTransaction == StatusOfTransaction.Pending)
+                        {
+                            transactionItem.StatusTransaction = StatusOfTransaction.Completed;
+                            transactionItem.FinishDate = DateTime.Now;
+                            await _transactionRepository.UpdateAsync(transactionItem);
+                        }
+                    }
                 }
                 else
                 {
@@ -83,12 +89,18 @@ namespace Service.Service
 
                 if (appointment.paymentStatus == PaymentStatus.FullyPaid)
                 {
-                    var transaction = await _transactionRepository.GetTransactionByAppointmentId(appointment.AppointmentID);
-                    if (transaction != null && transaction.StatusTransaction == StatusOfTransaction.Pending)
+                    var transactions = await _transactionRepository.GetListTransactionsByAppointmentId(appointment.AppointmentID);
+                    if (transactions != null)
                     {
-                        transaction.StatusTransaction = StatusOfTransaction.Completed;
-                        transaction.FinishDate = DateTime.Now;
-                        await _transactionRepository.UpdateAsync(transaction);
+                        foreach (var transactionItem in transactions)
+                        {
+                            if (transactionItem != null && transactionItem.StatusTransaction == StatusOfTransaction.Pending)
+                            {
+                                transactionItem.StatusTransaction = StatusOfTransaction.Completed;
+                                transactionItem.FinishDate = DateTime.Now;
+                                await _transactionRepository.UpdateAsync(transactionItem);
+                            }
+                        }
                     }
                 }
 

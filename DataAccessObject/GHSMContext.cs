@@ -149,7 +149,7 @@ namespace DataAccessObject
               };
             modelBuilder.Entity<IdentityRole>().HasData(roles);
 
-            //Add this to keep the asp.net userrole, then migrations
+            /*//Add this to keep the asp.net userrole, then migrations
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string> { RoleId = "your-admin-role-id", UserId = "your-admin-user-id" },
                 new IdentityUserRole<string> { RoleId = "your-customer-role-id", UserId = "your-customer-user-id" },
@@ -157,7 +157,7 @@ namespace DataAccessObject
                 new IdentityUserRole<string> { RoleId = "your-customer-role-id", UserId = "your-customer-user-id" },
                 new IdentityUserRole<string> { RoleId = "your-admin-role-id", UserId = "your-admin-user-id" },
                 new IdentityUserRole<string> { RoleId = "your-customer-role-id", UserId = "your-customer-user-id" }
-            );
+            );*/
         }
 
         public DbSet<Account> Accounts { get; set; }

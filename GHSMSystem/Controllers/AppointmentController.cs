@@ -263,7 +263,7 @@ namespace GHSMSystem.Controllers
 
         [HttpPost]
         [Route("AppointmentPayment-Refund-Full")]
-        public async Task<ActionResult<string>> CheckOutRefundAppointmentFull(int appointmentID, string accountId)
+        public async Task<ActionResult<string>> CheckOutRefundAppointmentFull(int appointmentID, string accountId, string refundType)
         {
             var appointment = await _appointmentService.GetAppointmentByIdAsync(appointmentID);
 
@@ -276,10 +276,37 @@ namespace GHSMSystem.Controllers
                     amount = appointment.Data.TotalAmount;
                 }
 
-                /*if (appointment.Data.paymentStatus == PaymentStatus.PartialRefund)
+                switch (refundType.ToLower())
                 {
+                    case "full":
+                        if (appointment.Data.paymentStatus == PaymentStatus.FullyPaid)
+                        {
+                            amount = appointment.Data.TotalAmount;
+                        }
+                        break;
 
-                }*/
+                    case "consultation":
+                        if (appointment.Data.paymentStatus == PaymentStatus.FullyPaid || appointment.Data.paymentStatus == PaymentStatus.PartiallyPaid)
+                        {
+                            amount = appointment.Data.ConsultationFee;
+                        }
+                        break;
+
+                    case "sti":
+                    case "stitest":
+                        if (appointment.Data.paymentStatus == PaymentStatus.FullyPaid || appointment.Data.paymentStatus == PaymentStatus.PartiallyPaid)
+                        {
+                            amount = appointment.Data.STIsTestFee;
+                        }
+                        break;
+
+                    default:
+                        return BadRequest("Invalid refund type. Must be 'full', 'consultation', or 'sti'.");
+                }
+
+                if (amount <= 0)
+                    return BadRequest("Refund amount is invalid or not applicable.");
+
 
                 var vnPayModel = new VnPayRequestModel
                 {

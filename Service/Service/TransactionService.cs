@@ -42,6 +42,24 @@ namespace Service.Service
                 StatusCodeEnum.OK_200, transactions);
         }
 
+        public async Task<BaseResponse<IEnumerable<TransactionResponse>>> GetListTransactionsByAppointmentId(int appointmentID)
+        {
+            IEnumerable<Transaction> transaction = await _transactionRepository.GetListTransactionsByAppointmentId(appointmentID);
+            if (transaction == null || !transaction.Any())
+            {
+                return new BaseResponse<IEnumerable<TransactionResponse>>("Something went wrong!",
+                StatusCodeEnum.BadGateway_502, null);
+            }
+            var transactions = _mapper.Map<IEnumerable<TransactionResponse>>(transaction);
+            if (transactions == null || !transactions.Any())
+            {
+                return new BaseResponse<IEnumerable<TransactionResponse>>("Something went wrong!",
+                StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<IEnumerable<TransactionResponse>>("Get all transactions as base success",
+                StatusCodeEnum.OK_200, transactions);
+        }
+
         public async Task<BaseResponse<TransactionResponse?>> GetTransactionByAppointmentId(int appointmentID)
         {
             Transaction? transaction = await _transactionRepository.GetTransactionByAppointmentId(appointmentID);

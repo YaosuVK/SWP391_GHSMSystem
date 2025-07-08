@@ -15,5 +15,6 @@ namespace Repository.IRepositories
         Task<Transaction?> GetTransactionById(string transactionID);
         Task<Transaction?> GetTransactionByAppointmentId(int appointmentID);
         Task<Transaction?> ChangeTransactionStatusForAppointment(int? appointmentId, StatusOfTransaction newStatus);
+        Task<IEnumerable<Transaction>> GetListTransactionsByAppointmentId(int appointmentID);
     }
 }

@@ -29,6 +29,11 @@ namespace Repository.Repositories
             return await _transactionDao.GetAllTransactions();
         }
 
+        public async Task<IEnumerable<Transaction>> GetListTransactionsByAppointmentId(int appointmentID)
+        {
+            return await _transactionDao.GetListTransactionsByAppointmentId(appointmentID);
+        }
+
         public async Task<Transaction?> GetTransactionByAppointmentId(int appointmentID)
         {
             return await _transactionDao.GetTransactionByAppointmentId(appointmentID);

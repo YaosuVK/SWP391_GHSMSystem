@@ -43,6 +43,15 @@ namespace DataAccessObject
                 .FirstOrDefaultAsync(t => t.ResponseId == transactionID);
         }
 
+        public async Task<IEnumerable<Transaction>> GetListTransactionsByAppointmentId(int appointmentID)
+        {
+            return await _context.Transactions
+                .Include(t => t.Account)
+                .Include(t => t.Appointment)
+                .Where(t => t.Appointment.AppointmentID == appointmentID)
+                .ToListAsync();
+        }
+
         public async Task<Transaction?> GetTransactionByAppointmentId(int appointmentID)
         {
             return await _context.Transactions

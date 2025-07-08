@@ -68,26 +68,30 @@ namespace Service.Service
                 bool hasRefund = daysBeforeAppointment < 1;
                 if (!hasRefund)
                 {
-                    var transaction = await _transactionRepository.GetTransactionByAppointmentId(appointmentExist.AppointmentID);
-                    if (transaction != null)
+                    var transactions = await _transactionRepository.GetListTransactionsByAppointmentId(appointmentExist.AppointmentID);
+                    if (transactions != null)
                     {
-
-                        transaction.StatusTransaction = StatusOfTransaction.Completed;
-                        transaction.FinishDate = DateTime.Now;
-                        await _transactionRepository.UpdateAsync(transaction);
+                        foreach(var transactionItem in transactions)
+                        {
+                            transactionItem.StatusTransaction = StatusOfTransaction.Completed;
+                            transactionItem.FinishDate = DateTime.Now;
+                            await _transactionRepository.UpdateAsync(transactionItem);
+                        }
                     }
                 }
             }
 
             if (status == AppointmentStatus.Completed)
             {
-                var transaction = await _transactionRepository.GetTransactionByAppointmentId(appointmentExist.AppointmentID);
-                if (transaction != null)
+                var transactions = await _transactionRepository.GetListTransactionsByAppointmentId(appointmentExist.AppointmentID);
+                if (transactions != null)
                 {
-
-                    transaction.StatusTransaction = StatusOfTransaction.Completed;
-                    transaction.FinishDate = DateTime.Now;
-                    await _transactionRepository.UpdateAsync(transaction);
+                    foreach (var transactionItem in transactions)
+                    {
+                        transactionItem.StatusTransaction = StatusOfTransaction.Completed;
+                        transactionItem.FinishDate = DateTime.Now;
+                        await _transactionRepository.UpdateAsync(transactionItem);
+                    }
                 }
             }
 
@@ -713,7 +717,7 @@ namespace Service.Service
                 var recipientEmail = appointment.Customer?.Email;
                 if (!string.IsNullOrEmpty(recipientEmail))
                 {
-                    string subject = "Yêu cầu hủy đặt phòng đã được xử lý";
+                    string subject = "Yêu cầu hủy đặt lịch đã được xử lý";
                     string body = $@"
                     <html>
                     <body>

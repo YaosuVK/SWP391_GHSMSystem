@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250708071950_FixDb")]
+    [Migration("20250708141808_FixDb")]
     partial class FixDb
     {
         /// <inheritdoc />
