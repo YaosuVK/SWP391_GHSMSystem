@@ -186,7 +186,7 @@ namespace DataAccessObject
                                 .CountAsync();
 
             int appointmentConfirmed = await _context.Appointments
-                                .Where(o => o.Status == AppointmentStatus.Confirmed && (o.paymentStatus == PaymentStatus.Deposited || o.paymentStatus == PaymentStatus.FullyPaid))
+                                .Where(o => o.Status == AppointmentStatus.Confirmed && (o.paymentStatus == PaymentStatus.PartiallyPaid || o.paymentStatus == PaymentStatus.FullyPaid))
                                 .CountAsync();
             return (appointmentsReturnOrCancell, appointments, appointmentsComplete, appointmentsCancell, appointmentsReturnRefund, appointmentsReport, appointmentConfirmed);
         }

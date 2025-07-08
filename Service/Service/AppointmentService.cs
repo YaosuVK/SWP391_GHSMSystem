@@ -591,6 +591,7 @@ namespace Service.Service
             existingAppointment.TotalAmount = totalPriceExistAppointment;
             existingAppointment.STIsTestFee = totalSTIsTestFee;
             existingAppointment.remainingBalance = totalSTIsTestFee;
+            existingAppointment.paymentStatus = PaymentStatus.PartiallyPaid;
 
             await _appointmentRepository.UpdateAppointmentAsync(existingAppointment);
             return new BaseResponse<UpdateApppointmentRequestSTI>("Appointment updated successfully!", StatusCodeEnum.OK_200, request);
@@ -628,6 +629,42 @@ namespace Service.Service
             transaction.StatusTransaction = StatusOfTransaction.Pending;
             appointment.Status = AppointmentStatus.Confirmed;
 
+            await _appointmentRepository.UpdateAppointmentAsync(appointment);
+            return appointment;
+        }
+
+        public async Task<Appointment> AppointmentPaymentForMoreService(int? appointmentID, Transaction transaction)
+        {
+            var appointment = await _appointmentRepository.GetAppointmentByIdCanNullAsync(appointmentID);
+            if (appointment == null)
+            {
+                throw new Exception("Appointment not found");
+            }
+            appointment.Transactions ??= new List<Transaction>();
+
+            bool alreadyExists = appointment.Transactions.Any(t => t.ResponseId == transaction.ResponseId && transaction.ResponseId != null);
+
+            if (alreadyExists)
+            {
+                throw new Exception("Duplicate transaction detected.");
+            }
+
+            transaction.Account = appointment.Customer;
+
+            appointment.Transactions.Add(transaction);
+
+            double remainingBalance = appointment.remainingBalance;  // Thay bằng cách tính tổng số tiền thanh toán của booking
+            double amountPaid = transaction.Amount; // Tính tổng số tiền đã thanh toán từ tất cả các giao dịch
+
+            if (amountPaid >= remainingBalance)
+            {
+                appointment.paymentStatus = PaymentStatus.FullyPaid; // Thanh toán đầy đủ
+                transaction.TransactionKind = TransactionKind.FullPayment;
+                appointment.remainingBalance = 0;
+            }
+
+            transaction.StatusTransaction = StatusOfTransaction.Pending;
+            
             await _appointmentRepository.UpdateAppointmentAsync(appointment);
             return appointment;
         }

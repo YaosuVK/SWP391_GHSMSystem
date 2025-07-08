@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250701152035_FixDb2")]
-    partial class FixDb2
+    [Migration("20250708071950_FixDb")]
+    partial class FixDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,14 +123,14 @@ namespace DataAccessObject.Migrations
                     b.Property<DateTime?>("AppointmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("AppointmentType")
-                        .HasColumnType("int");
-
                     b.Property<int>("ClinicID")
                         .HasColumnType("int");
 
                     b.Property<string>("ConsultantID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("ConsultationFee")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -141,6 +141,9 @@ namespace DataAccessObject.Migrations
 
                     b.Property<DateTime>("ExpiredTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<double>("STIsTestFee")
+                        .HasColumnType("float");
 
                     b.Property<int?>("SlotID")
                         .HasColumnType("int");
@@ -159,6 +162,9 @@ namespace DataAccessObject.Migrations
 
                     b.Property<int>("paymentStatus")
                         .HasColumnType("int");
+
+                    b.Property<double>("remainingBalance")
+                        .HasColumnType("float");
 
                     b.HasKey("AppointmentID");
 
@@ -700,6 +706,9 @@ namespace DataAccessObject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("ServiceType")
+                        .HasColumnType("int");
+
                     b.Property<string>("ServicesName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -956,38 +965,6 @@ namespace DataAccessObject.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "e543a6c7-eb57-4e89-aec7-9504f19ab418",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "dfa5e049-259d-468f-9f89-e67237248990",
-                            Name = "Customer",
-                            NormalizedName = "CUSTOMER"
-                        },
-                        new
-                        {
-                            Id = "3cfaf195-ad71-43b0-bd26-ec914f8cc4db",
-                            Name = "Consultant",
-                            NormalizedName = "CONSULTANT"
-                        },
-                        new
-                        {
-                            Id = "8a54f8c5-09f5-4d1d-84ef-24b03d32a321",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
-                            Id = "95ac6540-1eeb-4dc2-921e-d3ca364aa603",
-                            Name = "Staff",
-                            NormalizedName = "STAFF"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

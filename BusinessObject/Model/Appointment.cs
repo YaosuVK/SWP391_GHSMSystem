@@ -80,9 +80,10 @@ namespace BusinessObject.Model
     public enum PaymentStatus
     {
         Pending = 0,
-        Deposited = 1,
+        PartiallyPaid = 1,
         FullyPaid = 2,
-        Refunded = 3
+        Refunded = 3,
+        PartialRefund = 4
     }
 
    /* public enum AppointmentType

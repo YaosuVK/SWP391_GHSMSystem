@@ -137,8 +137,16 @@ namespace GHSMSystem.Controllers
                 if (appointment == null)
                     return BadRequest($"Appointment with ID {appointmentId} not found.");
 
-                await _appointmentService.CreateAppointmentPayment(appointmentId, transaction);
-                return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{appointmentId}");
+                if (appointment.Data.remainingBalance <= 0 && appointment.Data.Status != AppointmentStatus.Completed)
+                {               
+                    await _appointmentService.CreateAppointmentPayment(appointmentId, transaction);
+                    return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{appointmentId}");
+                }
+                else
+                {
+                    await _appointmentService.AppointmentPaymentForMoreService(appointmentId, transaction);
+                    return Redirect($"{_configuration["VnPay:UrlReturnPayment"]}/{appointmentId}");
+                }
             }
             return BadRequest("Cannot find Appointment");
         }
@@ -230,7 +238,17 @@ namespace GHSMSystem.Controllers
                 return BadRequest("This appointment already paid, cannot have a payment");
             }
 
-            double amount = appointment.Data.TotalAmount;
+            double amount = 0;
+
+            if (appointment.Data.paymentStatus == PaymentStatus.PartiallyPaid)
+            {
+                amount = appointment.Data.remainingBalance;
+            }
+            else
+            {
+                amount = appointment.Data.TotalAmount;
+            }
+
             var vnPayModel = new VnPayRequestModel
             {
                 AppointmentID = appointment.Data.AppointmentID,
@@ -257,6 +275,11 @@ namespace GHSMSystem.Controllers
                 {
                     amount = appointment.Data.TotalAmount;
                 }
+
+                /*if (appointment.Data.paymentStatus == PaymentStatus.PartialRefund)
+                {
+
+                }*/
 
                 var vnPayModel = new VnPayRequestModel
                 {
