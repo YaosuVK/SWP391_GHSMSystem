@@ -203,7 +203,5 @@ namespace DataAccessObject
 
             return await _context.Appointments.FindAsync(appointmentId);
         }
-
-
     }
 }
