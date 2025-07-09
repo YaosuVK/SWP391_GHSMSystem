@@ -217,5 +217,41 @@ namespace DataAccessObject
             
             return (totalAppointments, totalAppointmentsAmount);
         }
+
+        public async Task<List<(string date, double totalAppointmentsAmount)>> GetCurrentWeekRevenueAsync()
+        {
+            var today = DateTime.Today;
+
+            // Tính ngày đầu tuần (Thứ 2) và cuối tuần (Chủ nhật)
+            var startOfWeek = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday);
+            var endOfWeek = startOfWeek.AddDays(6);
+
+            var transactions = await _context.Transactions
+                .Where(t => t.TransactionKind == TransactionKind.FullPayment)
+                .Where(t => t.PayDate >= startOfWeek && t.PayDate <= endOfWeek)
+                .ToListAsync();
+
+            // Gom nhóm theo ngày và tính doanh thu theo từng trạng thái
+            var revenueByDay = transactions
+                        .GroupBy(b => b.PayDate.Date)
+                        .Select(g => (
+                            date: g.Key.ToString("yyyy-MM-dd"),
+                             totalAppointmentsAmount:
+                        g.Where(t => t.TransactionKind == TransactionKind.FullPayment).Sum(t => t.Amount)
+                ))
+                .ToList();
+
+            // Đảm bảo có đủ 7 ngày trong tuần, kể cả khi không có booking
+            var fullWeekRevenue = Enumerable.Range(0, 7)
+                .Select(offset =>
+                {
+                    var date = startOfWeek.AddDays(offset).ToString("yyyy-MM-dd");
+                    var matched = revenueByDay.FirstOrDefault(d => d.date == date);
+                    return matched != default ? matched : (date, 0.0);
+                })
+                .ToList();
+
+            return fullWeekRevenue;
+        }
     }
 }

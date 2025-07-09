@@ -14,5 +14,7 @@ namespace Repository.IRepositories
         DateTime startDate, DateTime endDate, string? timeSpanType);
 
         Task<(int totalBookings, double totalBookingsAmount)> GetTotalAppointmentsAndAmount();
+
+        Task<List<(string date, double totalAppointmentsAmount)>> GetCurrentWeekRevenueAsync();
     }
 }

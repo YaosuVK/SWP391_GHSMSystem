@@ -23,6 +23,20 @@ namespace Service.Service
             _dashBoardRepository = dashBoardRepository;
         }
 
+        public async Task<BaseResponse<List<GetCurrentWeekRevenue>>> GetCurrentWeekRevenue()
+        {
+            var revenueData = await _dashBoardRepository.GetCurrentWeekRevenueAsync();
+
+            // Chuyển đổi dữ liệu từ tuple (string, double) thành đối tượng GetCurrentWeekRevenueForHomeStay
+            var result = revenueData.Select(d => new GetCurrentWeekRevenue
+            {
+                Date = d.date,
+                totalAppointmentsAmount = d.totalAppointmentsAmount
+            }).ToList();
+
+            return new BaseResponse<List<GetCurrentWeekRevenue>>("Get All Success", StatusCodeEnum.OK_200, result);
+        }
+
         public async Task<BaseResponse<GetTotalAppointmentsAndAmount>> GetTotalAppointmentsAndAmount()
         {
             var total = await _dashBoardRepository.GetTotalAppointmentsAndAmount();

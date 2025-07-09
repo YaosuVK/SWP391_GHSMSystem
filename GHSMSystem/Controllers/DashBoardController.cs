@@ -24,6 +24,13 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpGet]
+        [Route("adminDashBoard/GetCurrentWeekRevenue")]
+        public async Task<BaseResponse<List<GetCurrentWeekRevenue>>> GetCurrentWeekRevenue()
+        {
+            return await _dashBoardService.GetCurrentWeekRevenue();
+        }
+
+        [HttpGet]
         [Route("adminDashBoard/GetTotalAppointmentsAndAmount")]
         public async Task<BaseResponse<GetTotalAppointmentsAndAmount>> GetTotalAppointmentsAndAmount()
         {

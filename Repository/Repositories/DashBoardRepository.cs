@@ -18,6 +18,11 @@ namespace Repository.Repositories
             _dashBoardDAO = dashBoardDAO;
         }
 
+        public async Task<List<(string date, double totalAppointmentsAmount)>> GetCurrentWeekRevenueAsync()
+        {
+            return await _dashBoardDAO.GetCurrentWeekRevenueAsync();
+        }
+
         public async Task<(int totalBookings, double totalBookingsAmount)> GetTotalAppointmentsAndAmount()
         {
            return await _dashBoardDAO.GetTotalAppointmentsAndAmount();
