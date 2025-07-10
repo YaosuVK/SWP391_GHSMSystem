@@ -33,13 +33,14 @@ namespace Service.Service
         private readonly ISlotRepository _slotRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly ITreatmentOutcomeRepository _treatmentOutcomeRepository;
 
         public AppointmentService(IMapper mapper, IAppointmentRepository appointmentRepository,
             IServiceRepository serviceRepository, IClinicRepository clinicalRepository,
             IAppointmentDetailRepository appointmentDetailRepository, 
             IConsultantProfileRepository consultantProfileRepository,
             ISlotRepository slotRepository, ITransactionRepository transactionRepository,
-            IAccountRepository accountRepository)
+            IAccountRepository accountRepository, ITreatmentOutcomeRepository treatmentOutcomeRepository)
         {
             _mapper = mapper;
             _appointmentRepository = appointmentRepository;
@@ -50,6 +51,7 @@ namespace Service.Service
             _slotRepository = slotRepository;
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
+            _treatmentOutcomeRepository = treatmentOutcomeRepository;
         }
 
         public async Task<BaseResponse<Appointment>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus)
@@ -83,6 +85,29 @@ namespace Service.Service
 
             if (status == AppointmentStatus.Completed)
             {
+                var existingTreatmentOutcome = await _treatmentOutcomeRepository.GetTreatmenOutComeByAppointmentIdAsync(appointmentID);
+                if (existingTreatmentOutcome == null)
+                {
+                    return new BaseResponse<Appointment>("Cannot find the TreatmentOutcome", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                var hasConsulting = appointmentExist.AppointmentDetails
+                .Any(d => d.Service?.ServiceType == ServiceType.Consultation);
+
+                var hasTest = appointmentExist.AppointmentDetails
+                    .Any(d => d.Service?.ServiceType == ServiceType.TestingSTI);
+
+                if (hasTest && (existingTreatmentOutcome.LabTests == null || !existingTreatmentOutcome.LabTests.Any()))
+                {
+                    return new BaseResponse<Appointment>("Missing LabTest result for Test service", StatusCodeEnum.BadRequest_400, null);
+                }
+
+                if (!hasConsulting && !hasTest)
+                {
+                    return new BaseResponse<Appointment>("No valid service types found", StatusCodeEnum.BadRequest_400, null);
+                }
+
+
                 var transactions = await _transactionRepository.GetListTransactionsByAppointmentId(appointmentExist.AppointmentID);
                 if (transactions != null)
                 {

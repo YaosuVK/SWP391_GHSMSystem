@@ -27,7 +27,8 @@ namespace DataAccessObject
                 .Include(b => b.Consultant)
                 .Include(b => b.FeedBacks)
                 .Include(b => b.Slot)
-                .Include(b => b.Transactions);
+                .Include(b => b.Transactions)
+                .Include(b => b.Clinic);
 
             return await appointments.ToListAsync();
         }
@@ -75,6 +76,7 @@ namespace DataAccessObject
                 .Include(b => b.FeedBacks)
                 .Include(b => b.Slot)
                 .Include(b => b.Transactions)
+                .Include(b => b.Clinic)
                 .FirstOrDefaultAsync(o => o.AppointmentID == appointmentId);
         }
 
@@ -88,6 +90,7 @@ namespace DataAccessObject
                 .Include(b => b.FeedBacks)
                 .Include(b => b.Slot)
                 .Include(b => b.Transactions)
+                .Include(b => b.Clinic)
                 .FirstOrDefaultAsync(o => o.AppointmentCode == appointmentCode);
         }
 
@@ -101,6 +104,7 @@ namespace DataAccessObject
                 .Include(b => b.FeedBacks)
                 .Include(b => b.Slot)
                 .Include(b => b.Transactions)
+                .Include(b => b.Clinic)
                 .FirstOrDefaultAsync(o => o.AppointmentID == appointmentId);
         }
 
@@ -114,6 +118,7 @@ namespace DataAccessObject
                  .Include(b => b.FeedBacks)
                  .Include(b => b.Slot)
                  .Include(b => b.Transactions)
+                 .Include(b => b.Clinic)
                  .Where(b => b.CustomerID == accountId)
                 .ToListAsync();
         }
@@ -128,6 +133,7 @@ namespace DataAccessObject
                  .Include(b => b.FeedBacks)
                  .Include(b => b.Slot)
                  .Include(b => b.Transactions)
+                 .Include(b => b.Clinic)
                  .Where(b => b.ConsultantID == accountId)
                  .ToListAsync();
         }

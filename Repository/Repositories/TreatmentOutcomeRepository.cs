@@ -92,5 +92,10 @@ namespace Repository.Repositories
                 .Include(to => to.LabTests)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<TreatmentOutcome?> GetTreatmenOutComeByAppointmentIdAsync(int appointmentId)
+        {
+            return await _treatmentOutcomeDAO.GetTreatmenOutComeByAppointmentIdAsync(appointmentId);
+        }
     }
 } 

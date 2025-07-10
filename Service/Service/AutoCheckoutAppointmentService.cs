@@ -19,13 +19,15 @@ namespace Service.Service
         private readonly IMapper _mapper;
         private readonly IAppointmentRepository _appointmentRepository;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly ITreatmentOutcomeRepository _treatmentOutcomeRepository;
 
         public AutoCheckoutAppointmentService(IMapper mapper, IAppointmentRepository appointmentRepository, 
-            ITransactionRepository transactionRepository)
+            ITransactionRepository transactionRepository, ITreatmentOutcomeRepository treatmentOutcomeRepository)
         {
             _mapper = mapper;
             _appointmentRepository = appointmentRepository;
             _transactionRepository = transactionRepository;
+            _treatmentOutcomeRepository = treatmentOutcomeRepository;
         }
 
         public async Task<BaseResponse<string>> AutoCheckOutAppointments()
@@ -44,6 +46,28 @@ namespace Service.Service
                 }
 
                 appointment.Status = AppointmentStatus.Completed;
+
+                var existingTreatmentOutcome = await _treatmentOutcomeRepository.GetTreatmenOutComeByAppointmentIdAsync(appointment.AppointmentID);
+                if (existingTreatmentOutcome == null)
+                {
+                    throw new InvalidOperationException("Cannot find the TreatmentOutcome");
+                }
+
+                var hasConsulting = appointment.AppointmentDetails
+                .Any(d => d.Service?.ServiceType == ServiceType.Consultation);
+
+                var hasTest = appointment.AppointmentDetails
+                    .Any(d => d.Service?.ServiceType == ServiceType.TestingSTI);
+
+                if (hasTest && (existingTreatmentOutcome.LabTests == null || !existingTreatmentOutcome.LabTests.Any()))
+                { 
+                    throw new InvalidOperationException("Missing LabTest result for Test service");
+                }
+
+                if (!hasConsulting && !hasTest)
+                {
+                    throw new InvalidOperationException("No valid service types found");
+                }
 
                 var transactions = await _transactionRepository.GetListTransactionsByAppointmentId(appointment.AppointmentID);
                 if (transactions != null)
