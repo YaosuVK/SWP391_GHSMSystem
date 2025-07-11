@@ -49,7 +49,7 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> SearchConsultantSlots([FromQuery] string keyword)
+        public async Task<IActionResult> SearchConsultantSlots([FromQuery] string? keyword)
         {
             var response = await _consultantSlotService.SearchConsultantSlotsAsync(keyword);
             return response.StatusCode switch

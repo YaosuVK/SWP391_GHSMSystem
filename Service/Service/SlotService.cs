@@ -120,13 +120,13 @@ namespace Service.Service
             IEnumerable<Slot> slot = await _slotRepository.SearchSlotsAsync(keyword);
             if (slot == null || !slot.Any())
             {
-                return new BaseResponse<IEnumerable<SlotForCustomer>>("No slot found matching your search criteria!",
+                return new BaseResponse<IEnumerable<SlotForCustomer>>("No slot found matching your search!",
                 StatusCodeEnum.NotFound_404, null);
             }
             var slots = _mapper.Map<IEnumerable<SlotForCustomer>>(slot);
             if (slots == null || !slots.Any())
             {
-                return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong during mapping!",
+                return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong!",
                 StatusCodeEnum.BadGateway_502, null);
             }
             return new BaseResponse<IEnumerable<SlotForCustomer>>("Get slots by keyword success",
