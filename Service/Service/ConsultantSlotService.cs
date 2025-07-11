@@ -163,6 +163,25 @@ namespace Service.Service
             return new BaseResponse<IEnumerable<ConsultantSlotResponse>>("Get all slot success", StatusCodeEnum.OK_200, mappedList);
         }
 
-        
+        public async Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> SearchConsultantSlotsAsync(string keyword)
+        {
+            var list = await _repo.SearchConsultantSlotsAsync(keyword);
+            if (list == null || !list.Any())
+            {
+                return new BaseResponse<IEnumerable<ConsultantSlotResponse>>("No consultant slots found matching your search criteria!",
+                    StatusCodeEnum.NotFound_404, null);
+            }
+
+            var mappedList = _mapper.Map<IEnumerable<ConsultantSlotResponse>>(list);
+
+            if (mappedList == null || !mappedList.Any())
+            {
+                return new BaseResponse<IEnumerable<ConsultantSlotResponse>>("Something went wrong during mapping!",
+                    StatusCodeEnum.BadGateway_502, null);
+            }
+
+            return new BaseResponse<IEnumerable<ConsultantSlotResponse>>("Get consultant slots by keyword success",
+                StatusCodeEnum.OK_200, mappedList);
+        }
     }
 }

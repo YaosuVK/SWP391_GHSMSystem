@@ -48,5 +48,10 @@ namespace Repository.Repositories
         {
            return _consultantSlotDao.DeleteAsync(cs);
         }
+
+        public Task<IEnumerable<ConsultantSlot>> SearchConsultantSlotsAsync(string keyword)
+        {
+            return _consultantSlotDao.SearchConsultantSlotsAsync(keyword);
+        }
     }
 }

@@ -17,5 +17,6 @@ namespace Service.IService
     string consultantIdB, int slotIdB);
         Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetRegisteredSlotsAsync(string consultantId);
         Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetAllAsync();
+        Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> SearchConsultantSlotsAsync(string keyword);
     }
 }
