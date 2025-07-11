@@ -83,14 +83,21 @@ namespace DataAccessObject
             }
 
             var lowerCaseKeyword = keyword.ToLower();
+
+            // Attempt to parse the keyword as a DateTime
+            DateTime searchDateTime;
+            bool isDateTime = DateTime.TryParse(keyword, out searchDateTime);
+
             return await _context.Slots
                 .Include(s => s.WorkingHour)
                 .Include(s => s.Appointments)
                 .Where(s =>
-                    s.StartTime.ToString().Contains(lowerCaseKeyword) ||
-                    s.EndTime.ToString().Contains(lowerCaseKeyword) ||
+                    (isDateTime && (s.StartTime.Date == searchDateTime.Date || s.EndTime.Date == searchDateTime.Date ||
+                                   s.StartTime.TimeOfDay == searchDateTime.TimeOfDay || s.EndTime.TimeOfDay == searchDateTime.TimeOfDay)) ||
                     s.MaxConsultant.ToString().Contains(lowerCaseKeyword) ||
-                    s.MaxTestAppointment.ToString().Contains(lowerCaseKeyword))
+                    s.MaxTestAppointment.ToString().Contains(lowerCaseKeyword) ||
+                    s.StartTime.ToString().ToLower().Contains(lowerCaseKeyword) ||
+                    s.EndTime.ToString().ToLower().Contains(lowerCaseKeyword))
                 .ToListAsync();
         }
 
