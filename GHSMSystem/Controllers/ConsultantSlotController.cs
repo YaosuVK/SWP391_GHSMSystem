@@ -48,6 +48,18 @@ namespace GHSMSystem.Controllers
             };
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchConsultantSlots([FromQuery] string keyword)
+        {
+            var response = await _consultantSlotService.SearchConsultantSlotsAsync(keyword);
+            return response.StatusCode switch
+            {
+                StatusCodeEnum.OK_200 => Ok(response),
+                StatusCodeEnum.NotFound_404 => NotFound(response),
+                _ => StatusCode(500, response)
+            };
+        }
+
         [HttpPost("register")]
         [Authorize(Roles = "Consultant")]
         public async Task<IActionResult> Register(
