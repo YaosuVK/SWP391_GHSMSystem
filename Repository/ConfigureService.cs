@@ -28,6 +28,8 @@ namespace Repository
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IDashBoardRepository, DashBoardRepository>();
+            services.AddScoped<ITreatmentOutcomeRepository, TreatmentOutcomeRepository>();
+            services.AddScoped<ILabTestRepository, LabTestRepository>();
 
             services.AddScoped<IAppointmentDetailRepository, AppointmentDetailRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -50,6 +52,8 @@ namespace Repository
             services.AddScoped<ImageServicesDAO>();
             services.AddScoped<ImageBlogDAO>();
             services.AddScoped<TransactionDAO>();
+            services.AddScoped<TreatmentOutcomeDAO>();
+            services.AddScoped<LabTestDAO>();
             services.AddScoped<FeedBackDAO>();
             services.AddScoped<ConsultantSlotDAO>();
             services.AddScoped<MessageDAO>();
