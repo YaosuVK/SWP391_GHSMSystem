@@ -72,6 +72,20 @@ namespace DataAccessObject
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Slot>> SearchSlotsAsync(string keyword)
+        {
+            var lowerCaseKeyword = keyword.ToLower();
+            return await _context.Slots
+                .Include(s => s.WorkingHour)
+                .Include(s => s.Appointments)
+                .Where(s =>
+                    s.StartTime.ToString().Contains(lowerCaseKeyword) ||
+                    s.EndTime.ToString().Contains(lowerCaseKeyword) ||
+                    s.MaxConsultant.ToString().Contains(lowerCaseKeyword) ||
+                    s.MaxTestAppointment.ToString().Contains(lowerCaseKeyword))
+                .ToListAsync();
+        }
+
         //test
     }
 }
