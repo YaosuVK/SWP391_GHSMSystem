@@ -29,6 +29,18 @@ namespace GHSMSystem.Controllers
                 : StatusCode(502, response);
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchSlots([FromQuery] string keyword)
+        {
+            var response = await _slotService.SearchSlotsAsync(keyword);
+            return response.StatusCode switch
+            {
+                StatusCodeEnum.OK_200 => Ok(response),
+                StatusCodeEnum.NotFound_404 => NotFound(response),
+                _ => StatusCode(500, response)
+            };
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateSlot([FromBody] CreateSlotRequest request)
         {

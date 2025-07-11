@@ -74,6 +74,14 @@ namespace DataAccessObject
 
         public async Task<IEnumerable<Slot>> SearchSlotsAsync(string keyword)
         {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return await _context.Slots
+                    .Include(s => s.WorkingHour)
+                    .Include(s => s.Appointments)
+                    .ToListAsync();
+            }
+
             var lowerCaseKeyword = keyword.ToLower();
             return await _context.Slots
                 .Include(s => s.WorkingHour)
