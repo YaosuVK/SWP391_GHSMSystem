@@ -71,5 +71,7 @@ namespace DataAccessObject
                     s.Appointments.Count(a => a.SlotID == s.SlotID && a.ConsultantID == null) <= s.MaxTestAppointment)
                 .ToListAsync();
         }
+
+        //test
     }
 }
