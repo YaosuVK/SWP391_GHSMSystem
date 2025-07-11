@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-<<<<<<<< HEAD:DataAccessObject/Migrations/20250708141808_FixDb.Designer.cs
     [Migration("20250708141808_FixDb")]
     partial class FixDb
-========
-    [Migration("20250708135840_Fix")]
-    partial class Fix
->>>>>>>> Huy:DataAccessObject/Migrations/20250708135840_Fix.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
