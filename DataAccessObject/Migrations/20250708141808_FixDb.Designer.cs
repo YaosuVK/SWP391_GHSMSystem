@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
+<<<<<<<< HEAD:DataAccessObject/Migrations/20250708141808_FixDb.Designer.cs
     [Migration("20250708141808_FixDb")]
     partial class FixDb
+========
+    [Migration("20250708135840_Fix")]
+    partial class Fix
+>>>>>>>> Huy:DataAccessObject/Migrations/20250708135840_Fix.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -965,6 +970,38 @@ namespace DataAccessObject.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "d310a57a-2738-43b0-b305-6697cc9780a3",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "74afe500-2817-476d-a161-9c7f0e10588a",
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
+                        },
+                        new
+                        {
+                            Id = "df7658f6-34a5-40be-be8b-79ecd55fc05e",
+                            Name = "Consultant",
+                            NormalizedName = "CONSULTANT"
+                        },
+                        new
+                        {
+                            Id = "4da945fb-4807-4eb5-ad9c-d187e21f1247",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = "1d30697b-5fc3-4262-971d-d93795b70d32",
+                            Name = "Staff",
+                            NormalizedName = "STAFF"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

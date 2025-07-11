@@ -37,7 +37,8 @@ namespace Service
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<IConsultantProfileServive, ConsultantProfileService>();
             services.AddScoped<IAutoCheckoutAppointmentService, AutoCheckoutAppointmentService>();
-
+            services.AddScoped<ILabTestService, LabTestService>();
+            services.AddScoped<ITreatmentOutcomeService, TreatmentOutcomeService>();
             return services;
         }
     }
