@@ -79,5 +79,26 @@ namespace DataAccessObject
             return await query.ToListAsync();
         }
 
+        public async Task<IEnumerable<ConsultantSlot>> SearchConsultantSlotsAsync(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return await _context.ConsultantSlots
+                    .Include(cs => cs.Slot)
+                    .Include(cs => cs.Consultant)
+                    .ToListAsync();
+            }
+
+            var lowerCaseKeyword = keyword.ToLower();
+            return await _context.ConsultantSlots
+                .Include(cs => cs.Slot)
+                .Include(cs => cs.Consultant)
+                .Where(cs =>
+                    cs.ConsultantID.ToLower().Contains(lowerCaseKeyword) ||
+                    cs.SlotID.ToString().Contains(lowerCaseKeyword) ||
+                    cs.MaxAppointment.ToString().Contains(lowerCaseKeyword) ||
+                    cs.AssignedDate.ToString().Contains(lowerCaseKeyword))
+                .ToListAsync();
+        }
     }
 }
