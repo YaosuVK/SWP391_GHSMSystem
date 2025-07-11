@@ -62,5 +62,10 @@ namespace Repository.Repositories
         {
             return await _slotDao.GetAvailableSlotsForTestCanNullAsync(appointmentDate);
         }
+
+        public async Task<IEnumerable<Slot>> SearchSlotsAsync(string keyword)
+        {
+            return await _slotDao.SearchSlotsAsync(keyword);
+        }
     }
 }

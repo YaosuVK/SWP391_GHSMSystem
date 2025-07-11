@@ -115,6 +115,24 @@ namespace Service.Service
                 StatusCodeEnum.OK_200, slots);
         }
 
+        public async Task<BaseResponse<IEnumerable<SlotForCustomer>>> SearchSlotsAsync(string keyword)
+        {
+            IEnumerable<Slot> slot = await _slotRepository.SearchSlotsAsync(keyword);
+            if (slot == null || !slot.Any())
+            {
+                return new BaseResponse<IEnumerable<SlotForCustomer>>("No slot found matching your search criteria!",
+                StatusCodeEnum.NotFound_404, null);
+            }
+            var slots = _mapper.Map<IEnumerable<SlotForCustomer>>(slot);
+            if (slots == null || !slots.Any())
+            {
+                return new BaseResponse<IEnumerable<SlotForCustomer>>("Something went wrong during mapping!",
+                StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<IEnumerable<SlotForCustomer>>("Get slots by keyword success",
+                StatusCodeEnum.OK_200, slots);
+        }
+
         public async Task<BaseResponse<Slot>> UpdateAsync(int slotID, UpdateSlotRequest entity)
         {
             var existSlot = await _slotRepository.GetByIdAsync(slotID);

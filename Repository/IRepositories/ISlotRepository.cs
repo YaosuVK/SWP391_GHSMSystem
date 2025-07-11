@@ -15,5 +15,6 @@ namespace Repository.IRepositories
         Task<IEnumerable<Slot>> GetAvailableSlotsForConsultantAsync(DateTime appointmentDate, string consultantId);
         Task<IEnumerable<Slot>> GetAvailableSlotsForTestAsync(DateTime appointmentDate);
         Task<IEnumerable<Slot>> GetAvailableSlotsForTestCanNullAsync(DateTime? appointmentDate);
+        Task<IEnumerable<Slot>> SearchSlotsAsync(string keyword);
     }
 }

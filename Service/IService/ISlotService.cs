@@ -18,5 +18,6 @@ namespace Service.IService
         Task<BaseResponse<List<Slot>>> AddAsync(CreateSlotRequest entity);
         Task<BaseResponse<Slot>> UpdateAsync(int slotID, UpdateSlotRequest entity);
         Task<BaseResponse<Slot>> DeleteAsync(int slotId);
+        Task<BaseResponse<IEnumerable<SlotForCustomer>>> SearchSlotsAsync(string keyword);
     }
 }
