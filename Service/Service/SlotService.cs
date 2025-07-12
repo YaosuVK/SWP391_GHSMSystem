@@ -85,6 +85,7 @@ namespace Service.Service
                         ClinicID = entity.ClinicID,
                         WorkingHourID = entity.WorkingHourID,
                         MaxConsultant = entity.MaxConsultant,
+                        MaxTestAppointment = entity.MaxTestAppointment,
                         StartTime = entity.StartTime,
                         EndTime = entity.EndTime,
                         CreateAt = DateTime.Now,
