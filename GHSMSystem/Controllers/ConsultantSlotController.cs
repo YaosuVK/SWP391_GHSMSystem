@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Enums;
 using Service.RequestAndResponse.Request.ConsultantProfiles;
+using Service.RequestAndResponse.Response.ConsultantProfiles;
 using Service.Service;
 using System.Security.Claims;
 
@@ -23,7 +25,7 @@ namespace GHSMSystem.Controllers
             _consultantProfileServive = consultantProfileServive;
         }
 
-        [HttpGet("GetAll")]
+        [HttpGet("GetAllConsultantSlot")]
         public async Task<IActionResult> GetAll()
         {
             var res = await _consultantSlotService.GetAllAsync();
@@ -33,6 +35,27 @@ namespace GHSMSystem.Controllers
                 StatusCodeEnum.NotFound_404 => NotFound(res),
                 _ => StatusCode(500, res)
             };
+        }
+
+        [HttpGet("GetAllConsultantProfile")]
+        public async Task<ActionResult<BaseResponse<IEnumerable<GetAllConsultantProfile?>>>> GetAllConsultantProfile()
+        {
+            var consultantProfile = await _consultantProfileServive.GetAllConsultantProfile();
+            return Ok(consultantProfile);
+        }
+
+        [HttpGet("GetConsultantProfileByAccountId/{accountId}")]
+        public async Task<ActionResult<BaseResponse<GetConsultantProfileResponse?>>> GetConsultantProfileByAccountID(string accountId)
+        {
+            var consultantProfile = await _consultantProfileServive.GetConsultantProfileByAccountID(accountId);
+            return Ok(consultantProfile);
+        }
+
+        [HttpGet("GetConsultantProfileById/{consultantProfileID}")]
+        public async Task<ActionResult<BaseResponse<GetConsultantProfileResponse?>>> GetConsultantProfileByID(int? consultantProfileID)
+        {
+            var consultantProfile = await _consultantProfileServive.GetConsultantProfileByID(consultantProfileID);
+            return Ok(consultantProfile);
         }
 
         [HttpGet]

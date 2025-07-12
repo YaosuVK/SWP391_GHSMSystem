@@ -7,6 +7,9 @@ using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Enums;
 using Service.RequestAndResponse.Request.Categories;
 using Service.RequestAndResponse.Request.ConsultantProfiles;
+using Service.RequestAndResponse.Response.Blogs;
+using Service.RequestAndResponse.Response.Categories;
+using Service.RequestAndResponse.Response.ConsultantProfiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +52,46 @@ namespace Service.Service
 
             var response = _mapper.Map<CreateConsultantProfile>(consultantProfile);
             return new BaseResponse<CreateConsultantProfile>("Create consultantProfile as base success", StatusCodeEnum.Created_201, response);
+        }
+
+        public async Task<BaseResponse<IEnumerable<GetAllConsultantProfile?>>> GetAllConsultantProfile()
+        {
+            IEnumerable<ConsultantProfile> consultantProfile = await _consultantProfileRepository.GetAllConsultantProfile();
+            if (consultantProfile == null)
+            {
+                return new BaseResponse<IEnumerable<GetAllConsultantProfile>>("Something went wrong!",
+                StatusCodeEnum.BadGateway_502, null);
+            }
+            var consultantProfiles = _mapper.Map<IEnumerable<GetAllConsultantProfile>>(consultantProfile);
+            if (consultantProfiles == null)
+            {
+                return new BaseResponse<IEnumerable<GetAllConsultantProfile>>("Something went wrong!",
+                StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<IEnumerable<GetAllConsultantProfile>>("Get all category as base success",
+                StatusCodeEnum.OK_200, consultantProfiles);
+        }
+
+        public async Task<BaseResponse<GetConsultantProfileResponse?>> GetConsultantProfileByAccountID(string accountId)
+        {
+            ConsultantProfile? consultantProfile = await _consultantProfileRepository.GetConsultantProfileByAccountID(accountId);
+            var result = _mapper.Map<GetConsultantProfileResponse>(consultantProfile);
+            if (result == null)
+            {
+                return new BaseResponse<GetConsultantProfileResponse?>("Something Went Wrong!", StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<GetConsultantProfileResponse?>("Get ConsultantProfile as base success", StatusCodeEnum.OK_200, result);
+        }
+
+        public async Task<BaseResponse<GetConsultantProfileResponse?>> GetConsultantProfileByID(int? consultantProfileID)
+        {
+            ConsultantProfile? consultantProfile = await _consultantProfileRepository.GetConsultantProfileByID(consultantProfileID);
+            var result = _mapper.Map<GetConsultantProfileResponse>(consultantProfile);
+            if (result == null)
+            {
+                return new BaseResponse<GetConsultantProfileResponse?>("Something Went Wrong!", StatusCodeEnum.BadGateway_502, null);
+            }
+            return new BaseResponse<GetConsultantProfileResponse?>("Get ConsultantProfile as base success", StatusCodeEnum.OK_200, result);
         }
 
         public async Task<BaseResponse<UpdateConsultantProfile>> UpdateConsultantProfile(int consultantProfileID, UpdateConsultantProfile request)

@@ -19,6 +19,8 @@ namespace Repository.Repositories
             _consultantDao = consultantDao;
         }
 
+
+
         public async Task<ConsultantProfile?> GetConsultantProfileById(int consultantId)
         {
             return await _consultantDao.GetByIdAsync(consultantId);
@@ -42,6 +44,11 @@ namespace Repository.Repositories
         public async Task<ConsultantProfile?> GetConsultantProfileByID(int? consultantProfileID)
         {
             return await _consultantDao.GetConsultantProfileByID(consultantProfileID);
+        }
+
+        public async Task<IEnumerable<ConsultantProfile?>> GetAllConsultantProfile()
+        {
+            return await _consultantDao.GetAllConsultantProfile();
         }
     }
 }

@@ -12,5 +12,6 @@ namespace Repository.IRepositories
     {
         Task<ConsultantProfile?> GetConsultantProfileByAccountID(string accountID);
         Task<ConsultantProfile?> GetConsultantProfileByID(int? consultantProfileID);
+        Task<IEnumerable<ConsultantProfile?>> GetAllConsultantProfile();
     }
 }

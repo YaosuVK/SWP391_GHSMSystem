@@ -20,6 +20,7 @@ using Service.RequestAndResponse.Response.Appointments;
 using Service.RequestAndResponse.Response.Blogs;
 using Service.RequestAndResponse.Response.Categories;
 using Service.RequestAndResponse.Response.Clinic;
+using Service.RequestAndResponse.Response.ConsultantProfiles;
 using Service.RequestAndResponse.Response.ConsultantSlots;
 using Service.RequestAndResponse.Response.CyclePredictions;
 using Service.RequestAndResponse.Response.FeedBacks;
@@ -49,6 +50,7 @@ namespace Service.Mapping
             CreateMap<Account, GetCustomerUser>().ReverseMap();
             CreateMap<Account, GetStaffUser>().ReverseMap();
             CreateMap<Account, GetConsultantUser>().ReverseMap();
+            CreateMap<Account, GetConsultantUserForProfile>().ReverseMap();
 
             CreateMap<Appointment, GetAllAppointment>().ReverseMap();
             CreateMap<Appointment, GetAllAppointmentForSlot>().ReverseMap();
@@ -65,6 +67,8 @@ namespace Service.Mapping
 
             CreateMap<CreateConsultantProfile, ConsultantProfile>().ReverseMap();
             CreateMap<UpdateConsultantProfile, ConsultantProfile>().ReverseMap();
+            CreateMap<ConsultantProfile, GetAllConsultantProfile>().ReverseMap();
+            CreateMap<ConsultantProfile, GetConsultantProfileResponse>().ReverseMap();
 
             CreateMap<WorkingHour, WorkingHourResponse>().ReverseMap();
             CreateMap<CreateWorkingHourRequest, WorkingHour>()
@@ -78,9 +82,11 @@ namespace Service.Mapping
 
             CreateMap<Slot, SlotForCustomer>().ReverseMap();
             CreateMap<Slot, GetSlotResponse>().ReverseMap();
+            CreateMap<Slot, GetSlotResponseForProfile>().ReverseMap();
             CreateMap<CreateSlotRequest, Slot>().ReverseMap();
             CreateMap<UpdateSlotRequest, Slot>().ReverseMap();
             CreateMap<ConsultantSlot, ConsultantSlotResponse>().ReverseMap();
+            CreateMap<ConsultantSlot, GetConsultantSlotForProfile>().ReverseMap();
 
             CreateMap<Category, GetAllCategoryResponse>().ReverseMap();
             CreateMap<Category, GetCategoryForService>().ReverseMap();

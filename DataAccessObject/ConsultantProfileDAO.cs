@@ -28,6 +28,8 @@ namespace DataAccessObject
         {
             return await _context.ConsultantProfiles
                 .Include(x => x.Account)
+                .ThenInclude(x => x.ConsultantSlots)
+                .ThenInclude(x => x.Slot)
                 .FirstOrDefaultAsync(x => x.AccountID == accountID);
         }
 
@@ -35,7 +37,19 @@ namespace DataAccessObject
         {
             return await _context.ConsultantProfiles
                 .Include(x => x.Account)
+                .ThenInclude(x => x.ConsultantSlots)
+                .ThenInclude(x => x.Slot)
                 .FirstOrDefaultAsync(x => x.ConsultantProfileID == consultantProfileID);
         }
+
+        public async Task<IEnumerable<ConsultantProfile?>> GetAllConsultantProfile()
+        {
+            return await _context.ConsultantProfiles
+                .Include(x => x.Account)
+                .ThenInclude(x => x.ConsultantSlots)
+                .ThenInclude(x => x.Slot)
+                .ToListAsync();
+        }
+
     }
 }
