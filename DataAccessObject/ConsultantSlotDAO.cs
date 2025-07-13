@@ -79,26 +79,27 @@ namespace DataAccessObject
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<ConsultantSlot>> SearchConsultantSlotsAsync(string keyword)
+        public async Task<IEnumerable<ConsultantSlot>> SearchAsync(string consultantKeyword, DateTime? date)
         {
-            if (string.IsNullOrWhiteSpace(keyword))
-            {
-                return await _context.ConsultantSlots
-                    .Include(cs => cs.Slot)
-                    .Include(cs => cs.Consultant)
-                    .ToListAsync();
-            }
-
-            var lowerCaseKeyword = keyword.ToLower();
-            return await _context.ConsultantSlots
+            var query = _context.ConsultantSlots
                 .Include(cs => cs.Slot)
                 .Include(cs => cs.Consultant)
-                .Where(cs =>
-                    cs.ConsultantID.ToLower().Contains(lowerCaseKeyword) ||
-                    cs.SlotID.ToString().Contains(lowerCaseKeyword) ||
-                    cs.MaxAppointment.ToString().Contains(lowerCaseKeyword) ||
-                    cs.AssignedDate.ToString().Contains(lowerCaseKeyword))
-                .ToListAsync();
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(consultantKeyword))
+            {
+                var lower = consultantKeyword.ToLower();
+                query = query.Where(cs => cs.ConsultantID.ToLower().Contains(lower)
+                                          || cs.Consultant.Name.ToLower().Contains(lower));
+            }
+
+            if (date.HasValue)
+            {
+                var target = date.Value.Date;
+                query = query.Where(cs => cs.AssignedDate.Date == target);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

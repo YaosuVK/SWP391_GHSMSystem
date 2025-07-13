@@ -49,9 +49,9 @@ namespace Repository.Repositories
            return _consultantSlotDao.DeleteAsync(cs);
         }
 
-        public Task<IEnumerable<ConsultantSlot>> SearchConsultantSlotsAsync(string keyword)
+        public Task<IEnumerable<ConsultantSlot>> SearchAsync(string consultantKeyword, DateTime? date)
         {
-            return _consultantSlotDao.SearchConsultantSlotsAsync(keyword);
+            return _consultantSlotDao.SearchAsync(consultantKeyword, date);
         }
     }
 }

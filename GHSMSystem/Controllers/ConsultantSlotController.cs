@@ -72,9 +72,12 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> SearchConsultantSlots([FromQuery] string? keyword)
+        public async Task<IActionResult> SearchConsultantSlots(
+        [FromQuery] string? keyword,
+        [FromQuery] DateTime? date)
         {
-            var response = await _consultantSlotService.SearchConsultantSlotsAsync(keyword);
+            var response = await _consultantSlotService.SearchAsync(keyword, date);
+
             return response.StatusCode switch
             {
                 StatusCodeEnum.OK_200 => Ok(response),
