@@ -1,5 +1,4 @@
 ﻿using BusinessObject.Model;
-using Google.Cloud.Dialogflow.V2;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Message = BusinessObject.Model.Message;
+
 namespace DataAccessObject
 {
     public class GHSMContext : IdentityDbContext<Account>
@@ -99,7 +98,7 @@ namespace DataAccessObject
                 .WithOne(p => p.MenstrualCycle)
                 .HasForeignKey<CyclePrediction>(p => p.MenstrualCycleID);
 
-            /*modelBuilder.Entity<FeedBack>()
+            /*modelBuilder.Entity<BusinessObject.Model.FeedBack>()
                 .HasOne(f => f.Service)
                 .WithMany(s => s.FeedBacks)
                 .HasForeignKey(f => f.ServicesID)
@@ -118,6 +117,75 @@ namespace DataAccessObject
                 .HasOne(cs => cs.Slot)
                 .WithMany(s => s.ConsultantSlots)
                 .HasForeignKey(cs => cs.SlotID);
+
+            // Configure QnAMessage entity
+            modelBuilder.Entity<QnAMessage>()
+                .HasOne(m => m.Question)
+                .WithMany(q => q.Messages)
+                .HasForeignKey(m => m.QuestionID)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            modelBuilder.Entity<QnAMessage>()
+                .HasOne(m => m.Customer)
+                .WithMany(a => a.QnACustomerMessages)
+                .HasForeignKey(m => m.CustomerID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<QnAMessage>()
+                .HasOne(m => m.Consultant)
+                .WithMany(a => a.QnAConsultantMessages)
+                .HasForeignKey(m => m.ConsultantID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<QnAMessage>()
+                .HasOne(m => m.ParentMessage)
+                .WithMany(m => m.Replies)
+                .HasForeignKey(m => m.ParentMessageId)
+                .IsRequired(false) // ParentMessageId can be null
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            // Configure Message entity (for chat)
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationID)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete messages when conversation is deleted
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany(a => a.SentChatMessages)
+                .HasForeignKey(m => m.SenderID)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            modelBuilder.Entity<Message>()
+                .HasOne(m => m.Receiver)
+                .WithMany(a => a.ReceivedChatMessages)
+                .HasForeignKey(m => m.ReceiverID)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            modelBuilder.Entity<Account>()
+                .HasMany(a => a.SentChatMessages)
+                .WithOne(m => m.Sender)
+                .HasForeignKey(m => m.SenderID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Account>()
+                .HasMany(a => a.ReceivedChatMessages)
+                .WithOne(m => m.Receiver)
+                .HasForeignKey(m => m.ReceiverID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.User1)
+                .WithMany(a => a.ConversationsAsUser1)
+                .HasForeignKey(c => c.User1ID)
+                .OnDelete(DeleteBehavior.NoAction); // Change to NoAction
+
+            modelBuilder.Entity<Conversation>()
+                .HasOne(c => c.User2)
+                .WithMany(a => a.ConversationsAsUser2)
+                .HasForeignKey(c => c.User2ID)
+                .OnDelete(DeleteBehavior.NoAction); // Change to NoAction
 
             List<IdentityRole> roles = new List<IdentityRole>
                {
@@ -182,6 +250,8 @@ namespace DataAccessObject
         public DbSet<LabTest> Labtests { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<ConsultantSlot> ConsultantSlots { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<QnAMessage> QnAMessages { get; set; } // New DbSet for Q&A messages
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

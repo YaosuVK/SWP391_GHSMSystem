@@ -33,12 +33,10 @@ namespace Service
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IDashBoardService, DashBoardService>();
             services.AddScoped<IVnPayService, VnPayService>();
-            services.AddScoped<IMessageService, MessageService>();
-            services.AddScoped<IQuestionService, QuestionService>();
-            services.AddScoped<IConsultantProfileServive, ConsultantProfileService>();
-            services.AddScoped<IAutoCheckoutAppointmentService, AutoCheckoutAppointmentService>();
-            services.AddScoped<ILabTestService, LabTestService>();
-            services.AddScoped<ITreatmentOutcomeService, TreatmentOutcomeService>();
+            services.AddScoped<IChatService, ChatService>(); // Add new chat service
+            services.AddScoped<IMenstrualCycleService, MenstrualCycleService>();
+            services.AddScoped<ICyclePredictionService, CyclePredictionService>();
+            services.AddScoped<IQnAMessageService, QnAMessageService>(); // Add QnAMessageService
             return services;
         }
     }

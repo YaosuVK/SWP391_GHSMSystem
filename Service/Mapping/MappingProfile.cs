@@ -35,6 +35,8 @@ using Service.RequestAndResponse.Response.Slots;
 using Service.RequestAndResponse.Response.Transactions;
 using Service.RequestAndResponse.Response.TreatmentOutcomes;
 using Service.RequestAndResponse.Response.WorkingHours;
+using Service.RequestAndResponse.Response.Conversation;
+using Service.RequestAndResponse.Request.Conversation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,6 +113,21 @@ namespace Service.Mapping
 
             CreateMap<Question, QuestionResponse>().ReverseMap();
             CreateMap<CreateQuestionRequest, Question>().ReverseMap();
+
+            // Chat mappings
+            CreateMap<Message, SimplifiedMessageResponse>()
+                .ForMember(dest => dest.SenderName, opt => opt.MapFrom(src => src.senderName))
+                .ForMember(dest => dest.ReceiverName, opt => opt.MapFrom(src => src.receiverName));
+            CreateMap<Account, SimplifiedAccountResponse>().ReverseMap();
+            CreateMap<CreateConversationRequest, Conversation>().ReverseMap();
+            CreateMap<SendMessageRequest, Message>()
+                .ForMember(dest => dest.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(dest => dest.SenderID, opt => opt.MapFrom(src => src.SenderID))
+                .ForMember(dest => dest.ReceiverID, opt => opt.MapFrom(src => src.ReceiverID))
+                .ReverseMap();
+            CreateMap<Conversation, ConversationResponse>().ReverseMap();
+            CreateMap<Conversation, GetConversationResponse>().ReverseMap();
+            CreateMap<Conversation, ConversationWithMessagesResponse>().ReverseMap();
 
             // TreatmentOutcome mappings
             CreateMap<TreatmentOutcome, GetAllTreatmentOutcomeResponse>()

@@ -3,6 +3,7 @@ using CloudinaryDotNet;
 using DataAccessObject;
 using GHSMSystem.HangFireSetUp;
 using GHSMSystem.Ultilities;
+using GHSMSystem.Hubs;
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,7 +16,13 @@ using Newtonsoft.Json;
 using Repository;
 using Service;
 using Service.IService;
-using Account = BusinessObject.Model.Account;
+using DataAccessObject.IBaseDAO;
+using Repository.IRepositories;
+using DataAccessObject.BaseDAO;
+using Repository.BaseRepository;
+using Service.Service;
+using Repository.Repositories;
+using Service.RequestAndResponse.Request.QnAMessages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,8 +63,6 @@ builder.Services.AddDbContext<GHSMContext>(options =>
 // Configure Services
 builder.Services.ConfigureRepositoryService(builder.Configuration);
 builder.Services.ConfigureServiceService(builder.Configuration);
-builder.Services.ConfigureDataAccessObjectService(builder.Configuration);
-
 
 // Add Controllers and JSON Serializer
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
@@ -107,7 +112,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 // SetUp Specification for password
-builder.Services.AddIdentity<Account, IdentityRole>(options =>
+builder.Services.AddIdentity<BusinessObject.Model.Account, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
 options.Password.RequireLowercase = true;
@@ -152,7 +157,7 @@ builder.Services.AddAuthentication(options =>
         {
             var accessToken = context.Request.Query["access_token"];
             var path = context.HttpContext.Request.Path;
-            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
+            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chatHub")))
             {
                 context.Token = accessToken;
             }
@@ -228,10 +233,8 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 });
 
 app.MapControllers();
-app.MapHangfireDashboard();
-/*app.MapHub<ChatHub>("/chatHub");
-app.MapHub<NotificationHub>("/notificationHub");
-app.MapHub<NotificationHubs>("/notificationHubs");*/
+app.MapHangfireDashboard(); // Ensure Hangfire dashboard is still mapped
+app.MapHub<ChatHub>("/chatHub");
 app.MapGet("/api/health/hub", () => "Hub is running");
 app.MapFallbackToFile("/index.html");
 

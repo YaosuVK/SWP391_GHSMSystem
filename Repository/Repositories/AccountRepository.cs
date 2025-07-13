@@ -58,12 +58,7 @@ namespace Repository.Repositories
 
         public async Task<Account> GetByAccountIdAsync(string accountId)
         {
-
-            if (int.TryParse(accountId, out int id))
-            {
-                return await GetByIdAsync(id);
-            }
-            return null;
+            return await _accountDao.GetByStringIdAsync(accountId);
         }
 
         public string SendEmail(string recipientEmail, string subject, string htmlBody)
@@ -82,5 +77,6 @@ namespace Repository.Repositories
 
             return "Email sent successfully";
         }
+
     }
 }
