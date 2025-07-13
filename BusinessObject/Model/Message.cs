@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessObject.Model
 {
@@ -12,22 +10,28 @@ namespace BusinessObject.Model
         [Key]
         public int MessageID { get; set; }
 
-        public int QuestionID { get; set; }
-        
+        public int ConversationID { get; set; }
 
-        public string? CustomerID { get; set; }
-        public string? ConsultantID { get; set; }
+        [Required]
+        public string SenderID { get; set; }
+
+        [Required]
+        public string ReceiverID { get; set; }
 
         public string Content { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string? senderName { get; set; }
+        public string? receiverName { get; set; }
+        public DateTime SentAt { get; set; }
+        public bool IsRead { get; set; } = false;
 
-        public int? ParentMessageId { get; set; }     // Trả lời cho message nào (nếu có)
+        // Navigation properties
+        [ForeignKey("ConversationID")]
+        public Conversation Conversation { get; set; }
 
-        // Navigation
-        public Account Customer { get; set; }
-        public Account Consultant { get; set; }
-        public Question Question { get; set; }
-        public Message ParentMessage { get; set; }
-        public ICollection<Message> Replies { get; set; }
+        [ForeignKey("SenderID")]
+        public Account Sender { get; set; }
+
+        [ForeignKey("ReceiverID")]
+        public Account Receiver { get; set; }
     }
 }

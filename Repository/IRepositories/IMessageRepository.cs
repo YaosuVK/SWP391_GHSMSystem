@@ -11,7 +11,6 @@ namespace Repository.IRepositories
     public interface IMessageRepository : IBaseRepository<Message>
     {
         Task<Message> AddAsync(Message m);
-        Task<IEnumerable<Message>> GetByQuestionAsync(int questionId);
         Task<Message> GetByIdAsync(int messageId);
     }
 }

@@ -19,6 +19,6 @@ namespace BusinessObject.Model
 
         public DateTime CreatedAt { get; set; }
         
-        public ICollection<Message> Messages { get; set; }
+        public ICollection<QnAMessage> Messages { get; set; }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250708141808_FixDb")]
-    partial class FixDb
+    [Migration("20250712185412_fix")]
+    partial class fix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -381,6 +381,37 @@ namespace DataAccessObject.Migrations
                     b.ToTable("ConsultantSlots");
                 });
 
+            modelBuilder.Entity("BusinessObject.Model.Conversation", b =>
+                {
+                    b.Property<int>("ConversationID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationID"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastMessageAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("User1ID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("User2ID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ConversationID");
+
+                    b.HasIndex("User1ID");
+
+                    b.HasIndex("User2ID");
+
+                    b.ToTable("Conversations");
+                });
+
             modelBuilder.Entity("BusinessObject.Model.CyclePrediction", b =>
                 {
                     b.Property<int>("CyclePredictionID")
@@ -586,6 +617,49 @@ namespace DataAccessObject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageID"));
 
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ConversationID")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("senderName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MessageID");
+
+                    b.HasIndex("ConversationID");
+
+                    b.HasIndex("ReceiverID");
+
+                    b.HasIndex("SenderID");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.QnAMessage", b =>
+                {
+                    b.Property<int>("MessageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageID"));
+
                     b.Property<string>("ConsultantID")
                         .HasColumnType("nvarchar(450)");
 
@@ -615,7 +689,7 @@ namespace DataAccessObject.Migrations
 
                     b.HasIndex("QuestionID");
 
-                    b.ToTable("Messages");
+                    b.ToTable("QnAMessages");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.Question", b =>
@@ -969,31 +1043,31 @@ namespace DataAccessObject.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d310a57a-2738-43b0-b305-6697cc9780a3",
+                            Id = "41c80cd8-ed5b-4383-a054-aeb0242b9167",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "74afe500-2817-476d-a161-9c7f0e10588a",
+                            Id = "847ff751-c02f-44f1-88ff-8a205351cb91",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
-                            Id = "df7658f6-34a5-40be-be8b-79ecd55fc05e",
+                            Id = "a2a2a2cb-4189-4428-86c5-2db7f826f3e7",
                             Name = "Consultant",
                             NormalizedName = "CONSULTANT"
                         },
                         new
                         {
-                            Id = "4da945fb-4807-4eb5-ad9c-d187e21f1247",
+                            Id = "e08189d3-2c63-4b42-8848-c7cbb8552cbd",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "1d30697b-5fc3-4262-971d-d93795b70d32",
+                            Id = "825c9716-10a9-4a86-a452-ebbc9cc6fb1c",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         });
@@ -1210,6 +1284,25 @@ namespace DataAccessObject.Migrations
                     b.Navigation("Slot");
                 });
 
+            modelBuilder.Entity("BusinessObject.Model.Conversation", b =>
+                {
+                    b.HasOne("BusinessObject.Model.Account", "User1")
+                        .WithMany("ConversationsAsUser1")
+                        .HasForeignKey("User1ID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Model.Account", "User2")
+                        .WithMany("ConversationsAsUser2")
+                        .HasForeignKey("User2ID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("User1");
+
+                    b.Navigation("User2");
+                });
+
             modelBuilder.Entity("BusinessObject.Model.CyclePrediction", b =>
                 {
                     b.HasOne("BusinessObject.Model.MenstrualCycle", "MenstrualCycle")
@@ -1297,22 +1390,52 @@ namespace DataAccessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Model.Message", b =>
                 {
+                    b.HasOne("BusinessObject.Model.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Model.Account", "Receiver")
+                        .WithMany("ReceivedChatMessages")
+                        .HasForeignKey("ReceiverID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Model.Account", "Sender")
+                        .WithMany("SentChatMessages")
+                        .HasForeignKey("SenderID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.QnAMessage", b =>
+                {
                     b.HasOne("BusinessObject.Model.Account", "Consultant")
-                        .WithMany()
-                        .HasForeignKey("ConsultantID");
+                        .WithMany("QnAConsultantMessages")
+                        .HasForeignKey("ConsultantID")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BusinessObject.Model.Account", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerID");
+                        .WithMany("QnACustomerMessages")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("BusinessObject.Model.Message", "ParentMessage")
+                    b.HasOne("BusinessObject.Model.QnAMessage", "ParentMessage")
                         .WithMany("Replies")
-                        .HasForeignKey("ParentMessageId");
+                        .HasForeignKey("ParentMessageId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BusinessObject.Model.Question", "Question")
                         .WithMany("Messages")
                         .HasForeignKey("QuestionID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Consultant");
@@ -1504,6 +1627,10 @@ namespace DataAccessObject.Migrations
 
                     b.Navigation("ConsultantTreatmentOutcomes");
 
+                    b.Navigation("ConversationsAsUser1");
+
+                    b.Navigation("ConversationsAsUser2");
+
                     b.Navigation("CustomerAppointments");
 
                     b.Navigation("CustomerTreatmentOutcomes");
@@ -1512,7 +1639,15 @@ namespace DataAccessObject.Migrations
 
                     b.Navigation("MenstrualCycles");
 
+                    b.Navigation("QnAConsultantMessages");
+
+                    b.Navigation("QnACustomerMessages");
+
                     b.Navigation("Ratings");
+
+                    b.Navigation("ReceivedChatMessages");
+
+                    b.Navigation("SentChatMessages");
 
                     b.Navigation("Services");
 
@@ -1561,13 +1696,18 @@ namespace DataAccessObject.Migrations
                     b.Navigation("AppointmentDetails");
                 });
 
+            modelBuilder.Entity("BusinessObject.Model.Conversation", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
             modelBuilder.Entity("BusinessObject.Model.MenstrualCycle", b =>
                 {
                     b.Navigation("Prediction")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BusinessObject.Model.Message", b =>
+            modelBuilder.Entity("BusinessObject.Model.QnAMessage", b =>
                 {
                     b.Navigation("Replies");
                 });

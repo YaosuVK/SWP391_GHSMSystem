@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccessObject.Migrations
 {
     /// <inheritdoc />
-    public partial class Fix : Migration
+    public partial class fix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -207,6 +207,32 @@ namespace DataAccessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Conversations",
+                columns: table => new
+                {
+                    ConversationID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    User1ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    User2ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastMessageAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conversations", x => x.ConversationID);
+                    table.ForeignKey(
+                        name: "FK_Conversations_AspNetUsers_User1ID",
+                        column: x => x.User1ID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Conversations_AspNetUsers_User2ID",
+                        column: x => x.User2ID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MenstrualCycles",
                 columns: table => new
                 {
@@ -345,6 +371,43 @@ namespace DataAccessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    MessageID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConversationID = table.Column<int>(type: "int", nullable: false),
+                    SenderID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReceiverID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    senderName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.MessageID);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_ReceiverID",
+                        column: x => x.ReceiverID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_SenderID",
+                        column: x => x.SenderID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_Conversations_ConversationID",
+                        column: x => x.ConversationID,
+                        principalTable: "Conversations",
+                        principalColumn: "ConversationID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CyclePredictions",
                 columns: table => new
                 {
@@ -368,7 +431,7 @@ namespace DataAccessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
+                name: "QnAMessages",
                 columns: table => new
                 {
                     MessageID = table.Column<int>(type: "int", nullable: false)
@@ -382,28 +445,31 @@ namespace DataAccessObject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Messages", x => x.MessageID);
+                    table.PrimaryKey("PK_QnAMessages", x => x.MessageID);
                     table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_ConsultantID",
+                        name: "FK_QnAMessages_AspNetUsers_ConsultantID",
                         column: x => x.ConsultantID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_CustomerID",
+                        name: "FK_QnAMessages_AspNetUsers_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Messages_Messages_ParentMessageId",
+                        name: "FK_QnAMessages_QnAMessages_ParentMessageId",
                         column: x => x.ParentMessageId,
-                        principalTable: "Messages",
-                        principalColumn: "MessageID");
+                        principalTable: "QnAMessages",
+                        principalColumn: "MessageID",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Messages_Questions_QuestionID",
+                        name: "FK_QnAMessages_Questions_QuestionID",
                         column: x => x.QuestionID,
                         principalTable: "Questions",
                         principalColumn: "QuestionID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -777,11 +843,11 @@ namespace DataAccessObject.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1d30697b-5fc3-4262-971d-d93795b70d32", null, "Staff", "STAFF" },
-                    { "4da945fb-4807-4eb5-ad9c-d187e21f1247", null, "Manager", "MANAGER" },
-                    { "74afe500-2817-476d-a161-9c7f0e10588a", null, "Customer", "CUSTOMER" },
-                    { "d310a57a-2738-43b0-b305-6697cc9780a3", null, "Admin", "ADMIN" },
-                    { "df7658f6-34a5-40be-be8b-79ecd55fc05e", null, "Consultant", "CONSULTANT" }
+                    { "41c80cd8-ed5b-4383-a054-aeb0242b9167", null, "Admin", "ADMIN" },
+                    { "825c9716-10a9-4a86-a452-ebbc9cc6fb1c", null, "Staff", "STAFF" },
+                    { "847ff751-c02f-44f1-88ff-8a205351cb91", null, "Customer", "CUSTOMER" },
+                    { "a2a2a2cb-4189-4428-86c5-2db7f826f3e7", null, "Consultant", "CONSULTANT" },
+                    { "e08189d3-2c63-4b42-8848-c7cbb8552cbd", null, "Manager", "MANAGER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -880,6 +946,16 @@ namespace DataAccessObject.Migrations
                 column: "SlotID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Conversations_User1ID",
+                table: "Conversations",
+                column: "User1ID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Conversations_User2ID",
+                table: "Conversations",
+                column: "User2ID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CyclePredictions_MenstrualCycleID",
                 table: "CyclePredictions",
                 column: "MenstrualCycleID",
@@ -926,23 +1002,38 @@ namespace DataAccessObject.Migrations
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ConsultantID",
+                name: "IX_Messages_ConversationID",
                 table: "Messages",
+                column: "ConversationID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ReceiverID",
+                table: "Messages",
+                column: "ReceiverID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_SenderID",
+                table: "Messages",
+                column: "SenderID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QnAMessages_ConsultantID",
+                table: "QnAMessages",
                 column: "ConsultantID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_CustomerID",
-                table: "Messages",
+                name: "IX_QnAMessages_CustomerID",
+                table: "QnAMessages",
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_ParentMessageId",
-                table: "Messages",
+                name: "IX_QnAMessages_ParentMessageId",
+                table: "QnAMessages",
                 column: "ParentMessageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_QuestionID",
-                table: "Messages",
+                name: "IX_QnAMessages_QuestionID",
+                table: "QnAMessages",
                 column: "QuestionID");
 
             migrationBuilder.CreateIndex(
@@ -1056,6 +1147,9 @@ namespace DataAccessObject.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
+                name: "QnAMessages");
+
+            migrationBuilder.DropTable(
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
@@ -1078,6 +1172,9 @@ namespace DataAccessObject.Migrations
 
             migrationBuilder.DropTable(
                 name: "TreatmentOutcomes");
+
+            migrationBuilder.DropTable(
+                name: "Conversations");
 
             migrationBuilder.DropTable(
                 name: "Questions");
