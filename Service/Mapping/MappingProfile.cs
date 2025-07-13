@@ -53,6 +53,7 @@ namespace Service.Mapping
             CreateMap<Account, GetStaffUser>().ReverseMap();
             CreateMap<Account, GetConsultantUser>().ReverseMap();
             CreateMap<Account, GetConsultantUserForProfile>().ReverseMap();
+            CreateMap<Account, GetAccount>().ReverseMap();
 
             CreateMap<Appointment, GetAllAppointment>().ReverseMap();
             CreateMap<Appointment, GetAllAppointmentForSlot>().ReverseMap();
