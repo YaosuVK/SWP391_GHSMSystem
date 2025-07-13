@@ -95,8 +95,12 @@ namespace DataAccessObject
 
             if (date.HasValue)
             {
-                var target = date.Value.Date;
-                query = query.Where(cs => cs.AssignedDate.Date == target);
+                var start = date.Value.Date;
+                var end = start.AddDays(1);
+
+                query = query.Where(cs =>
+                    cs.AssignedDate >= start &&
+                    cs.AssignedDate < end);
             }
 
             return await query.ToListAsync();
