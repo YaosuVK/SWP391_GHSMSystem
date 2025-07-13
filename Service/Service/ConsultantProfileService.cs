@@ -68,7 +68,7 @@ namespace Service.Service
                 return new BaseResponse<IEnumerable<GetAllConsultantProfile>>("Something went wrong!",
                 StatusCodeEnum.BadGateway_502, null);
             }
-            return new BaseResponse<IEnumerable<GetAllConsultantProfile>>("Get all category as base success",
+            return new BaseResponse<IEnumerable<GetAllConsultantProfile>>("Get all ConsultantProfile as base success",
                 StatusCodeEnum.OK_200, consultantProfiles);
         }
 
@@ -114,7 +114,7 @@ namespace Service.Service
 
             var result = _mapper.Map<UpdateConsultantProfile>(consultantProfileExist);
 
-            return new BaseResponse<UpdateConsultantProfile>("Update Category as base success", StatusCodeEnum.OK_200, result);
+            return new BaseResponse<UpdateConsultantProfile>("Update ConsultantProfile as base success", StatusCodeEnum.OK_200, result);
         }
     }
 }
