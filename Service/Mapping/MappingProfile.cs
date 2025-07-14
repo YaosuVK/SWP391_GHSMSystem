@@ -42,6 +42,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Service.RequestAndResponse.Response.AppointmentDetails;
 
 namespace Service.Mapping
 {
@@ -63,6 +64,7 @@ namespace Service.Mapping
             CreateMap<UpdateAppointmentRequest, Appointment>().ReverseMap();
             CreateMap<UpdateAppointmentSlot, Appointment>().ReverseMap();
             CreateMap<UpdateApppointmentRequestSTI, Appointment>().ReverseMap();
+            CreateMap<AppointmentDetail, GetAppointmentDetailResponse>().ReverseMap();
 
             CreateMap<Clinic, ClinicResponse>().ReverseMap();
             CreateMap<CreateClinicRequest, Clinic>().ReverseMap();
@@ -97,6 +99,7 @@ namespace Service.Mapping
             CreateMap<UpdateCategoryRequest, Category>().ReverseMap();
 
             CreateMap<Services, ServicesResponse>().ReverseMap();
+            CreateMap<Services, GetServiceResponse>().ReverseMap();
             CreateMap<CreateServiceRequest, Services>().ReverseMap();
             CreateMap<UpdateServiceRequest, Services>().ReverseMap();
             CreateMap<ImageService, ImageServiceResponse>().ReverseMap();

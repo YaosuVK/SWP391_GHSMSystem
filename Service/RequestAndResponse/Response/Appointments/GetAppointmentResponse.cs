@@ -10,6 +10,7 @@ using Service.RequestAndResponse.Response.Clinic;
 using Service.RequestAndResponse.Response.TreatmentOutcomes;
 using Service.RequestAndResponse.Response.Accounts;
 using Service.RequestAndResponse.Response.Slots;
+using Service.RequestAndResponse.Response.AppointmentDetails;
 
 namespace Service.RequestAndResponse.Response.Appointments
 {
@@ -53,5 +54,7 @@ namespace Service.RequestAndResponse.Response.Appointments
         public AppointmentStatus Status { get; set; }
 
         public PaymentStatus paymentStatus { get; set; }
+
+        public ICollection<GetAppointmentDetailResponse> AppointmentDetails { get; set; }
     }
 }

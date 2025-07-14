@@ -23,6 +23,9 @@ namespace DataAccessObject
         {
             IQueryable<Appointment> appointments = _context.Appointments
                 .Include(b => b.AppointmentDetails)
+                .ThenInclude(b => b.Service)
+                .Include(b => b.AppointmentDetails)
+                .ThenInclude(b => b.ConsultantProfile)
                 .Include(b => b.Customer)
                 .Include(b => b.Consultant)
                 .Include(b => b.FeedBacks)
@@ -71,6 +74,8 @@ namespace DataAccessObject
             return await _context.Appointments
                 .Include(b => b.AppointmentDetails)
                 .ThenInclude(b => b.Service)
+                .Include(b => b.AppointmentDetails)
+                .ThenInclude(b => b.ConsultantProfile)
                 .Include(b => b.Customer)
                 .Include(b => b.Consultant)
                 .Include(b => b.FeedBacks)
@@ -85,6 +90,8 @@ namespace DataAccessObject
             return await _context.Appointments
                 .Include(b => b.AppointmentDetails)
                 .ThenInclude(b => b.Service)
+                .Include(b => b.AppointmentDetails)
+                .ThenInclude(b => b.ConsultantProfile)
                 .Include(b => b.Customer)
                 .Include(b => b.Consultant)
                 .Include(b => b.FeedBacks)
@@ -99,6 +106,8 @@ namespace DataAccessObject
             return await _context.Appointments
                 .Include(b => b.AppointmentDetails)
                 .ThenInclude(b => b.Service)
+                .Include(b => b.AppointmentDetails)
+                .ThenInclude(b => b.ConsultantProfile)
                 .Include(b => b.Customer)
                 .Include(b => b.Consultant)
                 .Include(b => b.FeedBacks)
@@ -113,6 +122,8 @@ namespace DataAccessObject
             return await _context.Appointments
                  .Include(b => b.AppointmentDetails)
                  .ThenInclude(b => b.Service)
+                 .Include(b => b.AppointmentDetails)
+                 .ThenInclude(b => b.ConsultantProfile)
                  .Include(b => b.Customer)
                  .Include(b => b.Consultant)
                  .Include(b => b.FeedBacks)
@@ -128,6 +139,8 @@ namespace DataAccessObject
             return await _context.Appointments
                  .Include(b => b.AppointmentDetails)
                  .ThenInclude(b => b.Service)
+                 .Include(b => b.AppointmentDetails)
+                 .ThenInclude(b => b.ConsultantProfile)
                  .Include(b => b.Customer)
                  .Include(b => b.Consultant)
                  .Include(b => b.FeedBacks)
