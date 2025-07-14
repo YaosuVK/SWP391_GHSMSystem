@@ -95,12 +95,22 @@ namespace DataAccessObject
 
             if (date.HasValue)
             {
-                var start = date.Value.Date;
-                var end = start.AddDays(1);
+                // Check if the time component of the provided date is midnight.
+                if (date.Value.TimeOfDay == TimeSpan.Zero)
+                {
+                    // If time is midnight, search by date only.
+                    query = query.Where(cs => cs.Slot.StartTime.Date == date.Value.Date);
+                }
+                else
+                {
+                    // If time is provided, search within a one-hour window.
+                    var startDateTime = date.Value;
+                    var endDateTime = startDateTime.AddHours(1);
 
-                query = query.Where(cs =>
-                    cs.AssignedDate >= start &&
-                    cs.AssignedDate < end);
+                    query = query.Where(cs =>
+                        cs.Slot.StartTime >= startDateTime &&
+                        cs.Slot.StartTime < endDateTime);
+                }
             }
 
             return await query.ToListAsync();
