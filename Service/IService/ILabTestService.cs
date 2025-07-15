@@ -21,5 +21,6 @@ namespace Service.IService
         Task<BaseResponse<GetLabTestByIdResponse>> CreateLabTestAsync(CreateLabTestRequest request);
         Task<BaseResponse<GetLabTestByIdResponse>> UpdateLabTestAsync(UpdateLabTestRequest request);
         Task<BaseResponse<string>> DeleteLabTestAsync(int id);
+        Task<BaseResponse<IEnumerable<GetLabTestByIdResponse>>> CreateMultipleLabTestsAsync(CreateMultipleLabTestsRequest request);
     }
 } 

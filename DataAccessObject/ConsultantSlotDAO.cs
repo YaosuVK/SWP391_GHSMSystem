@@ -95,15 +95,12 @@ namespace DataAccessObject
 
             if (date.HasValue)
             {
-                // Check if the time component of the provided date is midnight.
                 if (date.Value.TimeOfDay == TimeSpan.Zero)
                 {
-                    // If time is midnight, search by date only.
                     query = query.Where(cs => cs.Slot.StartTime.Date == date.Value.Date);
                 }
                 else
                 {
-                    // If time is provided, search within a one-hour window.
                     var startDateTime = date.Value;
                     var endDateTime = startDateTime.AddHours(1);
 
