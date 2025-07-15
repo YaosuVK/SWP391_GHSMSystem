@@ -184,5 +184,25 @@ namespace Service.Service
                 return new BaseResponse<string>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
             }
         }
+
+        public async Task<BaseResponse<IEnumerable<GetLabTestByIdResponse>>> CreateMultipleLabTestsAsync(CreateMultipleLabTestsRequest request)
+        {
+            try
+            {
+                var createdLabTests = new List<GetLabTestByIdResponse>();
+                foreach (var labTestRequest in request.LabTests)
+                {
+                    var labTest = _mapper.Map<LabTest>(labTestRequest);
+                    var createdLabTest = await _labTestRepository.AddAsync(labTest);
+                    var result = await _labTestRepository.GetLabTestWithDetailsAsync(createdLabTest.LabTestID);
+                    createdLabTests.Add(_mapper.Map<GetLabTestByIdResponse>(result));
+                }
+                return new BaseResponse<IEnumerable<GetLabTestByIdResponse>>("Create multiple lab tests successfully", StatusCodeEnum.Created_201, createdLabTests);
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<IEnumerable<GetLabTestByIdResponse>>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
+            }
+        }
     }
 } 

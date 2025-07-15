@@ -121,6 +121,23 @@ namespace GHSMSystem.Controllers
         }
 
         /// <summary>
+        /// Create multiple new lab tests
+        /// </summary>
+        /// <param name="request">Lab tests creation request</param>
+        /// <returns>Created lab tests</returns>
+        [HttpPost("multiple")]
+        public async Task<IActionResult> CreateMultipleLabTests([FromBody] CreateMultipleLabTestsRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _labTestService.CreateMultipleLabTestsAsync(request);
+            return StatusCode((int)result.StatusCode, result);
+        }
+
+        /// <summary>
         /// Update an existing lab test
         /// </summary>
         /// <param name="request">Lab test update request</param>
