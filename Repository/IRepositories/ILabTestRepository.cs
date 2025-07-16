@@ -16,5 +16,6 @@ namespace Repository.IRepositories
         Task<IEnumerable<LabTest>> SearchLabTestsAsync(string? search, int pageIndex, int pageSize);
         Task<IEnumerable<LabTest>> GetLabTestsByDateRangeAsync(DateTime fromDate, DateTime toDate);
         Task<LabTest> GetLabTestWithDetailsAsync(int id);
+        Task<List<LabTest>> GetUnassignedLabTestsByCustomerId(string customerId);
     }
 } 

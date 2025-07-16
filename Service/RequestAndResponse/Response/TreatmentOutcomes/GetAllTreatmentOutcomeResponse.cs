@@ -1,3 +1,5 @@
+using BusinessObject.Model;
+using Service.RequestAndResponse.Response.LabTests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +23,6 @@ namespace Service.RequestAndResponse.Response.TreatmentOutcomes
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public int LabTestCount { get; set; }
+        public ICollection<GetLabtestForTreatmentOutcome> LabTests { get; set; }
     }
 } 

@@ -17,12 +17,14 @@ namespace Service.Service
     public class TreatmentOutcomeService : ITreatmentOutcomeService
     {
         private readonly ITreatmentOutcomeRepository _treatmentOutcomeRepository;
+        private readonly ILabTestRepository _labTestRepository;
         private readonly IMapper _mapper;
 
-        public TreatmentOutcomeService(ITreatmentOutcomeRepository treatmentOutcomeRepository, IMapper mapper)
+        public TreatmentOutcomeService(ITreatmentOutcomeRepository treatmentOutcomeRepository, IMapper mapper, ILabTestRepository labTestRepository)
         {
             _treatmentOutcomeRepository = treatmentOutcomeRepository;
             _mapper = mapper;
+            _labTestRepository = labTestRepository;
         }
 
         public async Task<BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>> GetAllTreatmentOutcomesAsync()
@@ -119,6 +121,17 @@ namespace Service.Service
             try
             {
                 var treatmentOutcome = _mapper.Map<TreatmentOutcome>(request);
+                
+                treatmentOutcome.CreateAt = DateTime.Now;
+                treatmentOutcome.UpdateAt = DateTime.Now;
+
+                var labTests = await _labTestRepository.GetUnassignedLabTestsByCustomerId(treatmentOutcome.CustomerID);
+
+                if (labTests != null)
+                {
+                    treatmentOutcome.LabTests = labTests;
+                }
+
                 var createdTreatmentOutcome = await _treatmentOutcomeRepository.AddAsync(treatmentOutcome);
                 var result = await _treatmentOutcomeRepository.GetTreatmentOutcomeWithDetailsAsync(createdTreatmentOutcome.TreatmentID);
                 var response = _mapper.Map<GetTreatmentOutcomeByIdResponse>(result);
@@ -134,13 +147,29 @@ namespace Service.Service
         {
             try
             {
-                var existingTreatmentOutcome = await _treatmentOutcomeRepository.GetByIdAsync(request.TreatmentID);
+                var existingTreatmentOutcome = await _treatmentOutcomeRepository.GetTreatmenOutComeByTreatmentIdAsync(request.TreatmentID);
                 if (existingTreatmentOutcome == null)
                 {
                     return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Treatment outcome not found", StatusCodeEnum.NotFound_404, null);
                 }
 
                 _mapper.Map(request, existingTreatmentOutcome);
+
+                var labTests = await _labTestRepository.GetUnassignedLabTestsByCustomerId(existingTreatmentOutcome.CustomerID);
+
+                if (labTests != null && labTests.Any())
+                {
+                    if (existingTreatmentOutcome.LabTests == null)
+                    {
+                        existingTreatmentOutcome.LabTests = new List<LabTest>();
+                    }
+
+                    foreach (var labTest in labTests)
+                    {
+                        existingTreatmentOutcome.LabTests.Add(labTest);
+                    }
+                }
+
                 await _treatmentOutcomeRepository.UpdateAsync(existingTreatmentOutcome);
                 var result = await _treatmentOutcomeRepository.GetTreatmentOutcomeWithDetailsAsync(request.TreatmentID);
                 var response = _mapper.Map<GetTreatmentOutcomeByIdResponse>(result);

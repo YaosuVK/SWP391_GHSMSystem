@@ -27,5 +27,15 @@ namespace DataAccessObject
                 .Include(b => b.LabTests)
                 .FirstOrDefaultAsync(o => o.AppointmentID == appointmentId);
         }
+
+        public async Task<TreatmentOutcome?> GetTreatmenOutComeByTreatmentIdAsync(int treatementID)
+        {
+            return await _context.TreatmentOutcomes
+                .Include(b => b.Customer)
+                .Include(b => b.Consultant)
+                .Include(b => b.Appointment)
+                .Include(b => b.LabTests)
+                .FirstOrDefaultAsync(o => o.TreatmentID == treatementID);
+        }
     }
 }

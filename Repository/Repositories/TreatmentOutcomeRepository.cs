@@ -97,5 +97,10 @@ namespace Repository.Repositories
         {
             return await _treatmentOutcomeDAO.GetTreatmenOutComeByAppointmentIdAsync(appointmentId);
         }
+
+        public async Task<TreatmentOutcome?> GetTreatmenOutComeByTreatmentIdAsync(int treatementID)
+        {
+            return await _treatmentOutcomeDAO.GetTreatmenOutComeByTreatmentIdAsync(treatementID);
+        }
     }
 } 

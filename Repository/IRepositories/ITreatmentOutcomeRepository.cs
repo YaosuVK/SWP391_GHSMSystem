@@ -16,5 +16,6 @@ namespace Repository.IRepositories
         Task<IEnumerable<TreatmentOutcome>> SearchTreatmentOutcomesAsync(string? search, int pageIndex, int pageSize);
         Task<TreatmentOutcome> GetTreatmentOutcomeWithDetailsAsync(int id);
         Task<TreatmentOutcome?> GetTreatmenOutComeByAppointmentIdAsync(int appointmentId);
+        Task<TreatmentOutcome?> GetTreatmenOutComeByTreatmentIdAsync(int treatementID);
     }
 } 

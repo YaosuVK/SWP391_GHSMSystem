@@ -99,5 +99,10 @@ namespace Repository.Repositories
                 .Include(lt => lt.TreatmentOutcome)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<List<LabTest>> GetUnassignedLabTestsByCustomerId(string customerId)
+        {
+            return await _labTestDAO.GetUnassignedLabTestsByCustomerIdAsync(customerId);
+        }
     }
 } 

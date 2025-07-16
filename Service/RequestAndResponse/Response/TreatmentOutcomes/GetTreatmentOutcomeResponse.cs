@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.RequestAndResponse.Response.LabTests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +24,6 @@ namespace Service.RequestAndResponse.Response.TreatmentOutcomes
         public string Recommendation { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
+        public ICollection<GetLabtestForTreatmentOutcome> LabTests { get; set; }
     }
 }

@@ -158,7 +158,8 @@ namespace Service.Mapping
                 .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => DateTime.Now));
 
             CreateMap<UpdateTreatmentOutcomeRequest, TreatmentOutcome>()
-                .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => DateTime.Now))
+                .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => DateTime.UtcNow)) // Khuyến nghị dùng UTC
+                .ForMember(dest => dest.LabTests, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // LabTest mappings
@@ -167,6 +168,14 @@ namespace Service.Mapping
                 .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.Name));
 
             CreateMap<LabTest, GetLabTestByIdResponse>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
+                .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
+                .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.PhoneNumber))
+                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.Name))
+                .ForMember(dest => dest.StaffEmail, opt => opt.MapFrom(src => src.Staff.Email))
+                .ForMember(dest => dest.TreatmentDiagnosis, opt => opt.MapFrom(src => src.TreatmentOutcome.Diagnosis));
+
+            CreateMap<LabTest, GetLabtestForTreatmentOutcome>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.Name))
                 .ForMember(dest => dest.CustomerEmail, opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.PhoneNumber))
