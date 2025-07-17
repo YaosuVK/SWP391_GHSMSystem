@@ -20,7 +20,11 @@ namespace DataAccessObject
 
         public async Task<IEnumerable<Services>> GetServicesByIdsAsync(List<int> servicesIds)
         {
-            return await _context.Services.Where(h => servicesIds.Contains(h.ServicesID)).ToListAsync();
+            return await _context.Services
+                .Include(h => h.ImageServices)
+                .Include(h => h.Manager)
+                .Include(h => h.Category)
+                .Where(h => servicesIds.Contains(h.ServicesID)).ToListAsync();
         }
 
         public async Task<Services?> GetServiceByID(int? serviceID)
