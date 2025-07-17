@@ -18,13 +18,16 @@ namespace Service.Service
     {
         private readonly ITreatmentOutcomeRepository _treatmentOutcomeRepository;
         private readonly ILabTestRepository _labTestRepository;
+        private readonly IAppointmentRepository _appointmentRepository;
         private readonly IMapper _mapper;
 
-        public TreatmentOutcomeService(ITreatmentOutcomeRepository treatmentOutcomeRepository, IMapper mapper, ILabTestRepository labTestRepository)
+        public TreatmentOutcomeService(ITreatmentOutcomeRepository treatmentOutcomeRepository, IMapper mapper,
+            ILabTestRepository labTestRepository, IAppointmentRepository appointmentRepository)
         {
             _treatmentOutcomeRepository = treatmentOutcomeRepository;
             _mapper = mapper;
             _labTestRepository = labTestRepository;
+            _appointmentRepository = appointmentRepository;
         }
 
         public async Task<BaseResponse<IEnumerable<GetAllTreatmentOutcomeResponse>>> GetAllTreatmentOutcomesAsync()
@@ -133,6 +136,16 @@ namespace Service.Service
                 }
 
                 var createdTreatmentOutcome = await _treatmentOutcomeRepository.AddAsync(treatmentOutcome);
+
+                var appointment = await _appointmentRepository.GetAppointmentByIdCanNullAsync(request.AppointmentID);
+                if (appointment == null)
+                {
+                    return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Appointment not found", StatusCodeEnum.NotFound_404, null);
+                }
+
+                appointment.TreatmentID = createdTreatmentOutcome.TreatmentID;
+                await _appointmentRepository.UpdateAsync(appointment);
+
                 var result = await _treatmentOutcomeRepository.GetTreatmentOutcomeWithDetailsAsync(createdTreatmentOutcome.TreatmentID);
                 var response = _mapper.Map<GetTreatmentOutcomeByIdResponse>(result);
                 return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Create treatment outcome successfully", StatusCodeEnum.Created_201, response);
