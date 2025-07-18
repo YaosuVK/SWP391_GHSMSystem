@@ -27,11 +27,21 @@ namespace DataAccessObject
                 .Where(h => servicesIds.Contains(h.ServicesID)).ToListAsync();
         }
 
+        public async Task<IEnumerable<Services>> GetAllServiceAsync()
+        {
+            return await _context.Services
+                .Include(h => h.ImageServices)
+                .Include(h => h.Manager)
+                .Include(h => h.Category)
+                .ToListAsync();
+        }
+
         public async Task<Services?> GetServiceByID(int? serviceID)
         {
             return await _context.Services
                 .Include(x => x.Category)
                 .Include(x => x.Manager)
+                .Include(h => h.ImageServices)
                 .FirstOrDefaultAsync(x => x.ServicesID == serviceID);
         }
     }

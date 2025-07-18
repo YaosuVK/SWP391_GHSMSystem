@@ -112,7 +112,7 @@ namespace Service.Service
 
         public async Task<BaseResponse<IEnumerable<ServicesResponse>>> GetAllAsync()
         {
-            IEnumerable<Services> service = await _serviceRepository.GetAllAsync();
+            IEnumerable<Services> service = await _serviceRepository.GetAllServiceAsync();
             if (service == null || !service.Any())
             {
                 return new BaseResponse<IEnumerable<ServicesResponse>>("Something went wrong!",

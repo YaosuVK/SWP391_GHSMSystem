@@ -46,7 +46,7 @@ namespace Repository.Repositories
 
         public async Task<IEnumerable<Services>> GetAllServiceAsync()
         {
-            return await _serviceDao.GetAllAsync();
+            return await _serviceDao.GetAllServiceAsync();
         }
 
         public async Task<IEnumerable<Services>> GetServicesByIdsAsync(List<int> servicesIds)
