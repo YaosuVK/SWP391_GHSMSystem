@@ -126,6 +126,8 @@ namespace Service.Service
 
         public async Task<BaseResponse<int>> CreateAppointment(CreateAppointmentRequest request)
         {
+            var today = DateTime.Now;
+
             var unpaidAppointment = await _appointmentRepository.GetUnpaidAppointmentByID(request.CustomerID);
             if (unpaidAppointment != null)
                 return new BaseResponse<int>("There is an unpaid appointment. Please complete it before creating a new one.", StatusCodeEnum.Conflict_409, 0);
@@ -138,7 +140,7 @@ namespace Service.Service
                 return new BaseResponse<int>("CustomerID is required.", StatusCodeEnum.BadRequest_400, 0);
             }
 
-            if(request.AppointmentDate == default)
+            if(request.AppointmentDate == default || request.AppointmentDate < today.Date)
             {
                 return new BaseResponse<int>("Please input the AppointmentDate", StatusCodeEnum.BadRequest_400, 0);
             }

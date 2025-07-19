@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace DataAccessObject
 {
@@ -37,7 +38,7 @@ namespace DataAccessObject
 
         public async Task<IEnumerable<Slot>> GetAvailableSlotsForConsultantAsync(DateTime appointmentDate, string consultantId)
         {
-            return await _context.Slots
+            var slots = await _context.Slots
                 .Include(s => s.ConsultantSlots)
                 .Include(s => s.WorkingHour)
                 .Include(s => s.Appointments)
@@ -48,28 +49,52 @@ namespace DataAccessObject
                         a.SlotID == s.SlotID &&
                         a.ConsultantID == consultantId) <= cs.MaxAppointment))
                 .ToListAsync();
+
+            if (appointmentDate.Date == DateTime.Today)
+            {
+                var currentTime = DateTime.Now.TimeOfDay;
+                slots = slots.Where(s => s.StartTime.TimeOfDay >= currentTime).ToList();
+            }
+
+            return slots;   
         }
 
         public async Task<IEnumerable<Slot>> GetAvailableSlotsForTestAsync(DateTime appointmentDate)
         {
-            return await _context.Slots
+            var slots = await _context.Slots
                 .Include(s => s.WorkingHour)
                 .Include(s => s.Appointments)
                 .Where(s => s.StartTime.Date == appointmentDate.Date)
                 .Where(s =>
                     s.Appointments.Count(a => a.SlotID == s.SlotID && a.ConsultantID == null) <= s.MaxTestAppointment)
                 .ToListAsync();
+
+            if (appointmentDate.Date == DateTime.Today)
+            {
+                var currentTime = DateTime.Now.TimeOfDay;
+                slots = slots.Where(s => s.StartTime.TimeOfDay >= currentTime).ToList();
+            }
+
+            return slots;
         }
 
         public async Task<IEnumerable<Slot>> GetAvailableSlotsForTestCanNullAsync(DateTime? appointmentDate)
         {
-            return await _context.Slots
+            var slots = await _context.Slots
                 .Include(s => s.WorkingHour)
                 .Include(s => s.Appointments)
                 .Where(s => s.StartTime.Date == appointmentDate.Value.Date)
                 .Where(s =>
                     s.Appointments.Count(a => a.SlotID == s.SlotID && a.ConsultantID == null) <= s.MaxTestAppointment)
                 .ToListAsync();
+
+            if (appointmentDate.Value.Date == DateTime.Today)
+            {
+                var currentTime = DateTime.Now.TimeOfDay;
+                slots = slots.Where(s => s.StartTime.TimeOfDay >= currentTime).ToList();
+            }
+
+            return slots;
         }
 
         public async Task<IEnumerable<Slot>> SearchSlotsAsync(string keyword)
