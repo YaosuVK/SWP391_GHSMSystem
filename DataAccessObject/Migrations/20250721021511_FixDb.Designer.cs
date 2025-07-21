@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessObject.Migrations
 {
     [DbContext(typeof(GHSMContext))]
-    [Migration("20250712185412_fix")]
-    partial class fix
+    [Migration("20250721021511_FixDb")]
+    partial class FixDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -638,6 +638,9 @@ namespace DataAccessObject.Migrations
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("receiverName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("senderName")
                         .HasColumnType("nvarchar(max)");
 
@@ -650,6 +653,42 @@ namespace DataAccessObject.Migrations
                     b.HasIndex("SenderID");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("BusinessObject.Model.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerID");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("BusinessObject.Model.QnAMessage", b =>
@@ -1039,38 +1078,6 @@ namespace DataAccessObject.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "41c80cd8-ed5b-4383-a054-aeb0242b9167",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "847ff751-c02f-44f1-88ff-8a205351cb91",
-                            Name = "Customer",
-                            NormalizedName = "CUSTOMER"
-                        },
-                        new
-                        {
-                            Id = "a2a2a2cb-4189-4428-86c5-2db7f826f3e7",
-                            Name = "Consultant",
-                            NormalizedName = "CONSULTANT"
-                        },
-                        new
-                        {
-                            Id = "e08189d3-2c63-4b42-8848-c7cbb8552cbd",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
-                            Id = "825c9716-10a9-4a86-a452-ebbc9cc6fb1c",
-                            Name = "Staff",
-                            NormalizedName = "STAFF"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1415,6 +1422,17 @@ namespace DataAccessObject.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("BusinessObject.Model.Notification", b =>
+                {
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
+                        .WithMany("Notifications")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("BusinessObject.Model.QnAMessage", b =>
                 {
                     b.HasOne("BusinessObject.Model.Account", "Consultant")
@@ -1638,6 +1656,8 @@ namespace DataAccessObject.Migrations
                     b.Navigation("LabTests");
 
                     b.Navigation("MenstrualCycles");
+
+                    b.Navigation("Notifications");
 
                     b.Navigation("QnAConsultantMessages");
 

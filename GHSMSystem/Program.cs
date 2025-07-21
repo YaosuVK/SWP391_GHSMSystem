@@ -223,8 +223,13 @@ recurringJobManager.AddOrUpdate<IAutoCheckoutAppointmentService>(
     Cron.MinuteInterval(5));
 
 recurringJobManager.AddOrUpdate<IAutoCheckoutAppointmentService>(
-    "check-out-bookings",
+    "check-out-appointments",
     service => service.AutoCheckOutAppointments(),
+    Cron.MinuteInterval(5));
+
+recurringJobManager.AddOrUpdate<INotificationService>(
+    "Reminder For Cycle Predictions",
+    service => service.ProcessRemindersAsync(),
     Cron.MinuteInterval(5));
 
 app.UseHangfireDashboard("/hangfire", new DashboardOptions

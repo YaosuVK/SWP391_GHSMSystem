@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace DataAccessObject.Migrations
 {
     /// <inheritdoc />
-    public partial class fix : Migration
+    public partial class FixDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -255,6 +253,30 @@ namespace DataAccessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CustomerID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_AspNetUsers_CustomerID",
+                        column: x => x.CustomerID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Questions",
                 columns: table => new
                 {
@@ -381,6 +403,7 @@ namespace DataAccessObject.Migrations
                     ReceiverID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     senderName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    receiverName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsRead = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -838,18 +861,6 @@ namespace DataAccessObject.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "41c80cd8-ed5b-4383-a054-aeb0242b9167", null, "Admin", "ADMIN" },
-                    { "825c9716-10a9-4a86-a452-ebbc9cc6fb1c", null, "Staff", "STAFF" },
-                    { "847ff751-c02f-44f1-88ff-8a205351cb91", null, "Customer", "CUSTOMER" },
-                    { "a2a2a2cb-4189-4428-86c5-2db7f826f3e7", null, "Consultant", "CONSULTANT" },
-                    { "e08189d3-2c63-4b42-8848-c7cbb8552cbd", null, "Manager", "MANAGER" }
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AppointmentDetails_AppointmentID",
                 table: "AppointmentDetails",
@@ -1017,6 +1028,11 @@ namespace DataAccessObject.Migrations
                 column: "SenderID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Notifications_CustomerID",
+                table: "Notifications",
+                column: "CustomerID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_QnAMessages_ConsultantID",
                 table: "QnAMessages",
                 column: "ConsultantID");
@@ -1145,6 +1161,9 @@ namespace DataAccessObject.Migrations
 
             migrationBuilder.DropTable(
                 name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "QnAMessages");

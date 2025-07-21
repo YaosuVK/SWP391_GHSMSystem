@@ -49,5 +49,7 @@ namespace BusinessObject.Model
         // Add navigation properties for Conversation entity
         public ICollection<Conversation> ConversationsAsUser1 { get; set; } // Conversations where this account is User1
         public ICollection<Conversation> ConversationsAsUser2 { get; set; } // Conversations where this account is User2
+
+        public ICollection<Notification> Notifications { get; set; }
     }
 }

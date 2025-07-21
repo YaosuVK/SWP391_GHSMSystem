@@ -43,6 +43,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Service.RequestAndResponse.Response.AppointmentDetails;
+using Service.RequestAndResponse.Response.Notifications;
 
 namespace Service.Mapping
 {
@@ -111,6 +112,7 @@ namespace Service.Mapping
 
             CreateMap<TransactionResponse, Transaction>().ReverseMap();
 
+            CreateMap<Notification, NotificationResponse>().ReverseMap();
 
             CreateMap<Message, MessageResponse>().ReverseMap();
             CreateMap<CreateMessageRequest, Message>().ReverseMap();

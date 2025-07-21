@@ -16,5 +16,6 @@ namespace Repository.IRepositories
         Task<CyclePrediction> GetCyclePredictionWithDetailsAsync(int id);
         Task<IEnumerable<CyclePrediction>> GetCyclePredictionsByDateRangeAsync(DateTime fromDate, DateTime toDate);
         Task<CyclePrediction> GetLatestCyclePredictionByCustomerAsync(string customerId);
+        Task<IEnumerable<CyclePrediction>> GetAllCycelPredictionAsync();
     }
 } 

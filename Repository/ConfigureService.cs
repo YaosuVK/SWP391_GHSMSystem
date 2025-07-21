@@ -46,6 +46,7 @@ namespace Repository
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IQnAMessageRepository, QnAMessageRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             services.AddScoped<AccountDAO>();
             services.AddScoped<BlogDAO>();
@@ -70,8 +71,7 @@ namespace Repository
             services.AddScoped<MessageDAO>();
             services.AddScoped<MenstrualCycleDAO>();
             services.AddScoped<CyclePredictionDAO>();
-
-
+            services.AddScoped<NotificationDAO>();
             services.AddScoped<ConsultantProfileDAO>();
             return services;
         }

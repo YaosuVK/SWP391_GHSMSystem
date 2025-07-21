@@ -187,7 +187,7 @@ namespace DataAccessObject
                 .HasForeignKey(c => c.User2ID)
                 .OnDelete(DeleteBehavior.NoAction); // Change to NoAction
 
-            List<IdentityRole> roles = new List<IdentityRole>
+            /*List<IdentityRole> roles = new List<IdentityRole>
                {
                    new IdentityRole
                    {
@@ -215,7 +215,7 @@ namespace DataAccessObject
                        NormalizedName = "STAFF"
                    }
               };
-            modelBuilder.Entity<IdentityRole>().HasData(roles);
+            modelBuilder.Entity<IdentityRole>().HasData(roles);*/
 
             /*//Add this to keep the asp.net userrole, then migrations
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(
@@ -252,6 +252,7 @@ namespace DataAccessObject
         public DbSet<ConsultantSlot> ConsultantSlots { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<QnAMessage> QnAMessages { get; set; } // New DbSet for Q&A messages
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,5 +1,6 @@
 using BusinessObject.Model;
 using DataAccessObject.BaseDAO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,14 @@ namespace DataAccessObject
         public CyclePredictionDAO(GHSMContext context) : base(context)
         {
             _context = context;
+        }
+
+        public async Task<IEnumerable<CyclePrediction>> GetAllCycelPredictionAsync()
+        {
+            return await _context.CyclePredictions
+                .Include(c => c.MenstrualCycle)
+                .ThenInclude(c => c.Customer)
+            .ToListAsync();
         }
     }
 } 

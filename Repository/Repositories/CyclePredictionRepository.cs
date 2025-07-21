@@ -90,5 +90,10 @@ namespace Repository.Repositories
                 .OrderByDescending(cp => cp.NextPeriodStartDate)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<CyclePrediction>> GetAllCycelPredictionAsync()
+        {
+            return await _cyclePredictionDAO.GetAllCycelPredictionAsync();
+        }
     }
 } 

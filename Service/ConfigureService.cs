@@ -38,6 +38,7 @@ namespace Service
             services.AddScoped<IMenstrualCycleService, MenstrualCycleService>();
             services.AddScoped<ICyclePredictionService, CyclePredictionService>();
             services.AddScoped<IQnAMessageService, QnAMessageService>(); // Add QnAMessageService
+            services.AddScoped<INotificationService, NotificationService>();
             return services;
         }
     }

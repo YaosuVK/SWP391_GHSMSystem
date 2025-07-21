@@ -652,6 +652,42 @@ namespace DataAccessObject.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("BusinessObject.Model.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CustomerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerID");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("BusinessObject.Model.QnAMessage", b =>
                 {
                     b.Property<int>("MessageID")
@@ -1039,38 +1075,6 @@ namespace DataAccessObject.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "95545edf-9253-4c27-9381-825326609c9b",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "e2d78ba8-484d-4cd2-a6c7-d1729d80544a",
-                            Name = "Customer",
-                            NormalizedName = "CUSTOMER"
-                        },
-                        new
-                        {
-                            Id = "0cf05af2-7c35-4e89-833c-43cb9ac5be3c",
-                            Name = "Consultant",
-                            NormalizedName = "CONSULTANT"
-                        },
-                        new
-                        {
-                            Id = "da1b1329-931b-4325-9948-5f595a632953",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
-                            Id = "2517234f-94c2-45c8-8bc1-b0d78daa3685",
-                            Name = "Staff",
-                            NormalizedName = "STAFF"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1415,6 +1419,17 @@ namespace DataAccessObject.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("BusinessObject.Model.Notification", b =>
+                {
+                    b.HasOne("BusinessObject.Model.Account", "Customer")
+                        .WithMany("Notifications")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("BusinessObject.Model.QnAMessage", b =>
                 {
                     b.HasOne("BusinessObject.Model.Account", "Consultant")
@@ -1638,6 +1653,8 @@ namespace DataAccessObject.Migrations
                     b.Navigation("LabTests");
 
                     b.Navigation("MenstrualCycles");
+
+                    b.Navigation("Notifications");
 
                     b.Navigation("QnAConsultantMessages");
 
