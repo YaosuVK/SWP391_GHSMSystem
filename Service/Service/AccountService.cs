@@ -575,5 +575,49 @@ namespace Service.Service
             }
             return account;
         }
+
+        public async Task<List<NewUserDto>> GetAllAccountsAsync()
+        {
+            var allAccounts = await _userManager.Users.ToListAsync();
+
+            var accountInfoList = new List<NewUserDto>();
+
+            foreach (var user in allAccounts)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                accountInfoList.Add(new NewUserDto
+                {
+                    UserID = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Name = user.Name,
+                    Address = user.Address,
+                    Phone = user.Phone,
+                    isActive = user.Status,
+                    Roles = roles.ToList()
+                });
+            }
+
+            return accountInfoList;
+        }
+
+        public async Task<BaseResponse<GetTotalAccount>> GetTotalAccount()
+        {
+            var accounts = await _accountRepository.GetTotalAccount();
+            var response = new GetTotalAccount
+            {
+                totalAccount = accounts.totalAccount,
+                customersAccount = accounts.customersAccount,
+                managersAccount = accounts.managersAccount,
+                consultantAccount = accounts.consultantAccount,
+                staffsAccount = accounts.staffsAccount
+            };
+            if (response == null)
+            {
+                return new BaseResponse<GetTotalAccount>("Get All Fail", StatusCodeEnum.BadGateway_502, response);
+            }
+            return new BaseResponse<GetTotalAccount>("Get All Success", StatusCodeEnum.OK_200, response);
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace Repository.IRepositories
 {
     public interface IAccountRepository : IBaseRepository<Account>
     {
-        Task<(int totalAccount, int consultantsAccount, int customersAccount, int staffsAccount, int managersAccount)> GetTotalAccount();
+        Task<(int totalAccount, int managersAccount, int customersAccount, int staffsAccount, int consultantAccount)> GetTotalAccount();
         Task<Account> GetByAccountIdAsync(string accountId);
         string SendEmail(string recipientEmail, string subject, string htmlBody);
     }

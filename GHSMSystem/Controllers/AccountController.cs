@@ -1,4 +1,5 @@
 ﻿using BusinessObject.IdentityModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
@@ -17,6 +18,20 @@ namespace GHSMSystem.Controllers
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
+        }
+
+        /*[Authorize(Roles = "Admin")]*/
+        [HttpGet("adminDashBoard/GetTotalAccount")]
+        public async Task<BaseResponse<GetTotalAccount>> GetTotalAccount()
+        {
+            return await _accountService.GetTotalAccount();
+        }
+
+        [HttpGet]
+        [Route("GetAllAccounts")]
+        public async Task<List<NewUserDto>> GetAllAccountsAsync()
+        {
+            return await _accountService.GetAllAccountsAsync();
         }
 
         [HttpPost("login")]
