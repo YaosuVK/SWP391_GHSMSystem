@@ -195,5 +195,21 @@ namespace GHSMSystem.Controllers
                 _ => StatusCode(500, res)
             };
         }
+
+        [HttpPut("updateConsultantPrice")]
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> UpdateConsultantPrice(
+        [FromQuery] int consultantProfileId,
+        [FromQuery] double newPrice)
+        {
+            var res = await _consultantProfileServive.UpdateConsultantPriceAsync(consultantProfileId, newPrice);
+            return res.StatusCode switch
+            {
+                StatusCodeEnum.OK_200 => Ok(res),
+                StatusCodeEnum.NotFound_404 => NotFound(res),
+                StatusCodeEnum.BadRequest_400 => BadRequest(res),
+                _ => StatusCode(500, res)
+            };
+        }
     }
 }
