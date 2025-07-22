@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BusinessObject.Model;
 using Microsoft.AspNetCore.Identity;
 using Repository.IRepositories;
@@ -129,7 +129,52 @@ namespace Service.Service
             return new BaseResponse<bool>("Swap successful", StatusCodeEnum.OK_200, true);
         }
 
+        // 3) Cập nhật MaxAppointment cho consultant slot
+        public async Task<BaseResponse<ConsultantSlot>> UpdateMaxAppointmentAsync(
+            string consultantId, 
+            int slotId, 
+            int newMaxAppointment)
+        {
+            // 1) Kiểm tra consultant tồn tại
+            var consultant = await _userManager.FindByIdAsync(consultantId);
+            if (consultant == null)
+                return new BaseResponse<ConsultantSlot>(
+                    "Consultant not found",
+                    StatusCodeEnum.NotFound_404,
+                    null);
 
+            // 2) Kiểm tra slot tồn tại
+            var slot = await _slotRepo.GetByIdAsync(slotId);
+            if (slot == null)
+                return new BaseResponse<ConsultantSlot>(
+                    "Slot not found",
+                    StatusCodeEnum.NotFound_404,
+                    null);
+
+            // 3) Kiểm tra consultant đã đăng ký slot này chưa
+            var consultantSlot = await _repo.GetByConsultantAndSlotAsync(consultantId, slotId);
+            if (consultantSlot == null)
+                return new BaseResponse<ConsultantSlot>(
+                    "Consultant is not registered for this slot",
+                    StatusCodeEnum.NotFound_404,
+                    null);
+
+            // 4) Kiểm tra giá trị maxAppointment hợp lệ
+            if (newMaxAppointment <= 0)
+                return new BaseResponse<ConsultantSlot>(
+                    "MaxAppointment must be greater than 0",
+                    StatusCodeEnum.BadRequest_400,
+                    null);
+
+            // 5) Cập nhật MaxAppointment
+            consultantSlot.MaxAppointment = newMaxAppointment;
+            var updated = await _repo.UpdateAsync(consultantSlot);
+
+            return new BaseResponse<ConsultantSlot>(
+                "MaxAppointment updated successfully",
+                StatusCodeEnum.OK_200,
+                updated);
+        }
 
         public async Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetRegisteredSlotsAsync(string consultantId)
         {
