@@ -1,4 +1,4 @@
-﻿using BusinessObject.Model;
+using BusinessObject.Model;
 using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Response.ConsultantSlots;
 using System;
@@ -15,6 +15,7 @@ namespace Service.IService
         Task<BaseResponse<bool>> SwapAsync(
     string consultantIdA, int slotIdA,
     string consultantIdB, int slotIdB);
+        Task<BaseResponse<ConsultantSlot>> UpdateMaxAppointmentAsync(string consultantId, int slotId, int newMaxAppointment);
         Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetRegisteredSlotsAsync(string consultantId);
         Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> GetAllAsync();
         Task<BaseResponse<IEnumerable<ConsultantSlotResponse>>> SearchAsync(string consultantKeyword, DateTime? date);

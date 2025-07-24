@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
@@ -87,17 +87,31 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpPost("register")]
-        [Authorize(Roles = "Consultant")]
+        [Authorize(Roles = "Consultant,Manager")]
         public async Task<IActionResult> Register(
         [FromQuery] int slotId,
-        [FromQuery] int maxAppointment)
+        [FromQuery] int? maxAppointment = null)
         {
             // đọc đúng claim bạn đã gán khi tạo token
             var consultantId = User.FindFirstValue("AccountID");
             if (string.IsNullOrEmpty(consultantId))
                 return Unauthorized(new { message = "Invalid token: AccountID missing" });
 
-            var res = await _consultantSlotService.RegisterAsync(consultantId, slotId, maxAppointment);
+            // Check user role to determine maxAppointment handling
+            var userRoles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+            int finalMaxAppointment;
+
+            if (userRoles.Contains("Manager") || userRoles.Contains("Consultant"))
+            {
+                // Both Managers and Consultants can set custom maxAppointment, default to 10 if not provided
+                finalMaxAppointment = maxAppointment ?? 10;
+            }
+            else
+            {
+                return Forbid("User does not have the required role to register for slots.");
+            }
+
+            var res = await _consultantSlotService.RegisterAsync(consultantId, slotId, finalMaxAppointment);
             return res.StatusCode switch
             {
                 StatusCodeEnum.Created_201 => CreatedAtAction(nameof(GetRegistered), new { consultantId }, res),
@@ -161,6 +175,39 @@ namespace GHSMSystem.Controllers
             {
                 StatusCodeEnum.OK_200 => Ok(res),
                 StatusCodeEnum.NotFound_404 => NotFound(res),
+                _ => StatusCode(500, res)
+            };
+        }
+
+        [HttpPut("updateMaxAppointment")]
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> UpdateMaxAppointment(
+        [FromQuery] string consultantId,
+        [FromQuery] int slotId,
+        [FromQuery] int newMaxAppointment)
+        {
+            var res = await _consultantSlotService.UpdateMaxAppointmentAsync(consultantId, slotId, newMaxAppointment);
+            return res.StatusCode switch
+            {
+                StatusCodeEnum.OK_200 => Ok(res),
+                StatusCodeEnum.NotFound_404 => NotFound(res),
+                StatusCodeEnum.BadRequest_400 => BadRequest(res),
+                _ => StatusCode(500, res)
+            };
+        }
+
+        [HttpPut("updateConsultantPrice")]
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> UpdateConsultantPrice(
+        [FromQuery] int consultantProfileId,
+        [FromQuery] double newPrice)
+        {
+            var res = await _consultantProfileServive.UpdateConsultantPriceAsync(consultantProfileId, newPrice);
+            return res.StatusCode switch
+            {
+                StatusCodeEnum.OK_200 => Ok(res),
+                StatusCodeEnum.NotFound_404 => NotFound(res),
+                StatusCodeEnum.BadRequest_400 => BadRequest(res),
                 _ => StatusCode(500, res)
             };
         }

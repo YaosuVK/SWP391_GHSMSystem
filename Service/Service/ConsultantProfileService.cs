@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BusinessObject.Model;
 using Repository.IRepositories;
 using Repository.Repositories;
@@ -115,6 +115,37 @@ namespace Service.Service
             var result = _mapper.Map<UpdateConsultantProfile>(consultantProfileExist);
 
             return new BaseResponse<UpdateConsultantProfile>("Update ConsultantProfile as base success", StatusCodeEnum.OK_200, result);
+        }
+
+        public async Task<BaseResponse<ConsultantProfile>> UpdateConsultantPriceAsync(int consultantProfileID, double newPrice)
+        {
+            // 1) Kiểm tra consultant profile tồn tại
+            var consultantProfile = await _consultantProfileRepository.GetConsultantProfileByID(consultantProfileID);
+            if (consultantProfile == null)
+            {
+                return new BaseResponse<ConsultantProfile>(
+                    "Consultant profile not found",
+                    StatusCodeEnum.NotFound_404,
+                    null);
+            }
+
+            // 2) Kiểm tra giá trị price hợp lệ
+            if (newPrice <= 0)
+            {
+                return new BaseResponse<ConsultantProfile>(
+                    "Consultant price must be greater than 0",
+                    StatusCodeEnum.BadRequest_400,
+                    null);
+            }
+
+            // 3) Cập nhật giá
+            consultantProfile.ConsultantPrice = newPrice;
+            var updated = await _consultantProfileRepository.UpdateAsync(consultantProfile);
+
+            return new BaseResponse<ConsultantProfile>(
+                "Consultant price updated successfully",
+                StatusCodeEnum.OK_200,
+                updated);
         }
     }
 }
