@@ -23,6 +23,7 @@ using Repository.BaseRepository;
 using Service.Service;
 using Repository.Repositories;
 using Service.RequestAndResponse.Request.QnAMessages;
+using Service.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -189,6 +190,8 @@ builder.Services.AddSignalR(options =>
     options.ClientTimeoutInterval = TimeSpan.FromSeconds(60);
 });
 
+builder.Logging.AddConsole();
+
 builder.Services.AddAuthorization();
 
 // Cloudinary
@@ -240,6 +243,7 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 app.MapControllers();
 app.MapHangfireDashboard(); // Ensure Hangfire dashboard is still mapped
 app.MapHub<ChatHub>("/chatHub");
+app.MapHub<NotificationHub>("/notificationHub");
 app.MapGet("/api/health/hub", () => "Hub is running");
 app.MapFallbackToFile("/index.html");
 
