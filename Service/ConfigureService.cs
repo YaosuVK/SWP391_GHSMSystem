@@ -22,6 +22,7 @@ namespace Service
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<ISlotService, SlotService>();
             services.AddScoped<IWorkingHourService, WorkingHourService>();
+            services.AddScoped<IAutoCheckoutAppointmentService, AutoCheckoutAppointmentService>();
             services.AddScoped<IClinicService, ClinicService>();
             services.AddScoped<IServiceService, ServicesService>();
             services.AddScoped<ICategoryService, CategoryService>();
