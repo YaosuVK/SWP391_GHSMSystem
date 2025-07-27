@@ -90,20 +90,37 @@ namespace GHSMSystem.Controllers
         [Authorize(Roles = "Consultant,Manager")]
         public async Task<IActionResult> Register(
         [FromQuery] int slotId,
+        [FromQuery] string? consultantId = null,
         [FromQuery] int? maxAppointment = null)
         {
             // đọc đúng claim bạn đã gán khi tạo token
-            var consultantId = User.FindFirstValue("AccountID");
-            if (string.IsNullOrEmpty(consultantId))
+            var currentUserId = User.FindFirstValue("AccountID");
+            if (string.IsNullOrEmpty(currentUserId))
                 return Unauthorized(new { message = "Invalid token: AccountID missing" });
 
-            // Check user role to determine maxAppointment handling
+            // Check user role to determine registration logic
             var userRoles = User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+            string targetConsultantId;
             int finalMaxAppointment;
 
-            if (userRoles.Contains("Manager") || userRoles.Contains("Consultant"))
+            if (userRoles.Contains("Manager"))
             {
-                // Both Managers and Consultants can set custom maxAppointment, default to 10 if not provided
+                // Manager must provide consultantId to register for a consultant
+                if (string.IsNullOrEmpty(consultantId))
+                {
+                    return BadRequest(new { message = "Manager must provide consultantId parameter to register slot for consultant" });
+                }
+                targetConsultantId = consultantId;
+                finalMaxAppointment = maxAppointment ?? 10;
+            }
+            else if (userRoles.Contains("Consultant"))
+            {
+                // Consultant can only register for themselves
+                if (!string.IsNullOrEmpty(consultantId) && consultantId != currentUserId)
+                {
+                    return Forbid("Consultant can only register slots for themselves");
+                }
+                targetConsultantId = currentUserId;
                 finalMaxAppointment = maxAppointment ?? 10;
             }
             else
@@ -111,10 +128,10 @@ namespace GHSMSystem.Controllers
                 return Forbid("User does not have the required role to register for slots.");
             }
 
-            var res = await _consultantSlotService.RegisterAsync(consultantId, slotId, finalMaxAppointment);
+            var res = await _consultantSlotService.RegisterAsync(targetConsultantId, slotId, finalMaxAppointment);
             return res.StatusCode switch
             {
-                StatusCodeEnum.Created_201 => CreatedAtAction(nameof(GetRegistered), new { consultantId }, res),
+                StatusCodeEnum.Created_201 => CreatedAtAction(nameof(GetRegistered), new { consultantId = targetConsultantId }, res),
                 StatusCodeEnum.Conflict_409 => Conflict(res),
                 StatusCodeEnum.NotFound_404 => NotFound(res),
                 _ => StatusCode(500, res)
