@@ -35,11 +35,12 @@ namespace Service
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IDashBoardService, DashBoardService>();
             services.AddScoped<IVnPayService, VnPayService>();
-            services.AddScoped<IChatService, ChatService>(); // Add new chat service
+            services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IMenstrualCycleService, MenstrualCycleService>();
             services.AddScoped<ICyclePredictionService, CyclePredictionService>();
-            services.AddScoped<IQnAMessageService, QnAMessageService>(); // Add QnAMessageService
+            services.AddScoped<IQnAMessageService, QnAMessageService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IQuestionService, QuestionService>();
             return services;
         }
     }
