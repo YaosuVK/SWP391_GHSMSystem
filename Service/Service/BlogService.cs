@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BusinessObject.Model;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
@@ -108,6 +108,57 @@ namespace Service.Service
             // 3. Cập nhật
             await _blogRepository.UpdateAsync(existBlog);
             return new BaseResponse<Blog>("Cập nhật phòng khám thành công.", StatusCodeEnum.OK_200, existBlog);
+        }
+
+        public async Task<BaseResponse<Blog>> DeleteAsync(int blogID)
+        {
+            var existBlog = await _blogRepository.GetBlogByIdAsync(blogID);
+            if (existBlog == null)
+            {
+                return new BaseResponse<Blog>("Cannot find the blog", StatusCodeEnum.NotFound_404, null);
+            }
+
+            // Delete images from Cloudinary and database
+            if (existBlog.ImageBlogs != null && existBlog.ImageBlogs.Any())
+            {
+                foreach (var image in existBlog.ImageBlogs.ToList())
+                {
+                    // Delete from Cloudinary
+                    var publicId = GetPublicIdFromUrl(image.Image);
+                    if (!string.IsNullOrEmpty(publicId))
+                    {
+                        var deletionParams = new DeletionParams(publicId);
+                        await _cloudinary.DestroyAsync(deletionParams);
+                    }
+
+                    // Delete from database
+                    await _imageBlogRepository.DeleteImageAsync(image.ImageBlogID);
+                }
+            }
+
+            await _blogRepository.DeleteAsync(existBlog);
+            return new BaseResponse<Blog>("Delete blog success", StatusCodeEnum.OK_200, existBlog);
+        }
+
+        private string GetPublicIdFromUrl(string url)
+        {
+            try
+            {
+                var uri = new Uri(url);
+                var segments = uri.Segments;
+                var fileName = segments.Last();
+                var publicId = Path.GetFileNameWithoutExtension(fileName);
+                // Cloudinary folder structure might be part of the public ID
+                if (segments.Length > 2 && segments[segments.Length - 2].Equals("ServiceImages/", StringComparison.OrdinalIgnoreCase))
+                {
+                    publicId = "ServiceImages/" + publicId;
+                }
+                return publicId;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private async Task<List<string>> UploadImagesToCloudinary(List<IFormFile> files)

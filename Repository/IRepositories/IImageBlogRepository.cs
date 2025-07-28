@@ -1,4 +1,4 @@
-﻿using BusinessObject.Model;
+using BusinessObject.Model;
 using Repository.IBaseRepository;
 using System;
 using System.Collections.Generic;
@@ -13,5 +13,6 @@ namespace Repository.IRepositories
         Task<IEnumerable<ImageBlog>> GetAllByBlogIdAsync(int blogId);
         Task<ImageBlog> GetImageBlogByIdAsync(int id);
         Task<ImageBlog> AddImageAsync(ImageBlog image);
+        Task DeleteImageAsync(int imageId);
     }
 }
