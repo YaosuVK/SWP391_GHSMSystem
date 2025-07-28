@@ -152,7 +152,12 @@ namespace Service.Service
             }
             catch (Exception ex)
             {
-                return new BaseResponse<GetTreatmentOutcomeByIdResponse>(ex.Message, StatusCodeEnum.InternalServerError_500, null);
+                string fullError = $"{ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    fullError += $" | Inner: {ex.InnerException.Message}";
+                }
+                return new BaseResponse<GetTreatmentOutcomeByIdResponse>(fullError, StatusCodeEnum.InternalServerError_500, null);
             }
         }
 
