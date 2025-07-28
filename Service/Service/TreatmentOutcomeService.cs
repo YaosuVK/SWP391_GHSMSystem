@@ -143,6 +143,11 @@ namespace Service.Service
                     return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Appointment not found", StatusCodeEnum.NotFound_404, null);
                 }
 
+                if(appointment.TreatmentID != null)
+                {
+                    return new BaseResponse<GetTreatmentOutcomeByIdResponse>("Hey, Already have Treatment Outcome, Cannot Create!", StatusCodeEnum.NotFound_404, null);
+                }
+
                 appointment.TreatmentID = createdTreatmentOutcome.TreatmentID;
                 await _appointmentRepository.UpdateAsync(appointment);
 
