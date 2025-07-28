@@ -15,7 +15,6 @@ namespace Service.RequestAndResponse.Response.QnAMessages
         public int QuestionID { get; set; }
 
         public string? CustomerID { get; set; }
-        public string? ConsultantID { get; set; }
 
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -24,9 +23,6 @@ namespace Service.RequestAndResponse.Response.QnAMessages
 
         public GetCustomerUser? Customer { get; set; }
 
-        public GetConsultantUser? Consultant { get; set; }
-
-        public QnAMessageResponse? ParentMessage { get; set; }
         public ICollection<QnAMessageResponse>? Replies { get; set; }
     }
 }
