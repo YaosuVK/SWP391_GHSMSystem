@@ -44,6 +44,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Service.RequestAndResponse.Response.AppointmentDetails;
 using Service.RequestAndResponse.Response.Notifications;
+using Service.RequestAndResponse.Response.QnAMessages;
 
 namespace Service.Mapping
 {
@@ -134,6 +135,8 @@ namespace Service.Mapping
             CreateMap<Conversation, ConversationResponse>().ReverseMap();
             CreateMap<Conversation, GetConversationResponse>().ReverseMap();
             CreateMap<Conversation, ConversationWithMessagesResponse>().ReverseMap();
+            CreateMap<Question, GetAllQuestionResponse>().ReverseMap();
+            CreateMap<QnAMessage, QnAMessageResponse>().ReverseMap();
 
             // TreatmentOutcome mappings
             CreateMap<TreatmentOutcome, GetAllTreatmentOutcomeResponse>()

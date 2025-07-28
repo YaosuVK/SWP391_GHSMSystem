@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Model;
 using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Request.Question;
+using Service.RequestAndResponse.Response.Question;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace Service.IService
     public interface IQuestionService
     {
         Task<BaseResponse<Question>> CreateQuestionAsync(string customerId, CreateQuestionRequest req);
-        Task<BaseResponse<IEnumerable<Question>>> GetAllQuestionsAsync();
+        /*Task<BaseResponse<IEnumerable<Question>>> GetAllQuestionsAsync();*/
         Task<BaseResponse<Question>> GetQuestionByIdAsync(int id);
+        Task<BaseResponse<IEnumerable<GetAllQuestionResponse>>> GetAllQuestionsAsync();
     }
 }

@@ -30,6 +30,7 @@ namespace DataAccessObject
             return await _context.Questions
                 .Include(q => q.Messages)
                     .ThenInclude(m => m.Replies)
+                .Include(q => q.Customer)
                 .FirstOrDefaultAsync(q => q.QuestionID == id);
         }
 
@@ -38,6 +39,7 @@ namespace DataAccessObject
             return await _context.Questions
                 .Include(q => q.Messages)
                     .ThenInclude(m => m.Replies)
+                .Include(q => q.Customer)
                 .ToListAsync();
         }
     }
