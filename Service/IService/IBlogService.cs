@@ -1,4 +1,4 @@
-﻿using BusinessObject.Model;
+using BusinessObject.Model;
 using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Request.Blogs;
 using Service.RequestAndResponse.Request.Services;
@@ -19,5 +19,6 @@ namespace Service.IService
         Task<BaseResponse<Blog>> AddAsync(CreateBlogRequest entity);
         Task<BaseResponse<Blog>> UpdateAsync(int blogID, UpdateBlogRequest entity);
         Task<BaseResponse<BlogResponse?>> GetBlogById(int blogID);
+        Task<BaseResponse<Blog>> DeleteAsync(int blogID);
     }
 }

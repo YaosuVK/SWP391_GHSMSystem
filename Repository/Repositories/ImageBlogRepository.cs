@@ -1,4 +1,4 @@
-﻿using BusinessObject.Model;
+using BusinessObject.Model;
 using DataAccessObject;
 using Repository.BaseRepository;
 using Repository.IRepositories;
@@ -32,6 +32,15 @@ namespace Repository.Repositories
         public async Task<ImageBlog> GetImageBlogByIdAsync(int id)
         {
             return await _imageBlogDao.GetImageBlogByIdAsync(id);
+        }
+
+        public async Task DeleteImageAsync(int imageId)
+        {
+            var image = await _imageBlogDao.GetByIdAsync(imageId);
+            if (image != null)
+            {
+                await _imageBlogDao.DeleteAsync(image);
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using BusinessObject.Model;
+using BusinessObject.Model;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
@@ -76,6 +76,14 @@ namespace GHSMSystem.Controllers
             }
 
             var blog = await _blogService.UpdateAsync(blogID,entity);
+            return blog;
+        }
+
+        [HttpDelete]
+        [Route("DeleteBlog")]
+        public async Task<ActionResult<BaseResponse<Blog>>> DeleteAsync(int blogID)
+        {
+            var blog = await _blogService.DeleteAsync(blogID);
             return blog;
         }
     }
