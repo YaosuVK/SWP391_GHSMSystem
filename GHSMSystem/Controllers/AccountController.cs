@@ -20,7 +20,7 @@ namespace GHSMSystem.Controllers
             _accountService = accountService;
         }
 
-        /*[Authorize(Roles = "Admin")]*/
+        [Authorize(Roles = "Admin")]
         [HttpGet("adminDashBoard/GetTotalAccount")]
         public async Task<BaseResponse<GetTotalAccount>> GetTotalAccount()
         {
@@ -65,6 +65,7 @@ namespace GHSMSystem.Controllers
             return await _accountService.RenewToken(model);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("create account")]
         public async Task<ActionResult<BaseResponse<AccountResponse>>> CreateAccount(AccountRequest createAccountDto)
         {

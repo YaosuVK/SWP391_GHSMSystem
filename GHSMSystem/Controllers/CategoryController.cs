@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
 using Service.RequestAndResponse.Request.Categories;
@@ -17,6 +18,7 @@ namespace GHSMSystem.Controllers
             _categoryService = categoryService;
         }
 
+        [Authorize(Roles = "Staff, Manager, Consultant")]
         [HttpGet]
         [Route("GetCategory")]
         public async Task<ActionResult<BaseResponse<IEnumerable<GetAllCategoryResponse>>>> GetAllCategory()
@@ -25,6 +27,7 @@ namespace GHSMSystem.Controllers
             return Ok(category);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [Route("CreateCategory")]
         public async Task<ActionResult<BaseResponse<CreateCategoryRequest>>> CreateCategory(CreateCategoryRequest categoryRequest)
@@ -47,6 +50,7 @@ namespace GHSMSystem.Controllers
             return category;
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPut]
         [Route("UpdateCategory")]
         public async Task<ActionResult<BaseResponse<UpdateCategoryRequest>>> UpdateCategoryFromBase(int id, UpdateCategoryRequest categoryRequest)

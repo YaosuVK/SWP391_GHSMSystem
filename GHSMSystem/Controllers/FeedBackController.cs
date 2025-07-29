@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.RequestAndResponse.Enums;
@@ -61,6 +62,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
+        [Authorize(Roles = "Customer")]
         [HttpPost]
         public async Task<IActionResult> CreateFeedBack([FromBody] CreateFeedBackRequest request)
         {
@@ -77,6 +79,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
+        [Authorize(Roles = "Customer, Staff")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateFeedBack(int id, [FromBody] UpdateFeedBackRequest request)
         {
@@ -93,6 +96,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
+        [Authorize(Roles = "Customer, Staff")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFeedBack(int id)
         {

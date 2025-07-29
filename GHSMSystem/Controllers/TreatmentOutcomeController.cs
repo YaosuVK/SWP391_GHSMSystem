@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.RequestAndResponse.Request.TreatmentOutcomes;
@@ -17,20 +18,23 @@ namespace GHSMSystem.Controllers
             _treatmentOutcomeService = treatmentOutcomeService;
         }
 
+        [Authorize(Roles = "Staff, Customer, Consultant")]
         [HttpGet]
         public async Task<IActionResult> GetAllTreatmentOutcomes()
         {
             var result = await _treatmentOutcomeService.GetAllTreatmentOutcomesAsync();
             return StatusCode((int)result.StatusCode, result);
         }
-        
+
+        [Authorize(Roles = "Staff, Customer, Consultant")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTreatmentOutcomeById(int id)
         {
             var result = await _treatmentOutcomeService.GetTreatmentOutcomeByIdAsync(id);
             return StatusCode((int)result.StatusCode, result);
         }
-        
+
+        [Authorize(Roles = "Staff, Customer, Consultant")]
         [HttpGet("customer/{customerId}")]
         public async Task<IActionResult> GetTreatmentOutcomesByCustomerId(string customerId)
         {
@@ -38,6 +42,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
+        [Authorize(Roles = "Staff, Customer, Consultant")]
         [HttpGet("consultant/{consultantId}")]
         public async Task<IActionResult> GetTreatmentOutcomesByConsultantId(string consultantId)
         {
@@ -45,13 +50,15 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
+        [Authorize(Roles = "Staff, Customer, Consultant")]
         [HttpGet("appointment/{appointmentId}")]
         public async Task<IActionResult> GetTreatmentOutcomesByAppointmentId(int appointmentId)
         {
             var result = await _treatmentOutcomeService.GetTreatmentOutcomesByAppointmentIdAsync(appointmentId);
             return StatusCode((int)result.StatusCode, result);
         }
-        
+
+        [Authorize(Roles = "Staff, Customer, Consultant")]
         [HttpGet("search")]
         public async Task<IActionResult> SearchTreatmentOutcomes([FromQuery] string? search, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
         {
@@ -59,7 +66,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        
+        [Authorize(Roles = "Consultant")]
         [HttpPost]
         public async Task<IActionResult> CreateTreatmentOutcome([FromBody] CreateTreatmentOutcomeRequest request)
         {
@@ -76,7 +83,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        
+        [Authorize(Roles = "Consultant")]
         [HttpPut]
         public async Task<IActionResult> UpdateTreatmentOutcome([FromBody] UpdateTreatmentOutcomeRequest request)
         {
@@ -92,7 +99,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        
+        [Authorize(Roles = "Consultant")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTreatmentOutcome(int id)
         {

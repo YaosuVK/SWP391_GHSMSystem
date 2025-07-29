@@ -1,4 +1,5 @@
 using BusinessObject.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
@@ -35,6 +36,7 @@ namespace GHSMSystem.Controllers
             return Ok(blogs);
         }
 
+        [Authorize(Roles = "Staff, Manager, Consultant")]
         [HttpPost]
         [Route("CreateBlog")]
         public async Task<ActionResult<BaseResponse<Blog>>> AddAsync(CreateBlogRequest entity)
@@ -57,6 +59,7 @@ namespace GHSMSystem.Controllers
             return blog;
         }
 
+        [Authorize(Roles = "Staff, Manager, Consultant")]
         [HttpPut]
         [Route("UpdateBlog")]
         public async Task<ActionResult<BaseResponse<Blog>>> UpdateAsync(int blogID, UpdateBlogRequest entity)
@@ -79,6 +82,7 @@ namespace GHSMSystem.Controllers
             return blog;
         }
 
+        [Authorize(Roles = "Staff, Manager, Consultant")]
         [HttpDelete]
         [Route("DeleteBlog")]
         public async Task<ActionResult<BaseResponse<Blog>>> DeleteAsync(int blogID)

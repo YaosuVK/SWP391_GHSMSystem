@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
@@ -18,6 +19,7 @@ namespace GHSMSystem.Controllers
             _serviceService = serviceService;
         }
 
+        [Authorize(Roles = "Staff, Manager, Customer, Consultant")]
         [HttpGet]
         [Route("GetService")]
         public async Task<ActionResult<BaseResponse<IEnumerable<ServicesResponse>>>> GetAllService()
@@ -26,6 +28,7 @@ namespace GHSMSystem.Controllers
             return Ok(service);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         [Route("GetServiceStats")]
         public async Task<ActionResult<BaseResponse<List<GetServiceStats>>>> GetServiceUsageStats()
@@ -34,6 +37,7 @@ namespace GHSMSystem.Controllers
             return Ok(services);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [Route("CreateService")]
         public async Task<ActionResult<BaseResponse<Services>>> AddService(CreateServiceRequest entity)
@@ -56,6 +60,7 @@ namespace GHSMSystem.Controllers
             return service;
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPut]
         [Route("UpdateService")]
         public async Task<ActionResult<BaseResponse<Services>>> UpdateService(int serviceID, UpdateServiceRequest entity)

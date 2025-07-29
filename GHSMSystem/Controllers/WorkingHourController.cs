@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.IService;
 using Service.RequestAndResponse.BaseResponse;
@@ -28,6 +29,7 @@ namespace GHSMSystem.Controllers
             _categoryService = categoryService;
         }
 
+        [Authorize(Roles = "Consultant, Manager, Staff")]
         [HttpGet]
         [Route("GetWorkingHour")]
         public async Task<ActionResult<BaseResponse<IEnumerable<WorkingHourResponse>>>> GetAllWorkingHour()
@@ -36,6 +38,7 @@ namespace GHSMSystem.Controllers
             return Ok(workinghour);
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [Route("CreateWorkingHour")]
         public async Task<ActionResult<BaseResponse<WorkingHour>>> AddWorkingHour(CreateWorkingHourRequest entity)
@@ -58,6 +61,7 @@ namespace GHSMSystem.Controllers
             return workinghour;
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPut]
         [Route("UpdateWorkingHour")]
         public async Task<ActionResult<BaseResponse<WorkingHour>>> UpdateWorkingHour(int workingHourID, UpdateWorkingHourRequest entity)
