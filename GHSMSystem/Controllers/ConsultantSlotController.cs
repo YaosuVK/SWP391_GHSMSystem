@@ -87,7 +87,7 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpPost("register")]
-        [Authorize(Roles = "Consultant,Manager")]
+        //[Authorize(Roles = "Consultant,Manager")]
         public async Task<IActionResult> Register(
         [FromQuery] int slotId,
         [FromQuery] string? consultantId = null,
@@ -197,7 +197,7 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpPut("updateMaxAppointment")]
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         public async Task<IActionResult> UpdateMaxAppointment(
         [FromQuery] string consultantId,
         [FromQuery] int slotId,
@@ -214,7 +214,7 @@ namespace GHSMSystem.Controllers
         }
 
         [HttpPut("updateConsultantPrice")]
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         public async Task<IActionResult> UpdateConsultantPrice(
         [FromQuery] int consultantProfileId,
         [FromQuery] double newPrice)
