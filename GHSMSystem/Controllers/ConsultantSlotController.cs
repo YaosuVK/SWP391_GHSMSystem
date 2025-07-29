@@ -122,7 +122,7 @@ namespace GHSMSystem.Controllers
                     return BadRequest(new { message = "Manager must provide consultantId parameter to register slot for consultant" });
                 }
                 idToUse = consultantId;
-                finalMaxAppointment = maxAppointment ?? 10;
+                finalMaxAppointment = maxAppointment ?? int.MaxValue;
             }
             else if (userRoles.Contains("Consultant"))
             {
@@ -132,12 +132,12 @@ namespace GHSMSystem.Controllers
                     return Forbid("Consultant can only register slots for themselves");
                 }
                 idToUse = currentUserId;
-                finalMaxAppointment = maxAppointment ?? 10;
+                finalMaxAppointment = maxAppointment ?? int.MaxValue;
             }
             // If user has no role but a valid ID was passed (e.g. for anonymous registration)
             else if (userRoles.Count == 0)
             {
-                finalMaxAppointment = maxAppointment ?? 10; // Default value
+                finalMaxAppointment = maxAppointment ?? int.MaxValue; // Default value
             }
             else
             {
