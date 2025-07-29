@@ -24,6 +24,7 @@ using Service.Service;
 using Repository.Repositories;
 using Service.RequestAndResponse.Request.QnAMessages;
 using Service.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -183,6 +184,7 @@ builder.Services.AddHangfire(config => config
 
 builder.Services.AddHangfireServer();
 
+builder.Services.AddSingleton<IUserIdProvider, NameIdentifierUserIdProvider>();
 // Add SignalR
 builder.Services.AddSignalR(options =>
 {
