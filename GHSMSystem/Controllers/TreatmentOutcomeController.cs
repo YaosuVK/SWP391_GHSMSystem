@@ -50,7 +50,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        /*[Authorize(Roles = "Staff, Customer, Consultant")*/]
+        /*[Authorize(Roles = "Staff, Customer, Consultant")]*/
         [HttpGet("appointment/{appointmentId}")]
         public async Task<IActionResult> GetTreatmentOutcomesByAppointmentId(int appointmentId)
         {
