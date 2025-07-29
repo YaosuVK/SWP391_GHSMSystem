@@ -23,7 +23,7 @@ namespace GHSMSystem.Controllers
         /// </summary>
         /// <returns>List of all lab tests</returns>
 
-        [Authorize(Roles = "Customer, Staff")]
+        //[Authorize(Roles = "Customer, Staff")]
         [HttpGet]
         public async Task<IActionResult> GetAllLabTests()
         {
@@ -37,7 +37,7 @@ namespace GHSMSystem.Controllers
         /// <param name="id">Lab test ID</param>
         /// <returns>Lab test details</returns>
 
-        [Authorize(Roles = "Customer, Staff")]
+        //[Authorize(Roles = "Customer, Staff")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetLabTestById(int id)
         {
@@ -50,7 +50,7 @@ namespace GHSMSystem.Controllers
         /// </summary>
         /// <param name="customerId">Customer ID</param>
         /// <returns>List of lab tests for the customer</returns>
-        [Authorize(Roles = "Customer, Staff")]
+        //[Authorize(Roles = "Customer, Staff")]
         [HttpGet("customer/{customerId}")]
         public async Task<IActionResult> GetLabTestsByCustomerId(string customerId)
         {
@@ -63,7 +63,7 @@ namespace GHSMSystem.Controllers
         /// </summary>
         /// <param name="staffId">Staff ID</param>
         /// <returns>List of lab tests for the staff</returns>
-        [Authorize(Roles = "Customer, Staff")]
+        //[Authorize(Roles = "Customer, Staff")]
         [HttpGet("staff/{staffId}")]
         public async Task<IActionResult> GetLabTestsByStaffId(string staffId)
         {
@@ -76,7 +76,7 @@ namespace GHSMSystem.Controllers
         /// </summary>
         /// <param name="treatmentId">Treatment ID</param>
         /// <returns>List of lab tests for the treatment</returns>
-        [Authorize(Roles = "Customer, Staff")]
+        //[Authorize(Roles = "Customer, Staff")]
         [HttpGet("treatment/{treatmentId}")]
         public async Task<IActionResult> GetLabTestsByTreatmentId(int treatmentId)
         {
@@ -90,7 +90,7 @@ namespace GHSMSystem.Controllers
         /// <param name="fromDate">Start date</param>
         /// <param name="toDate">End date</param>
         /// <returns>List of lab tests within the date range</returns>
-        [Authorize(Roles = "Customer, Staff")]
+        //[Authorize(Roles = "Customer, Staff")]
         [HttpGet("date-range")]
         public async Task<IActionResult> GetLabTestsByDateRange([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
         {
@@ -105,7 +105,7 @@ namespace GHSMSystem.Controllers
         /// <param name="pageIndex">Page index (default: 1)</param>
         /// <param name="pageSize">Page size (default: 10)</param>
         /// <returns>Paginated list of lab tests</returns>
-        [Authorize(Roles = "Customer, Staff")]
+        //[Authorize(Roles = "Customer, Staff")]
         [HttpGet("search")]
         public async Task<IActionResult> SearchLabTests([FromQuery] string? search, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
         {
@@ -136,7 +136,7 @@ namespace GHSMSystem.Controllers
         /// </summary>
         /// <param name="request">Lab tests creation request</param>
         /// <returns>Created lab tests</returns>
-        [Authorize(Roles = "Staff")]
+        //[Authorize(Roles = "Staff")]
         [HttpPost("multiple")]
         public async Task<IActionResult> CreateMultipleLabTests([FromBody] CreateMultipleLabTestsRequest request)
         {
@@ -154,7 +154,7 @@ namespace GHSMSystem.Controllers
         /// </summary>
         /// <param name="request">Lab test update request</param>
         /// <returns>Updated lab test</returns>
-        [Authorize(Roles = "Staff")]
+        //[Authorize(Roles = "Staff")]
         [HttpPut]
         public async Task<IActionResult> UpdateLabTest([FromBody] UpdateLabTestRequest request)
         {
@@ -172,7 +172,7 @@ namespace GHSMSystem.Controllers
         /// </summary>
         /// <param name="id">Lab test ID</param>
         /// <returns>Deletion result</returns>
-        [Authorize(Roles = "Staff")]
+        //[Authorize(Roles = "Staff")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLabTest(int id)
         {

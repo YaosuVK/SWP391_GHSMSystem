@@ -16,7 +16,7 @@ namespace GHSMSystem.Controllers
             _dashBoardService = dashBoardService;
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("adminDashBoard/GetTotalAppointmentsTotalAppointmentsAmount")]
         public async Task<BaseResponse<List<GetTotalAppointmentsTotalAppointmentsAmount>>> GetTotalAppointmentsTotalAppointmentsAmountAsync
@@ -25,7 +25,7 @@ namespace GHSMSystem.Controllers
             return await _dashBoardService.GetTotalAppointmentsTotalAppointmentsAmountAsync(startDate, endDate, timeSpanType);
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("adminDashBoard/GetCurrentWeekRevenue")]
         public async Task<BaseResponse<List<GetCurrentWeekRevenue>>> GetCurrentWeekRevenue()
@@ -33,7 +33,7 @@ namespace GHSMSystem.Controllers
             return await _dashBoardService.GetCurrentWeekRevenue();
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("adminDashBoard/GetTotalAppointmentsAndAmount")]
         public async Task<BaseResponse<GetTotalAppointmentsAndAmount>> GetTotalAppointmentsAndAmount()

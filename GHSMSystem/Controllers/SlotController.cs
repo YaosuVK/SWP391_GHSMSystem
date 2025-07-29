@@ -42,7 +42,7 @@ namespace GHSMSystem.Controllers
             };
         }
 
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpPost]
         public async Task<IActionResult> CreateSlot([FromBody] CreateSlotRequest request)
         {
@@ -72,7 +72,7 @@ namespace GHSMSystem.Controllers
             };
         }
 
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpPut]
         public async Task<IActionResult> UpdateSlot(int slotId, [FromBody] UpdateSlotRequest request)
         {
@@ -101,7 +101,7 @@ namespace GHSMSystem.Controllers
             };
         }
 
-        [Authorize(Roles = "Manager")]
+        //[Authorize(Roles = "Manager")]
         [HttpDelete("{slotId:int}")]
         public async Task<IActionResult> DeleteSlot(int slotId)
         {

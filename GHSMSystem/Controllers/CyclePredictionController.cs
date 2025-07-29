@@ -46,7 +46,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpGet("date-range")]
         public async Task<IActionResult> GetCyclePredictionsByDateRange([FromQuery] DateTime fromDate, [FromQuery] DateTime toDate)
         {
@@ -54,7 +54,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpGet("search")]
         public async Task<IActionResult> SearchCyclePredictions([FromQuery] string? search, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
         {
@@ -62,7 +62,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpPost("generate/{menstrualCycleId}")]
         public async Task<IActionResult> GenerateCyclePrediction(int menstrualCycleId)
         {
@@ -70,7 +70,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpPost]
         public async Task<IActionResult> CreateCyclePrediction([FromBody] CreateCyclePredictionRequest request)
         {
@@ -83,7 +83,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpPut]
         public async Task<IActionResult> UpdateCyclePrediction([FromBody] UpdateCyclePredictionRequest request)
         {
@@ -96,7 +96,7 @@ namespace GHSMSystem.Controllers
             return StatusCode((int)result.StatusCode, result);
         }
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCyclePrediction(int id)
         {

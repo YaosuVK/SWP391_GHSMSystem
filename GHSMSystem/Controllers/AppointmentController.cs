@@ -52,7 +52,7 @@ namespace GHSMSystem.Controllers
             _accountService = accountService;
         }
 
-        [Authorize(Roles = "Staff, Manager")]
+        //[Authorize(Roles = "Staff, Manager")]
         [HttpGet]
         [Route("GetAllAppointment")]
         public async Task<ActionResult<BaseResponse<IEnumerable<GetAllAppointment>>>> GetAllAppointment()
@@ -61,7 +61,7 @@ namespace GHSMSystem.Controllers
             return Ok(appointments);
         }
 
-        [Authorize(Roles = "Staff, Manager, Customer, Consultant")]
+        //[Authorize(Roles = "Staff, Manager, Customer, Consultant")]
         [HttpGet]
         [Route("GetAppointmentByID/{appointmentId}")]
         public async Task<ActionResult<BaseResponse<GetAllAppointment?>>> GetAppointmentByIdAsync(int appointmentId)
@@ -70,7 +70,7 @@ namespace GHSMSystem.Controllers
             return Ok(appointment);
         }
 
-        [Authorize(Roles = "Staff, Manager, Customer, Consultant")]
+        //[Authorize(Roles = "Staff, Manager, Customer, Consultant")]
         [HttpGet]
         [Route("GetAppointmentByCode/{appointmentCode}")]
         public async Task<ActionResult<BaseResponse<GetAllAppointment?>>> GetAppointmentByCodeAsync(string appointmentCode)
@@ -79,7 +79,7 @@ namespace GHSMSystem.Controllers
             return Ok(appointment);
         }
 
-        [Authorize(Roles = "Staff, Manager, Customer, Consultant")]
+        //[Authorize(Roles = "Staff, Manager, Customer, Consultant")]
         [HttpGet]
         [Route("GetAppointmentByConsultantID/{accountId}")]
         public async Task<ActionResult<BaseResponse<IEnumerable<GetAllAppointment>>>> GetAppointmentsByConsultantId(string accountId)
@@ -88,7 +88,7 @@ namespace GHSMSystem.Controllers
             return Ok(appointment);
         }
 
-        [Authorize(Roles = "Staff, Manager, Customer, Consultant")]
+        //[Authorize(Roles = "Staff, Manager, Customer, Consultant")]
         [HttpGet]
         [Route("GetAppointmentByCustomerID/{accountId}")]
         public async Task<ActionResult<BaseResponse<IEnumerable<GetAllAppointment>>>> GetAppointmentsByCustomerId(string accountId)
@@ -97,7 +97,7 @@ namespace GHSMSystem.Controllers
             return Ok(appointment);
         }
 
-        [Authorize(Roles = "Staff, Manager, Consultant")]
+        //[Authorize(Roles = "Staff, Manager, Consultant")]
         [HttpGet]
         [Route("GetSlot")]
         public async Task<ActionResult<BaseResponse<IEnumerable<SlotForCustomer>>>> GetAllSlot()
@@ -198,7 +198,7 @@ namespace GHSMSystem.Controllers
             return BadRequest("Cannot find Appointment");
         }
 
-        [Authorize(Roles = "Staff, Customer, Consultant")]
+        //[Authorize(Roles = "Staff, Customer, Consultant")]
         [HttpPost]
         [Route("CreateAppointment")]
         public async Task<ActionResult<BaseResponse<int>>> CreateAppointment(CreateAppointmentRequest request)
@@ -422,7 +422,7 @@ namespace GHSMSystem.Controllers
              return slot;
          }*/
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
         [HttpPut]
         [Route("UpdateAppointment")]
         public async Task<ActionResult<BaseResponse<UpdateAppointmentRequest>>> UpdateAppointment(int appointmentID, UpdateAppointmentRequest request)
@@ -445,7 +445,7 @@ namespace GHSMSystem.Controllers
             return appointment;
         }
 
-        [Authorize(Roles = "Staff, Customer, Consultant")]
+        //[Authorize(Roles = "Staff, Customer, Consultant")]
         [HttpPut]
         [Route("UpdateAppointmentWithSTIRequest")]
         public async Task<ActionResult<BaseResponse<UpdateApppointmentRequestSTI>>> UpdateAppointmentForTesting(int appointmentID, UpdateApppointmentRequestSTI request)
@@ -468,7 +468,7 @@ namespace GHSMSystem.Controllers
             return appointment;
         }
 
-        [Authorize(Roles = "Staff, Manager, Consultant")]
+        //[Authorize(Roles = "Staff, Manager, Consultant")]
         [HttpPut]
         [Route("ChangeAppointmentSlot")]
         public async Task<ActionResult<BaseResponse<UpdateAppointmentSlot>>> ChangeAppointmentSlot(int appointmentID, UpdateAppointmentSlot request)
@@ -491,7 +491,7 @@ namespace GHSMSystem.Controllers
             return appointment;
         }
 
-        [Authorize(Roles = "Staff, Manager, Consultant")]
+        //[Authorize(Roles = "Staff, Manager, Consultant")]
         [HttpPut]
         [Route("ChangeAppointmentStatus")]
         public async Task<ActionResult<BaseResponse<Appointment>>> ChangeAppointmentStatus(int appointmentID, AppointmentStatus status, PaymentStatus paymentStatus)
@@ -500,7 +500,7 @@ namespace GHSMSystem.Controllers
             return Ok(appointment);
         }
 
-        [Authorize(Roles = "Staff, Manager, Consultant")]
+        //[Authorize(Roles = "Staff, Manager, Consultant")]
         [HttpPut]
         [Route("RescheduleAppointmentWithEmail")]
         public async Task<ActionResult<BaseResponse<UpdateAppointmentSlot>>> RescheduleAppointmentWithEmail(int appointmentID, UpdateAppointmentSlot request)
